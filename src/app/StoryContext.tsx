@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { sceneDurations, story } from '../data/story'
 import { clamp } from '../utils/math'
+import type { CapabilityFocus } from '../data/capabilityConstellation'
+import type { IBIOLPhase } from '../data/ibiol'
 
 interface StoryState {
   scene: number
@@ -8,6 +10,12 @@ interface StoryState {
   autoplay: boolean
   presenter: boolean
   elapsed: number
+  capabilityFocus: CapabilityFocus
+  setCapabilityFocus: (focus: CapabilityFocus) => void
+  aiPhase: 'certifications' | 'gh300' | 'concepts'
+  setAIPhase: (phase: 'certifications' | 'gh300' | 'concepts') => void
+  ibiolPhase: IBIOLPhase
+  setIBIOLPhase: (phase: IBIOLPhase) => void
   goTo: (index: number) => void
   next: () => void
   previous: () => void
@@ -23,6 +31,9 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   const [autoplay, setAutoplay] = useState(false)
   const [presenter, setPresenter] = useState(false)
   const [elapsed, setElapsed] = useState(0)
+  const [capabilityFocus, setCapabilityFocus] = useState<CapabilityFocus>('overview')
+  const [aiPhase, setAIPhase] = useState<'certifications' | 'gh300' | 'concepts'>('certifications')
+  const [ibiolPhase, setIBIOLPhase] = useState<IBIOLPhase>('today')
   const sceneRef = useRef(scene)
 
   const goTo = (raw: number) => {
@@ -39,6 +50,12 @@ export function StoryProvider({ children }: { children: ReactNode }) {
     const ticker = window.setInterval(() => setElapsed((performance.now() - started) / 1000), 1000)
     return () => window.clearInterval(ticker)
   }, [])
+
+  useEffect(() => {
+    if (scene !== 3) setCapabilityFocus('overview')
+    if (scene !== 4) setAIPhase('certifications')
+    if (scene !== 6) setIBIOLPhase('today')
+  }, [scene])
 
   useEffect(() => {
     if (!autoplay) return
@@ -60,7 +77,7 @@ export function StoryProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed])
+  const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, goTo, next, previous])
   return <StoryContext.Provider value={value}>{children}</StoryContext.Provider>
 }
 

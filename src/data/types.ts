@@ -8,7 +8,9 @@ export interface CountryData {
   name: string
   total: number
   isMock?: boolean
-  hubs: Hub[]
-  distribution: Distribution[]
+  hubs?: Hub[]
+  distribution?: Distribution[]
+  operationalHubs?: Hub[]
+  territorialDistribution?: Distribution[]
   capabilities: Capability[]
 }

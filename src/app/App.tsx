@@ -6,27 +6,29 @@ import { ExperienceCanvas } from '../three/ExperienceCanvas'
 import { Navigation } from '../components/Navigation'
 import { PresenterMode } from '../components/PresenterMode'
 import { Brand } from '../components/Brand'
+import { AvatarOverlay } from '../components/AvatarOverlay/AvatarOverlay'
 import { OpeningScene } from '../scenes/OpeningScene'
 import { FootprintScene } from '../scenes/FootprintScene'
-import { DiversityScene } from '../scenes/DiversityScene'
+import { PeopleScene } from '../scenes/PeopleScene'
 import { SuperpowersScene } from '../scenes/SuperpowersScene'
 import { AISkillingScene } from '../scenes/AISkillingScene'
 import { JourneyScene } from '../scenes/JourneyScene'
-import { FutureScene } from '../scenes/FutureScene'
+import { IBIOLScene } from '../scenes/IBIOLScene'
 import { ClosingScene } from '../scenes/ClosingScene'
 
-const scenes = [OpeningScene, FootprintScene, DiversityScene, SuperpowersScene, AISkillingScene, JourneyScene, FutureScene, ClosingScene]
+const scenes = [OpeningScene, FootprintScene, PeopleScene, SuperpowersScene, AISkillingScene, JourneyScene, IBIOLScene, ClosingScene]
 
 function Experience() {
-  const { scene } = useStory()
+  const { scene, capabilityFocus, setAIPhase, ibiolPhase } = useStory()
   const Scene = scenes[scene]
   return <main className={`app scene-index-${scene}`}>
     <div className="grain" />
-    <ErrorBoundary fallback={<WebGLFallback />}><ExperienceCanvas scene={scene} /></ErrorBoundary>
+    <ErrorBoundary fallback={<WebGLFallback />}><ExperienceCanvas scene={scene} capabilityFocus={capabilityFocus} onAIPhase={setAIPhase} ibiolPhase={ibiolPhase} /></ErrorBoundary>
     <div className="ambient-wash" />
     <Brand />
     <div className="chapter-label">GDN-e / EXPERIENCIA EJECUTIVA</div>
     <AnimatePresence mode="wait"><Scene key={scene} /></AnimatePresence>
+    <AvatarOverlay moment={scene === 0 ? 'opening' : scene === 1 ? 'bridge' : scene === 7 ? 'closing' : undefined} />
     <Navigation />
     <PresenterMode />
     {import.meta.env.DEV && <span className="mock-indicator">Chile · datos demo</span>}

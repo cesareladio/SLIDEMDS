@@ -2,11 +2,11 @@ import type { CountryData } from './types'
 
 export const peru: CountryData = {
   id: 'peru', name: 'Perú', total: 1408,
-  hubs: [
+  operationalHubs: [
     { name: 'Trujillo', people: 1048, lat: -8.11, lon: -79.03 },
     { name: 'Arequipa', people: 360, lat: -16.4, lon: -71.54 },
   ],
-  distribution: [
+  territorialDistribution: [
     { label: 'Local', percent: 63, people: 894 },
     { label: 'Offshore', percent: 28, people: 399 },
     { label: 'Nearshore', percent: 8, people: 115 },

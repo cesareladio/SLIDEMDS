@@ -48,8 +48,8 @@ export function Globe({ scene }: { scene: number }) {
         <mesh scale={1 + Math.sin(index) * .1}><ringGeometry args={[.1, .13, 40]} /><meshBasicMaterial color="#00d4ff" transparent opacity={.55} side={THREE.DoubleSide} /></mesh>
       </group>)}
     </group>
-    {peru.hubs.map(hub => <Hub key={hub.name} {...hub} visible={scene === 1} />)}
-    {chile.hubs.map(hub => <Hub key={hub.name} {...hub} visible={scene === 1 || scene === 7} />)}
+    {peru.operationalHubs?.map(hub => <Hub key={hub.name} {...hub} visible={scene === 1} />)}
+    {chile.operationalHubs?.map(hub => <Hub key={hub.name} {...hub} visible={scene === 1 || scene === 7} />)}
     <EnergyArc from={chilePoint} to={peruPoint} visible={scene === 1 || scene === 7} />
   </group>
 }
