@@ -47,6 +47,9 @@ button { color: inherit; font: inherit; }
 .ibiol-scroll-final { position: fixed; inset: 0; padding: 0 9vw; display: grid; align-content: center; justify-items: start; }
 .ibiol-scroll-final .ibiol-final-p { margin: 0; width: min(78vw, 900px); max-width: min(78vw, 900px); font: 300 clamp(48px, 5.5vw, 96px)/.98 var(--font-display); letter-spacing: -.055em; color: #eaf9ff; text-wrap: balance; }
 .ibiol-scroll-final .ibiol-final-p em { color: var(--cyan); font-style: normal; font-weight: 280; }
+.ibiol-scroll-final { position: fixed; inset: 0; padding: 0 9vw; display: grid; align-content: center; justify-items: start; }
+.ibiol-scroll-final .ibiol-final-p { margin: 0; width: min(78vw, 900px); max-width: min(78vw, 900px); font: 300 clamp(48px, 5.5vw, 96px)/.98 var(--font-display); letter-spacing: -.055em; color: #eaf9ff; text-wrap: balance; }
+.ibiol-scroll-final .ibiol-final-p em { color: var(--cyan); font-style: normal; font-weight: 280; }
 
 .ibiol-node-label, .country-cap-label { color: #dcf7ff; font: 500 8px var(--mono); letter-spacing: .12em; white-space: nowrap; text-shadow: 0 0 12px rgba(0,212,255,.25); }
 .country-cap-label b { display: block; color: #fff; font: 280 18px var(--font-display); letter-spacing: -.04em; }

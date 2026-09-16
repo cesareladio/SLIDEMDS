@@ -12,12 +12,9 @@ export function JourneyFlight({ visible }: { visible: boolean }) {
   const points = useMemo(() => journeyWaypoints.map(item => new THREE.Vector3(...finitePosition(item.position))), [])
   const trail = useMemo(() => new THREE.CatmullRomCurve3(points).getPoints(100), [points])
   useEffect(() => { if (!visible) startedAt.current = null }, [visible])
-  useFrame(state => {
-    if (!group.current || !visible) return
-    if (startedAt.current === null) startedAt.current = state.clock.elapsedTime
-    const elapsed = state.clock.elapsedTime - startedAt.current
-    group.current.rotation.y = -.14 + Math.sin(elapsed * .12) * .025
-  })
+  // Removed useFrame rotation for deterministic scroll mode
+// Rotation is fixed
+useFrame(() => {})
   if (!visible) return null
   return <group ref={group}>
     <Line points={trail} color="#00d4ff" transparent opacity={.26} lineWidth={1.3} />

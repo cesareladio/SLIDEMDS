@@ -1,5 +1,6 @@
 import { StoryProvider, useStory } from './StoryContext'
 import { ScrollProvider, useScrollStory } from './ScrollContext'
+import { PresentationProvider } from './PresentationContext'
 import { ScrollDirector } from './ScrollDirector'
 import { ScrollStory } from '../components/ScrollStory'
 import { ScrollDebugOverlay } from '../components/ScrollDebugOverlay'
@@ -9,7 +10,6 @@ import { ExperienceCanvas } from '../three/ExperienceCanvas'
 import { Navigation } from '../components/Navigation'
 import { PresenterMode } from '../components/PresenterMode'
 import { Brand } from '../components/Brand'
-import { ScrollAvatarOverlay } from '../components/ScrollAvatarOverlay'
 import { OpeningScene } from '../scenes/OpeningScene'
 import { EarthHubScene } from '../scenes/EarthHubScene'
 import { CountryExperience } from '../scenes/CountryExperience'
@@ -38,7 +38,6 @@ function Experience() {
     <AIScrollScene />
     <IBIOLScrollScene />
     <ClosingScrollScene />
-    <ScrollAvatarOverlay />
     <Navigation />
     <PresenterMode />
     <ScrollDirector />
@@ -49,5 +48,5 @@ function Experience() {
 }
 
 export default function App() {
-  return <StoryProvider><ScrollProvider><Experience /></ScrollProvider></StoryProvider>
+  return <StoryProvider><ScrollProvider><PresentationProvider><Experience /></PresentationProvider></ScrollProvider></StoryProvider>
 }

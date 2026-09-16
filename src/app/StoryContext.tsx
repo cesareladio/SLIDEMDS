@@ -60,9 +60,8 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   const clearCountry = useCallback(() => { setSelectedCountry(null); setCountrySection('overview') }, [])
 
   useEffect(() => {
-    const started = performance.now()
-    const ticker = window.setInterval(() => setElapsed((performance.now() - started) / 1000), 1000)
-    return () => window.clearInterval(ticker)
+    // Eliminate narrativo ticker pero mantener para presenter timer
+    return () => {}
   }, [])
 
   useEffect(() => {

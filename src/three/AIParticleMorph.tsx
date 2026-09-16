@@ -72,28 +72,8 @@ export function AIParticleMorph({ visible, onPhase }: { visible: boolean; onPhas
       elapsed.current = 0
     }
   }, [visible])
-  useFrame(state => {
-    if (!points.current || !visible) return
-    if (startedAt.current === null) startedAt.current = state.clock.elapsedTime
-    elapsed.current = state.clock.elapsedTime - startedAt.current
-    const time = elapsed.current
-    let phase: AIParticlePhase = 'certifications'
-    if (time >= 7) phase = 'gh300'
-    if (time >= 12) phase = 'concepts'
-    onPhase?.(phase)
-    if (time < 1.8) blend(dispersed, certifications, time / 1.8, current)
-    else if (time < 5.2) certifications.forEach((value, index) => { current[index] = value })
-    else if (time < 9.5) blend(certifications, gh300, (time - 5.2) / 4.3, current)
-    else if (time < 12) gh300.forEach((value, index) => { current[index] = value })
-    else blend(gh300, expanded, Math.min((time - 12) / 3, 1), current)
-    const position = points.current.geometry.attributes.position as THREE.BufferAttribute
-    position.array.set(current)
-    position.needsUpdate = true
-    points.current.rotation.y = Math.sin(time * .18) * .08
-    points.current.rotation.x = Math.sin(time * .13) * .025
-    const material = points.current.material as THREE.PointsMaterial
-    material.opacity = .67 + Math.sin(time * 1.4) * .1
-  })
+  // Disabled useFrame temporal animation for deterministic scroll mode
+useFrame(() => {})
   if (!visible) return null
   return <points ref={points} position={[0, .2, 0]} scale={1.2}>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[current, 3]} /></bufferGeometry>
