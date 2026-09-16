@@ -32,7 +32,7 @@ export function ScrollAvatarOverlay() {
       const lines = avatarMoments.closing
       const first = fadeWindow(p, .42, .48, .54, .60)
       const second = fadeWindow(p, .62, .68, .74, .80)
-      const third = fadeWindow(p, .97, .985, 1, 1.01)
+      const third = fadeWindow(p, .90, .915, .935, .945)
       if (third > .02) return { ...lines[2], opacity: third }
       if (second > .02) return { ...lines[1], opacity: second }
       if (first > .02) return { ...lines[0], opacity: first }

@@ -14,10 +14,15 @@ export function Navigation() {
   const [busy, setBusy] = useState(false)
   const busyRef = useRef(false)
   const tweenRef = useRef<gsap.core.Tween | null>(null)
+  const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const scrollState = useRef({ y: 0 })
   const beatIndex = getStoryBeatIndex(chapter, chapterProgress)
 
   const unlock = useCallback(() => {
+    if (settleTimerRef.current) {
+      clearTimeout(settleTimerRef.current)
+      settleTimerRef.current = null
+    }
     tweenRef.current = null
     busyRef.current = false
     setBusy(false)
@@ -32,12 +37,18 @@ export function Navigation() {
     busyRef.current = true
     setBusy(true)
     scrollState.current.y = window.scrollY
+    const distance = Math.abs(targetY - scrollState.current.y)
+    const screens = distance / Math.max(window.innerHeight, 1)
+    const duration = Math.min(1.4, Math.max(.95, .88 + screens * .22))
     tweenRef.current = gsap.to(scrollState.current, {
       y: targetY,
-      duration: .7,
-      ease: 'power2.inOut',
+      duration,
+      ease: 'power3.inOut',
       onUpdate: () => window.scrollTo(0, scrollState.current.y),
-      onComplete: unlock,
+      onComplete: () => {
+        tweenRef.current = null
+        settleTimerRef.current = setTimeout(unlock, 400)
+      },
       onInterrupt: unlock,
     })
   }, [unlock])
@@ -47,7 +58,12 @@ export function Navigation() {
 
   useEffect(() => {
     const cancelForManualScroll = () => {
-      if (tweenRef.current) { tweenRef.current.kill(); unlock() }
+      if (settleTimerRef.current) {
+        clearTimeout(settleTimerRef.current)
+        settleTimerRef.current = null
+      }
+      if (tweenRef.current) tweenRef.current.kill()
+      if (busyRef.current) unlock()
     }
     window.addEventListener('wheel', cancelForManualScroll, { passive: true })
     window.addEventListener('touchstart', cancelForManualScroll, { passive: true })
@@ -55,6 +71,7 @@ export function Navigation() {
       window.removeEventListener('wheel', cancelForManualScroll)
       window.removeEventListener('touchstart', cancelForManualScroll)
       tweenRef.current?.kill()
+      if (settleTimerRef.current) clearTimeout(settleTimerRef.current)
     }
   }, [unlock])
 
