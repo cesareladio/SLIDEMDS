@@ -83,6 +83,18 @@ export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 't
       camera.lookAt(0, 0, 0)
       return
     }
+    if (scrollChapter === 'ibiol') {
+      const p = Math.min(1, Math.max(0, scrollProgress))
+      camera.position.set(0, lerpNumber(0, .12, p), lerpNumber(7.9, 8.2, p))
+      camera.lookAt(0, 0, 0)
+      return
+    }
+    if (scrollChapter === 'closing') {
+      const p = Math.min(1, Math.max(0, scrollProgress))
+      camera.position.set(0, lerpNumber(0, .08, p), lerpNumber(8.2, 9.2, p))
+      camera.lookAt(0, 0, 0)
+      return
+    }
     if (scene !== 5) return
     if (journeyStartedAt.current === null) journeyStartedAt.current = state.clock.elapsedTime
     const elapsed = state.clock.elapsedTime - journeyStartedAt.current

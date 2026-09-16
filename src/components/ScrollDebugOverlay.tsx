@@ -1,12 +1,9 @@
 import { useScrollStory } from '../app/ScrollContext'
 
 export function ScrollDebugOverlay() {
-  if (!import.meta.env.DEV) return null
+  if (!import.meta.env.DEV || !new URLSearchParams(window.location.search).has('debug')) return null
   const { chapter, chapterProgress, globalProgress, direction } = useScrollStory()
   return <div className="scroll-debug" aria-hidden="true">
-    <b>{chapter.toUpperCase()}</b>
-    <span>chapter {chapterProgress.toFixed(2)}</span>
-    <span>global {globalProgress.toFixed(2)}</span>
-    <span>dir {direction > 0 ? '↓' : '↑'}</span>
+    <b>{chapter.toUpperCase()}</b><span>chapter {chapterProgress.toFixed(2)}</span><span>global {globalProgress.toFixed(2)}</span><span>dir {direction > 0 ? '↓' : '↑'}</span>
   </div>
 }

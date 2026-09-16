@@ -9,6 +9,7 @@ import { Starfield } from './Globe/Starfield'
 import { Lights } from './Lights/Lights'
 import { WorldObjects } from './WorldObjects'
 import { AIScrollParticleMorph } from './AIScrollParticleMorph'
+import { IBIOLScrollNetwork } from './IBIOLScrollNetwork'
 import type { CapabilityFocus } from '../data/capabilityConstellation'
 import type { IBIOLPhase } from '../data/ibiol'
 import type { CountryId } from '../data/countryProfiles'
@@ -58,6 +59,7 @@ export function ExperienceCanvas({
         scrollProgress={scrollProgress}
       />
       {isAI && <AIScrollParticleMorph progress={scrollProgress} visible />}
+      {scrollChapter === 'ibiol' && <IBIOLScrollNetwork progress={scrollProgress} visible />}
       <WorldObjects
         scene={scene}
         capabilityFocus={capabilityFocus}
