@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { StoryProvider, useStory } from './StoryContext'
 import { ScrollProvider, useScrollStory } from './ScrollContext'
 import { ScrollDirector } from './ScrollDirector'
@@ -29,9 +29,12 @@ const legacyScenes = [null, FootprintScene, PeopleScene, SuperpowersScene, AISki
 function Experience() {
   const { scene, capabilityFocus, setAIPhase, ibiolPhase, selectedCountry, selectCountry, clearCountry } = useStory()
   const { chapter, chapterProgress, globalProgress } = useScrollStory()
+  const previousChapterRef = useRef(chapter)
 
   useEffect(() => {
-    if (selectedCountry && (chapter === 'earth' || chapter === 'convergence')) clearCountry()
+    const previousChapter = previousChapterRef.current
+    if (selectedCountry && previousChapter === 'country' && (chapter === 'earth' || chapter === 'convergence')) clearCountry()
+    previousChapterRef.current = chapter
   }, [chapter, selectedCountry, clearCountry])
 
   const isScrollDriven = chapter === 'opening' || chapter === 'earth' || chapter === 'country'

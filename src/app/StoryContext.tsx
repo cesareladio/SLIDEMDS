@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { sceneDurations, story } from '../data/story'
 import { clamp } from '../utils/math'
 import type { CapabilityFocus } from '../data/capabilityConstellation'
@@ -52,12 +52,12 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   }
   const next = () => goTo(sceneRef.current === story.length - 1 ? 0 : sceneRef.current + 1)
   const previous = () => goTo(sceneRef.current - 1)
-  const selectCountry = (country: CountryId) => {
+  const selectCountry = useCallback((country: CountryId) => {
     setSelectedCountry(country)
     setCountrySection('overview')
     window.requestAnimationFrame(() => document.querySelector('[data-chapter="country"]')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
-  }
-  const clearCountry = () => { setSelectedCountry(null); setCountrySection('overview') }
+  }, [])
+  const clearCountry = useCallback(() => { setSelectedCountry(null); setCountrySection('overview') }, [])
 
   useEffect(() => {
     const started = performance.now()
@@ -97,7 +97,7 @@ export function StoryProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [selectedCountry])
 
-  const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, selectedCountry, countrySection, selectCountry, clearCountry, setCountrySection, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, selectedCountry, countrySection])
+  const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, selectedCountry, countrySection, selectCountry, clearCountry, setCountrySection, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, selectedCountry, countrySection, selectCountry, clearCountry])
   return <StoryContext.Provider value={value}>{children}</StoryContext.Provider>
 }
 

@@ -55,8 +55,8 @@ void main() {
   float NDotL   = dot(mappedNormal, sunDir);
   float dayMix  = smoothstep(-0.22, 0.26, NDotL);
 
-  vec3 dayColor   = pow(texture2D(dayMap, vUv).rgb, vec3(2.2));   // linearize sRGB
-  vec3 nightColor = pow(texture2D(nightMap, vUv).rgb, vec3(2.2));
+  vec3 dayColor   = texture2D(dayMap, vUv).rgb;
+  vec3 nightColor = texture2D(nightMap, vUv).rgb;
 
   // Specular — Blinn-Phong on ocean, suppressed on land
   float oceanMask  = texture2D(specularMap, vUv).r;
@@ -64,8 +64,7 @@ void main() {
   float spec       = pow(max(dot(mappedNormal, halfVec), 0.0), 80.0) * oceanMask * dayMix * 0.55;
 
   // City lights fade near terminator
-  float nightFade  = smoothstep(-0.05, -0.30, NDotL);
-  float cityBright = nightColor.r * 0.6 + nightColor.g * 0.3 + nightColor.b * 0.1;
+  float nightFade  = 1.0 - smoothstep(-0.30, -0.05, NDotL);
   vec3  cityLights = nightColor * nightIntensity * nightFade;
 
   // Blend

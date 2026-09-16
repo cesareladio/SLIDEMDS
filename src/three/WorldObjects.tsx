@@ -77,6 +77,8 @@ export function WorldObjects({
     </>
   }
 
+  if (scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scrollChapter === 'convergence') return null
+
   return <>
     {scene === 3 && <CapabilityConstellation focus={capabilityFocus} />}
     <AIParticleMorph visible={scene === 4} onPhase={onAIPhase} />

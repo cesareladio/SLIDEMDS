@@ -16,6 +16,6 @@ export function EarthSurface({ textures, radius = 2.45, opacity = 1 }: { texture
 
   return <mesh>
     <sphereGeometry args={[radius, 128, 128]} />
-    <shaderMaterial uniforms={uniforms} vertexShader={earthVertexShader} fragmentShader={earthFragmentShader} lights={false} transparent />
+    <shaderMaterial uniforms={uniforms} vertexShader={earthVertexShader} fragmentShader={earthFragmentShader} lights={false} transparent depthWrite={opacity > .98} />
   </mesh>
 }
