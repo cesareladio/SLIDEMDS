@@ -54,6 +54,11 @@ export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollCh
 
   const p = Number.isFinite(scrollProgress) ? Math.min(1, Math.max(0, scrollProgress)) : 0
   const isCountry = scrollChapter === 'country' && selectedCountry !== null
+  const countryQuaternion = selectedCountry === 'peru' ? peruQ : chileQ
+  const exitProgress = rangeProgress(p, .88, 1)
+  const exitEase = exitProgress * exitProgress * (3 - 2 * exitProgress)
+  const scrollQuaternion = countryQuaternion.clone().slerp(peruChileQ, exitEase)
+  const earthHidden = fadeWindow(p, .14, .40, .88, .98)
   let position = footprintComposition.position
   let scale = footprintComposition.scale
   let quaternion = peruChileQ
@@ -64,7 +69,7 @@ export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollCh
     const exit = rangeProgress(p, .90, 1)
     position = [lerpNumber(composition.position[0], .5, exit), lerpNumber(composition.position[1], -.85, exit), 0]
     scale = lerpNumber(composition.scale + .08, .94, Math.max(rangeProgress(p, .14, .52), exit))
-    quaternion = exit > 0 ? peruChileQ : selectedCountry === 'peru' ? peruQ : chileQ
+    quaternion = scrollQuaternion
     outlineOpacity = .18 + rangeProgress(p, 0, .14) * .34 + exit * .24
   } else if (scrollChapter === 'opening') {
     const sample = sampleEarthChoreographyProgress(p)
@@ -84,7 +89,7 @@ export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollCh
   }
 
   const hotspotOpacity = scrollChapter === 'earth' ? 1 : rangeProgress(p, .72, 1)
-  const earthOpacity = isCountry ? Math.max(0, 1 - rangeProgress(p, .14, .48) - rangeProgress(p, .72, .92) * .5) : 1
+  const earthOpacity = isCountry ? 1 - earthHidden : 1
   const highlightIntensity = isCountry ? fadeWindow(p, 0, .05, .18, .52) + fadeWindow(p, .90, .95, 1, 1.02) : 0
   const globeVisible = scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scene === 1 || scene === 7 || selectedCountry !== null
   const showHotspots = (scrollChapter === 'earth' || hotspotOpacity > .01) && !selectedCountry

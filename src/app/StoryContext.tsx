@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { sceneDurations, story } from '../data/story'
+import { story } from '../data/story'
 import { clamp } from '../utils/math'
 import type { CapabilityFocus } from '../data/capabilityConstellation'
 import type { IBIOLPhase } from '../data/ibiol'
@@ -72,12 +72,6 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   }, [scene])
 
   useEffect(() => {
-    if (!autoplay || selectedCountry) return
-    const timeout = window.setTimeout(next, sceneDurations[scene] * 1000)
-    return () => window.clearTimeout(timeout)
-  }, [autoplay, scene, selectedCountry])
-
-  useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase()
       if (selectedCountry && key === 'escape') {
@@ -88,7 +82,6 @@ export function StoryProvider({ children }: { children: ReactNode }) {
       if (key === ' ' && event.shiftKey) { event.preventDefault(); window.scrollBy({ top: -window.innerHeight * .72, behavior: 'smooth' }); return }
       if (key === 'arrowright' || key === 'arrowdown' || key === ' ') { event.preventDefault(); window.scrollBy({ top: window.innerHeight * .72, behavior: 'smooth' }) }
       if (key === 'arrowleft' || key === 'arrowup') { event.preventDefault(); window.scrollBy({ top: -window.innerHeight * .72, behavior: 'smooth' }) }
-      if (key === 'a') setAutoplay(value => !value)
       if (key === 'p') setPresenter(value => !value)
       if (key === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()
       if (key === 'escape') setPresenter(false)
@@ -97,7 +90,7 @@ export function StoryProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [selectedCountry])
 
-  const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, selectedCountry, countrySection, selectCountry, clearCountry, setCountrySection, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, selectedCountry, countrySection, selectCountry, clearCountry])
+  const value = useMemo(() => ({ scene, direction, autoplay: false, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, selectedCountry, countrySection, selectCountry, clearCountry, setCountrySection, goTo, next, previous, toggleAutoplay: () => undefined, togglePresenter: () => setPresenter(v => !v) }), [scene, direction, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, selectedCountry, countrySection, selectCountry, clearCountry])
   return <StoryContext.Provider value={value}>{children}</StoryContext.Provider>
 }
 

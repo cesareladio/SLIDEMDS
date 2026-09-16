@@ -24,6 +24,8 @@ const countryFocusTargets: Record<CountryId, { camera: [number, number, number];
 const earthHubCamera: [number, number, number] = [0, -.1, 7.0]
 const earthHubLookAt: [number, number, number] = [.5, -.85, 0]
 const finiteVector = (vector: readonly number[]) => vector.length === 3 && vector.every(Number.isFinite) ? vector as [number, number, number] : [0, 0, 8.5] as [number, number, number]
+const lerpTuple = (from: readonly number[], to: readonly number[], amount: number): [number, number, number] => [from[0] + (to[0] - from[0]) * amount, from[1] + (to[1] - from[1]) * amount, from[2] + (to[2] - from[2]) * amount]
+const smoothstep = (value: number) => { const t = Math.min(1, Math.max(0, value)); return t * t * (3 - 2 * t) }
 
 export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 'today', selectedCountry = null, scrollChapter = 'opening', scrollProgress = 0 }: { scene: number; capabilityFocus?: CapabilityFocus; ibiolPhase?: IBIOLPhase; selectedCountry?: CountryId | null; scrollChapter?: ScrollChapter; scrollProgress?: number }) {
   const { camera } = useThree()
@@ -41,14 +43,18 @@ export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 't
   useFrame(state => {
     if (scrollChapter === 'country' && selectedCountry) {
       const journeyProgress = journeyLocalProgress(selectedCountry, scrollProgress)
-      if (journeyProgress > .01) {
-        const { position, target } = sampleJourneyCameraProgress(journeyProgress)
-        camera.position.set(...position)
-        camera.lookAt(...target)
+      const countryTarget = countryFocusTargets[selectedCountry]
+      const transitionEnd = .12
+      if (journeyProgress <= transitionEnd) {
+        const local = smoothstep(journeyProgress / transitionEnd)
+        const journeyStart = sampleJourneyCameraProgress(0)
+        camera.position.set(...lerpTuple(countryTarget.camera, journeyStart.position, local))
+        camera.lookAt(...lerpTuple(countryTarget.lookAt, journeyStart.target, local))
       } else {
-        const { camera: position, lookAt: target } = countryFocusTargets[selectedCountry]
-        camera.position.set(...position)
-        camera.lookAt(...target)
+        const normalized = (journeyProgress - transitionEnd) / (1 - transitionEnd)
+        const journey = sampleJourneyCameraProgress(normalized)
+        camera.position.set(...journey.position)
+        camera.lookAt(...journey.target)
       }
       return
     }
