@@ -32,5 +32,10 @@ function CapabilityConstellation({ focus }: { focus: CapabilityFocus }) {
 }
 
 export function WorldObjects({ scene, capabilityFocus = 'overview', onAIPhase, ibiolPhase = 'today' }: { scene: number; capabilityFocus?: CapabilityFocus; onAIPhase?: (phase: 'certifications' | 'gh300' | 'concepts') => void; ibiolPhase?: IBIOLPhase }) {
-  return <><CapabilityConstellation focus={scene === 3 ? capabilityFocus : 'overview'} /><AIParticleMorph visible={scene === 4} onPhase={onAIPhase} /><JourneyFlight visible={scene === 5} /><IBIOLNetwork visible={scene === 6} phase={ibiolPhase} /></>
+  return <>
+    {scene === 3 && <CapabilityConstellation focus={capabilityFocus} />}
+    <AIParticleMorph visible={scene === 4} onPhase={onAIPhase} />
+    <JourneyFlight visible={scene === 5} />
+    <IBIOLNetwork visible={scene === 6} phase={ibiolPhase} />
+  </>
 }

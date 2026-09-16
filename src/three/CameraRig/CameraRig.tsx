@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import type { CapabilityFocus } from '../../data/capabilityConstellation'
 import type { IBIOLPhase } from '../../data/ibiol'
 import { journeyCameraPath, journeyWaypoints } from '../../data/journeyPath'
-import { earthJourneyDuration, sampleEarthJourney } from '../../data/earthJourney'
+import { earthChoreographyDuration, sampleOpeningCamera } from '../../data/earthJourney'
 
 const scenePositions: [number, number, number][] = [
   [0, .15, 8.5], [1.05, .1, 6.3], [.3, .2, 7.4], [0, 0, 7.1], [0, 0, 9.5], [-1.6, .1, 7.5], [0, -.2, 8.6], [0, .1, 8.2],
@@ -34,7 +34,7 @@ export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 't
     if (scene === 0) {
       if (openingStartedAt.current === null) openingStartedAt.current = state.clock.elapsedTime
       const elapsed = state.clock.elapsedTime - openingStartedAt.current
-      const { position, target } = sampleEarthJourney(Math.min(elapsed, earthJourneyDuration))
+      const { position, target } = sampleOpeningCamera(Math.min(elapsed, earthChoreographyDuration))
       camera.position.set(...position)
       camera.lookAt(...target)
       return

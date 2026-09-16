@@ -3,7 +3,7 @@ import * as THREE from 'three'
 
 function finite(value: number) { return Number.isFinite(value) ? value : 0 }
 
-export function Starfield({ count = 700, radius = 42 }: { count?: number; radius?: number }) {
+export function Starfield({ count = 700, radius = 42, visible = true }: { count?: number; radius?: number; visible?: boolean }) {
   const positions = useMemo(() => {
     let seed = 4271
     const random = () => ((seed = seed * 16807 % 2147483647) - 1) / 2147483646
@@ -19,6 +19,7 @@ export function Starfield({ count = 700, radius = 42 }: { count?: number; radius
     return output
   }, [count, radius])
 
+  if (!visible) return null
   return <points>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
     <pointsMaterial size={.028} color="#cfe9ff" transparent opacity={.4} depthWrite={false} sizeAttenuation />

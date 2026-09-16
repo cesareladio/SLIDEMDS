@@ -10,7 +10,7 @@ export function EnergyArc({ from, to, visible = true }: { from: THREE.Vector3; t
   }, [from, to])
   if (!visible) return null
   return <group>
-    <Line points={points} color="#00d4ff" transparent opacity={.18} lineWidth={5} />
-    <Line points={points} color="#8cecff" transparent opacity={.9} lineWidth={1.2} dashed dashScale={1.8} dashSize={.12} gapSize={.18} />
+    <Line points={points} color="#00d4ff" transparent opacity={.08} lineWidth={3} />
+    <Line points={points} color="#8cecff" transparent opacity={.55} lineWidth={.8} dashed dashScale={1.4} dashSize={.1} gapSize={.22} />
   </group>
 }
