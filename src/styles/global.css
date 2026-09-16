@@ -24,8 +24,11 @@ button { color: inherit; font: inherit; }
 .eyebrow { margin: 0 0 18px; color: var(--cyan); font: 500 10px var(--mono); letter-spacing: .28em; }
 .scene h1 { margin: 0; font-size: clamp(36px, 4.5vw, 74px); line-height: .94; letter-spacing: -.055em; font-weight: 300; }
 .scene h1 em { color: var(--cyan); font-style: normal; }
-.opening-scene { align-items: flex-start; }
+.opening-scene { position: fixed; inset: 0; display: flex; align-items: flex-start; padding: 14vh 7vw; pointer-events: none; z-index: 2; }
 .opening-copy { width: min(580px, 44vw); margin-top: 5vh; }
+.earth-hub-scene { position: fixed; inset: 0; display: flex; align-items: flex-start; padding: 14vh 7vw; pointer-events: none; z-index: 2; }
+.earth-hub-copy { width: min(500px, 40vw); margin-top: 5vh; }
+.earth-hub-hint { margin: 20px 0 0; color: var(--cyan); font: 500 10px var(--mono); letter-spacing: .28em; }
 .opening-beat { }
 .opening-beat-h1 { margin: 0; font-size: clamp(46px, 6.2vw, 106px); line-height: .9; letter-spacing: -.06em; font-weight: 260; }
 .opening-beat-h1 em { color: var(--cyan); font-style: normal; }

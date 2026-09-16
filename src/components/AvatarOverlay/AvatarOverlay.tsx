@@ -3,7 +3,7 @@ import { avatarMoments, type AvatarMoment } from '../../data/avatar'
 import { AvatarDialogue } from './AvatarDialogue'
 import { AvatarVisual } from './AvatarVisual'
 
-const OPENING_DELAY_MS = 7500
+const OPENING_DELAY_MS = 0 // Opening is now scroll-driven; timer disabled
 
 export function AvatarOverlay({ moment }: { moment?: AvatarMoment }) {
   const lines = useMemo(() => moment ? avatarMoments[moment] : [], [moment])

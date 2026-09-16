@@ -7,7 +7,7 @@ export function Clouds({ textures, radius = 2.45 }: { textures: EarthTextureSet 
   const mesh = useRef<THREE.Mesh>(null)
   useFrame((_, delta) => {
     if (!mesh.current) return
-    mesh.current.rotation.y += delta * 0.0035
+    mesh.current.rotation.y += delta * 0.0018
   })
   if (!textures) return null
   return <mesh ref={mesh} scale={1.012}>
