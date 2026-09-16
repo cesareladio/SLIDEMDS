@@ -54,6 +54,7 @@ export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollCh
 
   const p = Number.isFinite(scrollProgress) ? Math.min(1, Math.max(0, scrollProgress)) : 0
   const isCountry = scrollChapter === 'country' && selectedCountry !== null
+  const isConvergence = scrollChapter === 'convergence'
   const countryQuaternion = selectedCountry === 'peru' ? peruQ : chileQ
   const exitProgress = rangeProgress(p, .88, 1)
   const exitEase = exitProgress * exitProgress * (3 - 2 * exitProgress)
@@ -77,6 +78,12 @@ export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollCh
     scale = sample.scale
     quaternion = sample.phase === 'hero' || sample.phase === 'shift' ? southAmericaQ : peruChileQ
     outlineOpacity = sample.phase === 'hero' ? 0 : sample.phase === 'shift' ? .22 : .38
+  } else if (isConvergence) {
+    const convergenceP = p
+    position = [lerpNumber(.5, 0, convergenceP), lerpNumber(-.85, -.05, convergenceP), 0]
+    scale = lerpNumber(.94, .9, convergenceP)
+    quaternion = peruChileQ
+    outlineOpacity = .35
   } else if (scrollChapter === 'earth') {
     position = earthHubComposition.position
     scale = earthHubComposition.scale
@@ -89,6 +96,8 @@ export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollCh
   }
 
   const hotspotOpacity = scrollChapter === 'earth' ? 1 : rangeProgress(p, .72, 1)
+  const convergenceP = isConvergence ? p : 0
+  const convergenceCountryIntensity = fadeWindow(convergenceP, .12, .24, .72, .9)
   const earthOpacity = isCountry ? 1 - earthHidden : 1
   const highlightIntensity = isCountry ? fadeWindow(p, 0, .05, .18, .52) + fadeWindow(p, .90, .95, 1, 1.02) : 0
   const globeVisible = scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scene === 1 || scene === 7 || selectedCountry !== null
@@ -103,6 +112,11 @@ export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollCh
       <Atmosphere opacity={earthOpacity} />
       <Line points={outline} color="#8fe6ff" lineWidth={1} transparent opacity={outlineOpacity * earthOpacity} />
       {selectedCountry && <CountrySurfaceHighlight country={selectedCountry} visible intensity={highlightIntensity} />}
+      {isConvergence && <>
+        <CountrySurfaceHighlight country="peru" visible intensity={convergenceCountryIntensity} />
+        <CountrySurfaceHighlight country="chile" visible intensity={convergenceCountryIntensity} />
+        <EnergyArc from={chilePoint} to={peruPoint} visible={convergenceCountryIntensity > .01} />
+      </>}
       {showHotspots && <>
         <InteractiveHotspot point={peruPoint} label="PERÚ" color="#00e6ff" onSelect={() => onSelectCountry?.('peru')} opacity={hotspotOpacity} />
         <InteractiveHotspot point={chilePoint} label="CHILE" color="#4aa8ff" onSelect={() => onSelectCountry?.('chile')} opacity={hotspotOpacity} />

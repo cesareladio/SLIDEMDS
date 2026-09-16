@@ -14,6 +14,8 @@ import { Brand } from '../components/Brand'
 import { AvatarOverlay } from '../components/AvatarOverlay/AvatarOverlay'
 import { OpeningScene } from '../scenes/OpeningScene'
 import { EarthHubScene } from '../scenes/EarthHubScene'
+import { ConvergenceScene } from '../scenes/ConvergenceScene'
+import { AIScrollScene } from '../scenes/AIScrollScene'
 import { FootprintScene } from '../scenes/FootprintScene'
 import { PeopleScene } from '../scenes/PeopleScene'
 import { SuperpowersScene } from '../scenes/SuperpowersScene'
@@ -37,7 +39,7 @@ function Experience() {
     previousChapterRef.current = chapter
   }, [chapter, selectedCountry, clearCountry])
 
-  const isScrollDriven = chapter === 'opening' || chapter === 'earth' || chapter === 'country'
+  const isScrollDriven = chapter === 'opening' || chapter === 'earth' || chapter === 'country' || chapter === 'convergence' || chapter === 'ai'
   const LegacyScene = !isScrollDriven && !selectedCountry ? legacyScenes[scene] : null
 
   return <main className={`app scene-index-${scene}`}>
@@ -62,6 +64,8 @@ function Experience() {
     {/* Scroll-driven scenes */}
     <OpeningScene />
     <EarthHubScene />
+    <ConvergenceScene />
+    <AIScrollScene />
 
     {/* Country overlay — independent of scroll */}
     {selectedCountry && <CountryExperience key={`country-${selectedCountry}`} />}

@@ -77,7 +77,7 @@ export function WorldObjects({
     </>
   }
 
-  if (scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scrollChapter === 'convergence') return null
+  if (scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scrollChapter === 'convergence' || scrollChapter === 'ai') return null
 
   return <>
     {scene === 3 && <CapabilityConstellation focus={capabilityFocus} />}

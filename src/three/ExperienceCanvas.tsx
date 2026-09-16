@@ -8,6 +8,7 @@ import { Globe } from './Globe/Globe'
 import { Starfield } from './Globe/Starfield'
 import { Lights } from './Lights/Lights'
 import { WorldObjects } from './WorldObjects'
+import { AIScrollParticleMorph } from './AIScrollParticleMorph'
 import type { CapabilityFocus } from '../data/capabilityConstellation'
 import type { IBIOLPhase } from '../data/ibiol'
 import type { CountryId } from '../data/countryProfiles'
@@ -32,8 +33,10 @@ export function ExperienceCanvas({
 }: ExperienceCanvasProps) {
   const isOpeningOrEarth = scrollChapter === 'opening' || scrollChapter === 'earth'
   const isCountry = scrollChapter === 'country'
-  const showSpaceBackdrop = isOpeningOrEarth || isCountry || scene === 1 || scene === 7
-  const ambientActive = !isOpeningOrEarth && !isCountry && scene === 4
+  const isConvergence = scrollChapter === 'convergence'
+  const isAI = scrollChapter === 'ai'
+  const showSpaceBackdrop = isOpeningOrEarth || isCountry || isConvergence || isAI || scene === 1 || scene === 7
+  const ambientActive = !isOpeningOrEarth && !isCountry && !isConvergence && !isAI && scene === 4
 
   return <Canvas
     className="experience-canvas"
@@ -54,6 +57,7 @@ export function ExperienceCanvas({
         scrollChapter={scrollChapter}
         scrollProgress={scrollProgress}
       />
+      {isAI && <AIScrollParticleMorph progress={scrollProgress} visible />}
       <WorldObjects
         scene={scene}
         capabilityFocus={capabilityFocus}

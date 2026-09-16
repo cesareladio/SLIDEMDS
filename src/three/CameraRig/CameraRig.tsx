@@ -10,6 +10,7 @@ import { journeyCameraPath, journeyWaypoints } from '../../data/journeyPath'
 import { sampleOpeningCameraProgress } from '../../data/earthJourney'
 import { journeyLocalProgress } from '../../data/countryScroll'
 import { sampleJourneyCameraProgress } from '../JourneyScrollFlight'
+import { lerpNumber } from '../../utils/scrollMotion'
 
 const scenePositions: [number, number, number][] = [[0, .15, 8.5], [1.05, .1, 6.3], [.3, .2, 7.4], [0, 0, 7.1], [0, 0, 9.5], [-1.6, .1, 7.5], [0, -.2, 8.6], [0, .1, 8.2]]
 const focusTargets: Record<Exclude<CapabilityFocus, 'overview'>, { camera: [number, number, number]; lookAt: [number, number, number] }> = {
@@ -32,7 +33,7 @@ export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 't
   const journeyStartedAt = useRef<number | null>(null)
 
   useEffect(() => {
-    if (selectedCountry || scene === 5 || scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country') { journeyStartedAt.current = null; return }
+    if (selectedCountry || scene === 5 || scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scrollChapter === 'convergence' || scrollChapter === 'ai') { journeyStartedAt.current = null; return }
     const target = scene === 6 ? ibiolTargets[ibiolPhase] : capabilityFocus === 'overview' || scene !== 3 ? { camera: scenePositions[scene] ?? scenePositions[0], lookAt: [0, 0, 0] as [number, number, number] } : focusTargets[capabilityFocus]
     const cameraTarget = finiteVector(target.camera)
     const lookAtTarget = finiteVector(target.lookAt)
@@ -68,6 +69,18 @@ export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 't
     if (scrollChapter === 'earth') {
       camera.position.set(...earthHubCamera)
       camera.lookAt(...earthHubLookAt)
+      return
+    }
+    if (scrollChapter === 'convergence') {
+      const p = Math.min(1, Math.max(0, scrollProgress))
+      camera.position.set(lerpNumber(0, 0, p), lerpNumber(-.1, .05, p), lerpNumber(7, 7.4, p))
+      camera.lookAt(lerpNumber(.5, 0, p), lerpNumber(-.85, 0, p), 0)
+      return
+    }
+    if (scrollChapter === 'ai') {
+      const p = Math.min(1, Math.max(0, scrollProgress))
+      camera.position.set(0, 0, lerpNumber(7.4, 7.9, p))
+      camera.lookAt(0, 0, 0)
       return
     }
     if (scene !== 5) return
