@@ -16,13 +16,11 @@ export function CountryOverview({ profile, progress }: { profile: CountryProfile
   // "overview" segment — it must never bleed into "talent".
   const overviewCopyOpacity = segmentFadeOpacity(data.id, 'overview', progress, .035)
 
-  // The map is rendered as a SIBLING (not a child) of the copy section so
-  // its own opacity is independent — it can linger faintly as a background
-  // continuity cue during talent without being multiplied by the copy fade.
+  // Map is visible only during overview and faintly during talent.
+  // exit is handled by Earth/Globe — CountryMap must be 0 in that range.
   const mapOpacity = Math.max(
     segmentFadeOpacity(data.id, 'overview', progress, .035),
     segmentFadeOpacity(data.id, 'talent', progress, .04) * .24,
-    segmentFadeOpacity(data.id, 'exit', progress, .02),
   )
 
   return <>

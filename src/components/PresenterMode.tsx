@@ -19,9 +19,9 @@ export function PresenterMode() {
   const { presenter, elapsed } = useStory()
   const { chapter, chapterProgress } = useScrollStory()
   if (!presenter) return null
-  const activeCountry = countryFromChapter(chapter)
   const item = meta[chapter] ?? meta.opening
-  const title = activeCountry ? `${activeCountry.toUpperCase()} · ${item.title}` : item.title
+  // peru/chile titles already include the country name — no double-prefix.
+  const title = item.title
   const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0')
   const seconds = String(Math.floor(elapsed % 60)).padStart(2, '0')
   return <motion.aside className="presenter" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>

@@ -119,13 +119,26 @@ export function Globe({ scrollChapter = 'opening', scrollProgress = 0 }: { scrol
 
   // ----- Derived visual state ----- //
   const convergenceIntensity = isConvergence ? fadeWindow(p, .12, .24, .72, .9) : 0
-  const earthOpacity = isPeru
-    ? (p < .92 ? fadeWindow(p, 0, .12, .80, .92) : 0)
-    : isChile
-      ? (p < .88 ? (p < .16 ? p / .16 : 1) : 1 - rangeProgress(p, .88, 1))
-      : scrollChapter === 'ai' ? 1 - rangeProgress(p, 0, .14)
-      : isClosing ? (p < .65 ? 0 : p < .84 ? 1 : 1 - rangeProgress(p, .84, .92))
-      : 1
+
+  // Peru: visible 0→.22 (geo focus) and 0.90→1.00 (bridge pullback). Invisible during story.
+  const peruEarthOpacity = isPeru
+    ? (p <= .22 ? (p <= .14 ? 1 : 1 - rangeProgress(p, .14, .22))
+       : p >= .90 ? rangeProgress(p, .90, .94)
+       : 0)
+    : 0
+
+  // Chile: visible 0→.24 (geo entry) and 0.84→1.00 (exit to convergence). Invisible during story.
+  const chileEarthOpacity = isChile
+    ? (p <= .24 ? (p <= .16 ? 1 : 1 - rangeProgress(p, .16, .24))
+       : p >= .84 ? rangeProgress(p, .84, .88)
+       : 0)
+    : 0
+
+  const earthOpacity = isPeru ? peruEarthOpacity
+    : isChile ? chileEarthOpacity
+    : scrollChapter === 'ai' ? 1 - rangeProgress(p, 0, .14)
+    : isClosing ? (p < .65 ? 0 : p < .84 ? 1 : 1 - rangeProgress(p, .84, .92))
+    : 1
 
   const peruHighlight = isPeru
     ? Math.max(segmentFadeOpacity('peru', 'geo-focus', p, .04), segmentFadeOpacity('peru', 'exit', p, .02))
