@@ -34,12 +34,12 @@ export function ExperienceCanvas({ selectedCountry = null, onSelectCountry, scro
       <fog attach="fog" args={['#040816', 8, 18]} />
       <Lights />
       <Starfield visible={showSpaceBackdrop} />
-      <Globe selectedCountry={selectedCountry} onSelectCountry={onSelectCountry} scrollChapter={scrollChapter} scrollProgress={scrollProgress} scene={0} />
+      <Globe selectedCountry={selectedCountry} onSelectCountry={onSelectCountry} scrollChapter={scrollChapter} scrollProgress={scrollProgress} />
       {isAI && <AIScrollParticleMorph progress={scrollProgress} visible />}
       {isIBIOL && <AIScrollParticleMorph progress={1} opacity={Math.max(0, 1 - Math.min(1, scrollProgress / .12))} visible />}
       {isIBIOL && <IBIOLScrollNetwork progress={scrollProgress} opacity={Math.min(1, scrollProgress / .12)} visible />}
       <WorldObjects selectedCountry={selectedCountry} countryScrollProgress={scrollProgress} scrollChapter={scrollChapter} />
-      <CameraRig selectedCountry={selectedCountry} scrollChapter={scrollChapter} scrollProgress={scrollProgress} scene={0} />
+      <CameraRig selectedCountry={selectedCountry} scrollChapter={scrollChapter} scrollProgress={scrollProgress} />
       <SceneEffects scrollChapter={scrollChapter} />
     </Suspense>
   </Canvas>

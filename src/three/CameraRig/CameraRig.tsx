@@ -17,7 +17,7 @@ const convergenceStartLookAt: [number, number, number] = [.5, -.85, 0]
 const smoothstep = (value: number) => { const t = Math.min(1, Math.max(0, value)); return t * t * (3 - 2 * t) }
 const lerpTuple = (from: readonly number[], to: readonly number[], amount: number): [number, number, number] => [from[0] + (to[0] - from[0]) * amount, from[1] + (to[1] - from[1]) * amount, from[2] + (to[2] - from[2]) * amount]
 
-export function CameraRig({ selectedCountry = null, scrollChapter = 'opening', scrollProgress = 0 }: { scene: number; capabilityFocus?: unknown; ibiolPhase?: unknown; selectedCountry?: CountryId | null; scrollChapter?: ScrollChapter; scrollProgress?: number }) {
+export function CameraRig({ selectedCountry = null, scrollChapter = 'opening', scrollProgress = 0 }: { selectedCountry?: CountryId | null; scrollChapter?: ScrollChapter; scrollProgress?: number }) {
   const { camera } = useThree()
 
   useFrame(() => {

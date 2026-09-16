@@ -1,27 +1,29 @@
 import { countryPolygon } from '../../data/countryGeo'
 import type { CountryId } from '../../data/countryProfiles'
 
-function project(country: CountryId, lat: number, lon: number) {
-  const bounds = country === 'peru'
-    ? { minLat: -18.5, maxLat: 0, minLon: -81.5, maxLon: -68.4 }
-    : { minLat: -56.2, maxLat: -17.2, minLon: -76, maxLon: -66.8 }
-  const x = ((lon - bounds.minLon) / (bounds.maxLon - bounds.minLon)) * 100
-  const y = ((bounds.maxLat - lat) / (bounds.maxLat - bounds.minLat)) * 100
-  return { x: Math.min(100, Math.max(0, x)), y: Math.min(100, Math.max(0, y)) }
+function pathAndBounds(country: CountryId) {
+  const polygon = countryPolygon(country)
+  const centerLat = polygon.reduce((sum, [, lat]) => sum + lat, 0) / polygon.length
+  const cosLat = Math.cos(centerLat * Math.PI / 180)
+  const projected = polygon.map(([lon, lat]) => ({ x: lon * cosLat, y: -lat }))
+  const minX = Math.min(...projected.map(point => point.x))
+  const maxX = Math.max(...projected.map(point => point.x))
+  const minY = Math.min(...projected.map(point => point.y))
+  const maxY = Math.max(...projected.map(point => point.y))
+  const width = maxX - minX || 1
+  const height = maxY - minY || 1
+  const scale = Math.min(84 / width, 84 / height)
+  const offsetX = 50 - (minX + width / 2) * scale
+  const offsetY = 50 - (minY + height / 2) * scale
+  const d = projected.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x * scale + offsetX} ${point.y * scale + offsetY}`).join(' ') + ' Z'
+  return d
 }
 
-function polygonPath(country: CountryId) {
-  return countryPolygon(country).map(([lon, lat], index) => {
-    const { x, y } = project(country, lat, lon)
-    return `${index === 0 ? 'M' : 'L'} ${x} ${y}`
-  }).join(' ') + ' Z'
-}
-
-export function ClosingCountrySilhouette({ country, opacity, label, subtitle }: { country: CountryId; opacity: number; label: string; subtitle: string }) {
-  return <div className={`closing-silhouette closing-silhouette-${country}`} style={{ opacity }}>
+export function ClosingCountrySilhouette({ country, opacity, label, subtitle, pair = false }: { country: CountryId; opacity: number; label: string; subtitle: string; pair?: boolean }) {
+  return <div className={`closing-silhouette closing-silhouette-${country}${pair ? ' closing-silhouette-pair' : ''}`} style={{ opacity }}>
     <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-label={label}>
-      <path d={polygonPath(country)} className="closing-map-surface" />
-      <path d={polygonPath(country)} className="closing-map-outline" />
+      <path d={pathAndBounds(country)} className="closing-map-surface" />
+      <path d={pathAndBounds(country)} className="closing-map-outline" />
     </svg>
     <div className="closing-country-copy"><strong>{label}</strong><span>{subtitle}</span></div>
   </div>

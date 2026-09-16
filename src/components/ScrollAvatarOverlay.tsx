@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useScrollStory } from '../app/ScrollContext'
-import { AvatarVisual } from './AvatarOverlay/AvatarVisual'
+import { ScrollAvatarVisual } from './ScrollAvatarVisual'
 import { avatarMoments } from '../data/avatar'
 import { fadeWindow } from '../utils/scrollMotion'
 
@@ -43,7 +43,7 @@ export function ScrollAvatarOverlay() {
 
   if (!line) return null
   return <aside className={`avatar-overlay avatar-tone-${line.tone} scroll-avatar`} style={{ opacity: line.opacity }} aria-live="polite" aria-label="Diálogo de B2">
-    <AvatarVisual active={false} />
+    <ScrollAvatarVisual opacity={line.opacity} />
     <div className="avatar-dialogue"><span>{line.speaker}</span><p>{line.text}</p></div>
   </aside>
 }
