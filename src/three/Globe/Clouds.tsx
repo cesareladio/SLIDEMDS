@@ -7,11 +7,19 @@ export function Clouds({ textures, radius = 2.45 }: { textures: EarthTextureSet 
   const mesh = useRef<THREE.Mesh>(null)
   useFrame((_, delta) => {
     if (!mesh.current) return
-    mesh.current.rotation.y += delta * 0.0018
+    mesh.current.rotation.y += delta * 0.0008   // barely perceptible over 10 seconds
   })
   if (!textures) return null
-  return <mesh ref={mesh} scale={1.012}>
-    <sphereGeometry args={[radius, 72, 72]} />
-    <meshStandardMaterial map={textures.clouds} transparent opacity={.42} depthWrite={false} roughness={1} />
+  return <mesh ref={mesh} scale={1.008} renderOrder={1}>
+    <sphereGeometry args={[radius, 96, 96]} />
+    <meshStandardMaterial
+      map={textures.clouds}
+      alphaMap={textures.clouds}
+      transparent
+      opacity={0.55}
+      depthWrite={false}
+      roughness={1}
+      metalness={0}
+    />
   </mesh>
 }

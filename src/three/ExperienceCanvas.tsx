@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
+import * as THREE from 'three'
 import { AmbientParticles } from './Particles/AmbientParticles'
 import { CameraRig } from './CameraRig/CameraRig'
 import { SceneEffects } from './Effects/SceneEffects'
@@ -32,7 +33,7 @@ export function ExperienceCanvas({
   const isOpeningOrEarth = scrollChapter === 'opening' || scrollChapter === 'earth'
   const showSpaceBackdrop = isOpeningOrEarth || scene === 1 || scene === 7
   const ambientActive = !isOpeningOrEarth && scene === 4
-  return <Canvas className="experience-canvas" dpr={[1, 1.6]} camera={{ position: [0, .15, 8.5], fov: 42 }} gl={{ antialias: true, powerPreference: 'high-performance', alpha: true }}>
+  return <Canvas className="experience-canvas" dpr={[1, 1.6]} camera={{ position: [0, .15, 8.5], fov: 42 }} gl={{ antialias: true, powerPreference: 'high-performance', alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0 }}>
     <Suspense fallback={null}>
       <color attach="background" args={['#040816']} />
       <fog attach="fog" args={['#040816', 8, 18]} />
@@ -55,7 +56,7 @@ export function ExperienceCanvas({
         scrollChapter={scrollChapter}
         scrollProgress={scrollProgress}
       />
-      <SceneEffects />
+      <SceneEffects scrollChapter={scrollChapter} />
     </Suspense>
   </Canvas>
 }

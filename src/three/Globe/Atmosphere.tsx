@@ -4,10 +4,10 @@ import { atmosphereFragmentShader, atmosphereVertexShader } from './earthShaders
 
 export function Atmosphere({ radius = 2.45 }: { radius?: number }) {
   const uniforms = useMemo(() => ({
-    glowColor: { value: new THREE.Color('#5fd3ff') },
-    intensity: { value: .85 },
+    glowColor: { value: new THREE.Color('#3db8e8') },
+    intensity:  { value: 0.52 },
   }), [])
-  return <mesh scale={1.045}>
+  return <mesh scale={1.028} renderOrder={2}>
     <sphereGeometry args={[radius, 64, 64]} />
     <shaderMaterial
       uniforms={uniforms}

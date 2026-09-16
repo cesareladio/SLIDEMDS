@@ -10,11 +10,11 @@ export interface EarthTextureSet {
 }
 
 const texturePaths = {
-  day: '/textures/earth/earth_day.jpg',
-  night: '/textures/earth/earth_night.png',
-  normal: '/textures/earth/earth_normal.jpg',
-  specular: '/textures/earth/earth_specular.jpg',
-  clouds: '/textures/earth/earth_clouds.png',
+  day:     '/textures/earth/earth_day_4k.jpg',
+  night:   '/textures/earth/earth_night_4k.jpg',
+  normal:  '/textures/earth/earth_normal.jpg',
+  specular:'/textures/earth/earth_specular.jpg',
+  clouds:  '/textures/earth/earth_clouds_4k.jpg',
 }
 
 export function useEarthTextures() {
@@ -34,8 +34,13 @@ export function useEarthTextures() {
         texturePaths[key],
         texture => {
           if (cancelled) return
-          texture.colorSpace = key === 'day' || key === 'night' || key === 'clouds' ? THREE.SRGBColorSpace : THREE.NoColorSpace
-          texture.anisotropy = 4
+          texture.colorSpace = (key === 'day' || key === 'night' || key === 'clouds')
+            ? THREE.SRGBColorSpace
+            : THREE.NoColorSpace
+          texture.generateMipmaps = true
+          texture.minFilter = THREE.LinearMipmapLinearFilter
+          texture.magFilter = THREE.LinearFilter
+          texture.anisotropy = 8
           loaded[key] = texture
           pending--
           if (pending === 0 && !hasFailed) setTextures(loaded as EarthTextureSet)
@@ -47,7 +52,6 @@ export function useEarthTextures() {
         },
       )
     })
-
     return () => { cancelled = true }
   }, [])
 
