@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion'
+import { useEffect } from 'react'
 import { StoryProvider, useStory } from './StoryContext'
 import { ScrollProvider, useScrollStory } from './ScrollContext'
 import { ScrollDirector } from './ScrollDirector'
@@ -26,8 +27,12 @@ import { CountryExperience } from '../scenes/CountryExperience'
 const legacyScenes = [null, FootprintScene, PeopleScene, SuperpowersScene, AISkillingScene, JourneyScene, IBIOLScene, ClosingScene]
 
 function Experience() {
-  const { scene, capabilityFocus, setAIPhase, ibiolPhase, selectedCountry, selectCountry } = useStory()
+  const { scene, capabilityFocus, setAIPhase, ibiolPhase, selectedCountry, selectCountry, clearCountry } = useStory()
   const { chapter, chapterProgress, globalProgress } = useScrollStory()
+
+  useEffect(() => {
+    if (selectedCountry && (chapter === 'earth' || chapter === 'convergence')) clearCountry()
+  }, [chapter, selectedCountry, clearCountry])
 
   const isScrollDriven = chapter === 'opening' || chapter === 'earth' || chapter === 'country'
   const LegacyScene = !isScrollDriven && !selectedCountry ? legacyScenes[scene] : null

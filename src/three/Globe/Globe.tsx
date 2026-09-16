@@ -1,5 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useMemo, useState } from 'react'
 import { Line, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { peru } from '../../data/peru'
@@ -12,37 +11,21 @@ import { useEarthTextures } from './useEarthTextures'
 import { EarthSurface } from './EarthSurface'
 import { Clouds } from './Clouds'
 import { Atmosphere } from './Atmosphere'
-import {
-  sampleEarthChoreographyProgress,
-  footprintComposition,
-  closingComposition,
-  earthHubComposition,
-  type EarthChoreographyPhase,
-} from '../../data/earthJourney'
+import { sampleEarthChoreographyProgress, footprintComposition, closingComposition, earthHubComposition } from '../../data/earthJourney'
 import type { CountryId } from '../../data/countryProfiles'
 import type { ScrollChapter } from '../../app/ScrollContext'
-import { rangeProgress } from '../../utils/scrollMotion'
-
-function dampScalar(current: number, target: number, delta: number, lambda = 5.0) {
-  const next = THREE.MathUtils.damp(current, target, lambda, delta)
-  return Math.abs(next - target) < .0001 ? target : next
-}
+import { fadeWindow, lerpNumber, rangeProgress } from '../../utils/scrollMotion'
 
 const countryOrientations = { peru: { lat: -10, lon: -75 }, chile: { lat: -33, lon: -71 } } as const
 const countryCompositions: Record<CountryId, { position: [number, number, number]; scale: number }> = {
-  peru: { position: [.15, -.45, 0], scale: 1.28 },
-  chile: { position: [.2, -.52, 0],  scale: 1.22 },
+  peru: { position: [.15, -.45, 0], scale: 1.28 }, chile: { position: [.2, -.52, 0], scale: 1.22 },
 }
 
 function InteractiveHotspot({ point, label, color = '#bdf3ff', onSelect, opacity = 1 }: { point: THREE.Vector3; label: string; color?: string; onSelect: () => void; opacity?: number }) {
   const [hovered, setHovered] = useState(false)
   const leaderEnd = useMemo(() => point.clone().normalize().multiplyScalar(point.length() + .3), [point])
   const size = hovered ? .026 : .016
-  return <group
-    onPointerEnter={e => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer' }}
-    onPointerLeave={e => { e.stopPropagation(); setHovered(false); document.body.style.cursor = '' }}
-    onClick={e => { e.stopPropagation(); onSelect() }}
-  >
+  return <group onPointerEnter={e => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer' }} onPointerLeave={e => { e.stopPropagation(); setHovered(false); document.body.style.cursor = '' }} onClick={e => { e.stopPropagation(); onSelect() }}>
     <mesh position={point}><sphereGeometry args={[size, 12, 12]} /><meshBasicMaterial color={color} transparent opacity={opacity} toneMapped={false} /></mesh>
     <mesh position={point} scale={2.5}><sphereGeometry args={[size, 12, 12]} /><meshBasicMaterial color={color} transparent opacity={opacity * (hovered ? .2 : .07)} depthWrite={false} /></mesh>
     <Line points={[point, leaderEnd]} color={color} transparent opacity={opacity * (hovered ? .7 : .38)} lineWidth={.7} />
@@ -59,116 +42,61 @@ function PlainHotspot({ point, label, color = '#eaffff' }: { point: THREE.Vector
   </group>
 }
 
-export interface GlobeScrollProps {
-  scrollChapter?: ScrollChapter
-  scrollProgress?: number
-}
-
-export function Globe({
-  scene,
-  selectedCountry = null,
-  onSelectCountry,
-  scrollChapter = 'opening',
-  scrollProgress = 0,
-}: {
-  scene: number
-  selectedCountry?: CountryId | null
-  onSelectCountry?: (id: CountryId) => void
-  scrollChapter?: ScrollChapter
-  scrollProgress?: number
-}) {
-  const transformGroup = useRef<THREE.Group>(null)
-  const orientationGroup = useRef<THREE.Group>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const outlineRef = useRef<any>(null)
+export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollChapter = 'opening', scrollProgress = 0 }: { scene: number; selectedCountry?: CountryId | null; onSelectCountry?: (id: CountryId) => void; scrollChapter?: ScrollChapter; scrollProgress?: number }) {
   const { textures, failed } = useEarthTextures()
-  const [visualPhase, setVisualPhase] = useState<EarthChoreographyPhase>('hero')
-  const [highlightIntensity, setHighlightIntensity] = useState(0)
-
-  const outline      = useMemo(() => southAmericaOutline.map(([lat, lon]) => latLonToVector3(lat, lon, 2.47)), [])
-  const peruPoint    = useMemo(() => latLonToVector3(geoAnchors.peru.lat,      geoAnchors.peru.lon,      2.52), [])
-  const chilePoint   = useMemo(() => latLonToVector3(geoAnchors.peruChile.lat, geoAnchors.peruChile.lon, 2.52), [])
-
+  const outline = useMemo(() => southAmericaOutline.map(([lat, lon]) => latLonToVector3(lat, lon, 2.47)), [])
+  const peruPoint = useMemo(() => latLonToVector3(geoAnchors.peru.lat, geoAnchors.peru.lon, 2.52), [])
+  const chilePoint = useMemo(() => latLonToVector3(geoAnchors.peruChile.lat, geoAnchors.peruChile.lon, 2.52), [])
   const southAmericaQ = useMemo(() => getGlobeOrientationForLatLon(geoAnchors.southAmerica.lat, geoAnchors.southAmerica.lon), [])
-  const peruChileQ    = useMemo(() => getGlobeOrientationForLatLon(geoAnchors.peruChile.lat,    geoAnchors.peruChile.lon),    [])
-  const peruQ         = useMemo(() => getGlobeOrientationForLatLon(countryOrientations.peru.lat,  countryOrientations.peru.lon),  [])
-  const chileQ        = useMemo(() => getGlobeOrientationForLatLon(countryOrientations.chile.lat, countryOrientations.chile.lon), [])
+  const peruChileQ = useMemo(() => getGlobeOrientationForLatLon(geoAnchors.peruChile.lat, geoAnchors.peruChile.lon), [])
+  const peruQ = useMemo(() => getGlobeOrientationForLatLon(countryOrientations.peru.lat, countryOrientations.peru.lon), [])
+  const chileQ = useMemo(() => getGlobeOrientationForLatLon(countryOrientations.chile.lat, countryOrientations.chile.lon), [])
 
-  // derived from scroll — deterministic, no clock
-  const hotspotOpacity = scrollChapter === 'earth' ? 1 : rangeProgress(scrollProgress, 0.72, 1.0)
+  const p = Number.isFinite(scrollProgress) ? Math.min(1, Math.max(0, scrollProgress)) : 0
+  const isCountry = scrollChapter === 'country' && selectedCountry !== null
+  let position = footprintComposition.position
+  let scale = footprintComposition.scale
+  let quaternion = peruChileQ
+  let outlineOpacity = .38
 
-  useFrame((_, delta) => {
-    let earthPosition: [number, number, number]
-    let earthScale: number
-    let targetQuaternion: THREE.Quaternion
-    let nextPhase: EarthChoreographyPhase = 'settle'
-    let outlineTarget = .38
+  if (isCountry && selectedCountry) {
+    const composition = countryCompositions[selectedCountry]
+    const exit = rangeProgress(p, .90, 1)
+    position = [lerpNumber(composition.position[0], .5, exit), lerpNumber(composition.position[1], -.85, exit), 0]
+    scale = lerpNumber(composition.scale + .08, .94, Math.max(rangeProgress(p, .14, .52), exit))
+    quaternion = exit > 0 ? peruChileQ : selectedCountry === 'peru' ? peruQ : chileQ
+    outlineOpacity = .18 + rangeProgress(p, 0, .14) * .34 + exit * .24
+  } else if (scrollChapter === 'opening') {
+    const sample = sampleEarthChoreographyProgress(p)
+    position = sample.position
+    scale = sample.scale
+    quaternion = sample.phase === 'hero' || sample.phase === 'shift' ? southAmericaQ : peruChileQ
+    outlineOpacity = sample.phase === 'hero' ? 0 : sample.phase === 'shift' ? .22 : .38
+  } else if (scrollChapter === 'earth') {
+    position = earthHubComposition.position
+    scale = earthHubComposition.scale
+    quaternion = peruChileQ
+    outlineOpacity = .42
+  } else if (scene === 7) {
+    position = closingComposition.position
+    scale = closingComposition.scale
+    outlineOpacity = .3
+  }
 
-    if (selectedCountry) {
-      const comp = countryCompositions[selectedCountry]
-      // During country chapter, Earth fades to background as journey progress increases
-      const jrProg = scrollChapter === 'country' ? Math.min(1, scrollProgress > 0.72 ? (scrollProgress - 0.72) / 0.22 : 0) : 0
-      const scaleBoost = scrollChapter === 'country' && scrollProgress < 0.14 ? 0.06 * (1 - scrollProgress / 0.14) : 0
-      earthPosition    = comp.position
-      earthScale       = comp.scale + scaleBoost - jrProg * 0.12
-      targetQuaternion = selectedCountry === 'peru' ? peruQ : chileQ
-      outlineTarget    = scrollChapter === 'country' ? (0.2 + Math.min(0.3, scrollProgress * 1.5)) : .2
-    } else if (scrollChapter === 'opening') {
-      const sample     = sampleEarthChoreographyProgress(scrollProgress)
-      earthPosition    = sample.position
-      earthScale       = sample.scale
-      nextPhase        = sample.phase
-      targetQuaternion = nextPhase === 'hero' || nextPhase === 'shift' ? southAmericaQ : peruChileQ
-      outlineTarget    = nextPhase === 'hero' ? 0 : nextPhase === 'shift' ? .22 : .38
-    } else if (scrollChapter === 'earth') {
-      earthPosition    = earthHubComposition.position
-      earthScale       = earthHubComposition.scale
-      targetQuaternion = peruChileQ
-      outlineTarget    = .42
-    } else if (scene === 7) {
-      earthPosition    = closingComposition.position
-      earthScale       = closingComposition.scale
-      targetQuaternion = peruChileQ
-      outlineTarget    = .3
-    } else {
-      earthPosition    = footprintComposition.position
-      earthScale       = footprintComposition.scale
-      targetQuaternion = peruChileQ
-    }
-
-    if (nextPhase !== visualPhase) setVisualPhase(nextPhase)
-    const nextHI = THREE.MathUtils.damp(highlightIntensity, selectedCountry ? 1 : 0, 5.5, delta)
-    if (Math.abs(nextHI - highlightIntensity) > .0001) setHighlightIntensity(nextHI)
-
-    if (transformGroup.current) {
-      transformGroup.current.position.set(
-        dampScalar(transformGroup.current.position.x, earthPosition[0], delta),
-        dampScalar(transformGroup.current.position.y, earthPosition[1], delta),
-        dampScalar(transformGroup.current.position.z, earthPosition[2], delta),
-      )
-      transformGroup.current.scale.setScalar(dampScalar(transformGroup.current.scale.x, earthScale, delta))
-    }
-    if (orientationGroup.current) {
-      const angle = orientationGroup.current.quaternion.angleTo(targetQuaternion)
-      if (angle < .00015) orientationGroup.current.quaternion.copy(targetQuaternion)
-      else orientationGroup.current.quaternion.slerp(targetQuaternion, 1 - Math.exp(-4.8 * delta))
-    }
-    if (outlineRef.current?.material) {
-      outlineRef.current.material.opacity = dampScalar(outlineRef.current.material.opacity, outlineTarget, delta)
-    }
-  })
-
+  const hotspotOpacity = scrollChapter === 'earth' ? 1 : rangeProgress(p, .72, 1)
+  const earthOpacity = isCountry ? Math.max(0, 1 - rangeProgress(p, .14, .48) - rangeProgress(p, .72, .92) * .5) : 1
+  const highlightIntensity = isCountry ? fadeWindow(p, 0, .05, .18, .52) + fadeWindow(p, .90, .95, 1, 1.02) : 0
   const globeVisible = scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scene === 1 || scene === 7 || selectedCountry !== null
-  const showHotspots = (scrollChapter === 'earth' || hotspotOpacity > 0.01) && !selectedCountry
-  const showPeruHubs = (scene === 1 || selectedCountry === 'peru') && scrollChapter !== 'country'
-  const showChileHubs = ((scene === 1 && !selectedCountry) || selectedCountry === 'chile') && scrollChapter !== 'country'
+  const showHotspots = (scrollChapter === 'earth' || hotspotOpacity > .01) && !selectedCountry
+  const showPeruHubs = scene === 1 && !isCountry
+  const showChileHubs = scene === 1 && !isCountry
 
-  return <group ref={transformGroup} visible={globeVisible}>
-    <group ref={orientationGroup}>
-      <EarthSurface textures={failed ? null : textures} />
-      {textures && !failed && <Clouds textures={textures} />}
-      <Atmosphere />
-      <Line ref={outlineRef} points={outline} color="#8fe6ff" lineWidth={1} transparent opacity={0} />
+  return <group position={position} scale={scale} visible={globeVisible}>
+    <group quaternion={quaternion}>
+      <EarthSurface textures={failed ? null : textures} opacity={earthOpacity} />
+      {textures && !failed && <Clouds textures={textures} opacity={earthOpacity} />}
+      <Atmosphere opacity={earthOpacity} />
+      <Line points={outline} color="#8fe6ff" lineWidth={1} transparent opacity={outlineOpacity * earthOpacity} />
       {selectedCountry && <CountrySurfaceHighlight country={selectedCountry} visible intensity={highlightIntensity} />}
       {showHotspots && <>
         <InteractiveHotspot point={peruPoint} label="PERÚ" color="#00e6ff" onSelect={() => onSelectCountry?.('peru')} opacity={hotspotOpacity} />

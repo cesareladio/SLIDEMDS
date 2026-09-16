@@ -24,7 +24,7 @@ export function CountryOverview({ profile, progress, opacity }: { profile: Count
       territories={territorial}
       hubs={data.operationalHubs ?? []}
       progress={revealNodes}
-      opacity={Math.max(.16, overallOpacity)}
+      opacity={overallOpacity * exitOpacity}
     />
     {territorial.length > 0 && <div className="country-scroll-top3" style={{ opacity: revealTop3, transform: `translateY(${(1 - revealTop3) * 14}px)` }}>
       <strong>64.7%</strong><span>DEL HC EN EL TOP 3<br /><small>La Libertad · Arequipa · Lima</small></span>

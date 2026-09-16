@@ -28,6 +28,7 @@ uniform sampler2D normalMap;
 uniform vec3 sunDirection;
 uniform float nightIntensity;
 uniform float exposure;
+uniform float opacity;
 
 varying vec2 vUv;
 varying vec3 vNormalW;
@@ -79,7 +80,7 @@ void main() {
   color *= exposure;
   color = tonemapACES(color);
 
-  gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(color, opacity);
 }
 `
 

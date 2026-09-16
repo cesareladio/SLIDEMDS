@@ -56,18 +56,22 @@ export function WorldObjects({
   if (isCountryChapter && selectedCountry) {
     const profile = countryProfiles[selectedCountry]
     const supProg = getSegmentProgress(selectedCountry, 'superpowers', countryScrollProgress)
-    const jrProg  = journeyLocalProgress(selectedCountry, countryScrollProgress)
-    const showSup = supProg > 0.01
-    const showJrn = jrProg > 0.01 && profile.journeyHistory !== undefined
+    const jrProg = journeyLocalProgress(selectedCountry, countryScrollProgress)
+    const supOpacity = Math.min(1, Math.max(0, Math.min(supProg / .15, (1 - supProg) / .22)))
+    const jrOpacity = Math.min(1, Math.max(0, Math.min(jrProg / .12, (1 - jrProg) / .04)))
+    const showSup = supOpacity > .01
+    const showJrn = jrOpacity > .01 && profile.journeyHistory !== undefined
     return <>
       {showSup && <CountryCapabilityConstellation
         capabilities={profile.data.capabilities}
         progress={supProg}
+        opacity={supOpacity}
         visible
       />}
       {showJrn && <JourneyScrollFlight
         waypoints={journeyWaypoints}
         progress={jrProg}
+        opacity={jrOpacity}
         visible
       />}
     </>

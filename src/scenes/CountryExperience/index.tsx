@@ -30,7 +30,6 @@ export function CountryExperience() {
   )
 
   const returnToEarth = () => {
-    clearCountry()
     document.querySelector('[data-chapter="earth"]')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 

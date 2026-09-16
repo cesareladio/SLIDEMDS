@@ -69,8 +69,6 @@ export function StoryProvider({ children }: { children: ReactNode }) {
     if (scene !== 3) setCapabilityFocus('overview')
     if (scene !== 4) setAIPhase('certifications')
     if (scene !== 6) setIBIOLPhase('today')
-    setSelectedCountry(null)
-    setCountrySection('overview')
   }, [scene])
 
   useEffect(() => {
@@ -82,26 +80,24 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase()
-      if (selectedCountry) {
-        const sections = countryProfiles[selectedCountry].sections
-        const index = sections.indexOf(countrySection)
-        if (key === 'arrowright' || key === ' ') { event.preventDefault(); if (index < sections.length - 1) setCountrySection(sections[index + 1]) }
-        if (key === 'arrowleft' && index > 0) setCountrySection(sections[index - 1])
-        if (key === 'escape') { setPresenter(false); clearCountry() }
+      if (selectedCountry && key === 'escape') {
+        event.preventDefault()
+        document.querySelector('[data-chapter="earth"]')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
         return
       }
-      if (key === 'arrowright' || key === ' ') { event.preventDefault(); next() }
-      if (key === 'arrowleft') previous()
+      if (key === ' ' && event.shiftKey) { event.preventDefault(); window.scrollBy({ top: -window.innerHeight * .72, behavior: 'smooth' }); return }
+      if (key === 'arrowright' || key === 'arrowdown' || key === ' ') { event.preventDefault(); window.scrollBy({ top: window.innerHeight * .72, behavior: 'smooth' }) }
+      if (key === 'arrowleft' || key === 'arrowup') { event.preventDefault(); window.scrollBy({ top: -window.innerHeight * .72, behavior: 'smooth' }) }
       if (key === 'a') setAutoplay(value => !value)
       if (key === 'p') setPresenter(value => !value)
       if (key === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()
-      if (key === 'escape') { setPresenter(false); setSelectedCountry(null); setCountrySection('overview') }
+      if (key === 'escape') setPresenter(false)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [selectedCountry, countrySection])
+  }, [selectedCountry])
 
-  const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, selectedCountry, countrySection, selectCountry, clearCountry, setCountrySection, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, selectedCountry, countrySection, goTo, next, previous])
+  const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, selectedCountry, countrySection, selectCountry, clearCountry, setCountrySection, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, selectedCountry, countrySection])
   return <StoryContext.Provider value={value}>{children}</StoryContext.Provider>
 }
 
