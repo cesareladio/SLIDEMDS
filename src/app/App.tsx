@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react'
 import { StoryProvider, useStory } from './StoryContext'
 import { ScrollProvider, useScrollStory } from './ScrollContext'
 import { ScrollDirector } from './ScrollDirector'
@@ -13,44 +12,39 @@ import { Brand } from '../components/Brand'
 import { ScrollAvatarOverlay } from '../components/ScrollAvatarOverlay'
 import { OpeningScene } from '../scenes/OpeningScene'
 import { EarthHubScene } from '../scenes/EarthHubScene'
+import { CountryExperience } from '../scenes/CountryExperience'
 import { ConvergenceScene } from '../scenes/ConvergenceScene'
 import { AIScrollScene } from '../scenes/AIScrollScene'
 import { IBIOLScrollScene } from '../scenes/IBIOLScrollScene'
 import { ClosingScrollScene } from '../scenes/ClosingScrollScene'
-import { CountryExperience } from '../scenes/CountryExperience'
+import { countryFromChapter } from '../data/countryScroll'
 
 function Experience() {
-  const { selectedCountry, selectCountry, clearCountry } = useStory()
+  const { presenter, elapsed } = useStory()
   const { chapter, chapterProgress } = useScrollStory()
-  const previousChapterRef = useRef(chapter)
-
-  useEffect(() => {
-    const previousChapter = previousChapterRef.current
-    if (selectedCountry && previousChapter === 'country' && (chapter === 'earth' || chapter === 'convergence')) clearCountry()
-    previousChapterRef.current = chapter
-  }, [chapter, selectedCountry, clearCountry])
+  const activeCountry = countryFromChapter(chapter)
 
   return <main className="app">
     <div className="grain" />
     <ErrorBoundary fallback={<WebGLFallback />}>
-      <ExperienceCanvas selectedCountry={selectedCountry} onSelectCountry={selectCountry} scrollChapter={chapter} scrollProgress={chapterProgress} />
+      <ExperienceCanvas scrollChapter={chapter} scrollProgress={chapterProgress} />
     </ErrorBoundary>
     <div className="ambient-wash" />
     <Brand />
     <OpeningScene />
     <EarthHubScene />
+    {(chapter === 'peru' || chapter === 'chile') && <CountryExperience key={chapter} />}
     <ConvergenceScene />
     <AIScrollScene />
     <IBIOLScrollScene />
     <ClosingScrollScene />
-    {selectedCountry && <CountryExperience key={`country-${selectedCountry}`} />}
     <ScrollAvatarOverlay />
     <Navigation />
     <PresenterMode />
     <ScrollDirector />
     <ScrollStory />
     <ScrollDebugOverlay />
-    {import.meta.env.DEV && chapter === 'country' && selectedCountry === 'chile' && <span className="mock-indicator">Chile · datos demo</span>}
+    {import.meta.env.DEV && chapter === 'chile' && <span className="mock-indicator">Chile · datos demo</span>}
   </main>
 }
 

@@ -3,7 +3,8 @@ import { ScrollChapterBlock } from './ScrollChapterBlock'
 const chapters: { id: string; height: string }[] = [
   { id: 'opening', height: '220vh' },
   { id: 'earth', height: '180vh' },
-  { id: 'country', height: '500vh' },
+  { id: 'peru', height: '500vh' },
+  { id: 'chile', height: '340vh' },
   { id: 'convergence', height: '140vh' },
   { id: 'ai', height: '240vh' },
   { id: 'ibiol', height: '260vh' },

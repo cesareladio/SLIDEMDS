@@ -1,86 +1,111 @@
 import { useFrame, useThree } from '@react-three/fiber'
-import type { CountryId } from '../../data/countryProfiles'
 import type { ScrollChapter } from '../../app/ScrollContext'
 import { sampleOpeningCameraProgress } from '../../data/earthJourney'
 import { journeyLocalProgress } from '../../data/countryScroll'
 import { sampleJourneyCameraProgress } from '../JourneyScrollFlight'
+import { bridgeCameraComposition, convergenceStartCameraComposition } from '../../data/sequentialCountryChoreography'
 import { lerpNumber } from '../../utils/scrollMotion'
 
-const countryFocusTargets: Record<CountryId, { camera: [number, number, number]; lookAt: [number, number, number] }> = {
-  peru: { camera: [.05, -.35, 5.4], lookAt: [.15, -.45, 0] },
-  chile: { camera: [.1, -.38, 5.2], lookAt: [.2, -.52, 0] },
-}
 const earthHubCamera: [number, number, number] = [0, -.1, 7.0]
 const earthHubLookAt: [number, number, number] = [.5, -.85, 0]
-const convergenceStartCamera: [number, number, number] = [0, -.1, 7.0]
-const convergenceStartLookAt: [number, number, number] = [.5, -.85, 0]
-const smoothstep = (value: number) => { const t = Math.min(1, Math.max(0, value)); return t * t * (3 - 2 * t) }
-const lerpTuple = (from: readonly number[], to: readonly number[], amount: number): [number, number, number] => [from[0] + (to[0] - from[0]) * amount, from[1] + (to[1] - from[1]) * amount, from[2] + (to[2] - from[2]) * amount]
+const peruFocusCamera: [number, number, number] = [.05, -.35, 5.4]
+const peruFocusLookAt: [number, number, number] = [.15, -.45, 0]
+const chileFocusCamera: [number, number, number] = [.1, -.38, 5.2]
+const chileFocusLookAt: [number, number, number] = [.2, -.52, 0]
 
-export function CameraRig({ selectedCountry = null, scrollChapter = 'opening', scrollProgress = 0 }: { selectedCountry?: CountryId | null; scrollChapter?: ScrollChapter; scrollProgress?: number }) {
+const smoothstep = (value: number) => { const t = Math.min(1, Math.max(0, value)); return t * t * (3 - 2 * t) }
+const lerpTuple = (a: readonly number[], b: readonly number[], t: number): [number,number,number] =>
+  [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]
+
+export function CameraRig({ scrollChapter = 'opening', scrollProgress = 0 }: { scrollChapter?: ScrollChapter; scrollProgress?: number }) {
   const { camera } = useThree()
 
   useFrame(() => {
     const p = Math.min(1, Math.max(0, scrollProgress))
 
-    if (scrollChapter === 'country' && selectedCountry) {
-      const journeyProgress = journeyLocalProgress(selectedCountry, p)
-      const countryTarget = countryFocusTargets[selectedCountry]
-      const countryExitStart = selectedCountry === 'peru' ? .94 : .90
-      const countryExit = smoothstep(Math.min(1, Math.max(0, (p - countryExitStart) / (1 - countryExitStart))))
+    // ---- OPENING ----
+    if (scrollChapter === 'opening') {
+      const { position, target } = sampleOpeningCameraProgress(p)
+      camera.position.set(...position); camera.lookAt(...target); return
+    }
 
-      if (countryExit > 0) {
-        const bridgeCamera = journeyProgress > .01 ? sampleJourneyCameraProgress(1).position : countryTarget.camera
-        const bridgeTarget = journeyProgress > .01 ? sampleJourneyCameraProgress(1).target : countryTarget.lookAt
-        camera.position.set(...lerpTuple(bridgeCamera, convergenceStartCamera, countryExit))
-        camera.lookAt(...lerpTuple(bridgeTarget, convergenceStartLookAt, countryExit))
+    // ---- EARTH HUB ----
+    if (scrollChapter === 'earth') {
+      camera.position.set(...earthHubCamera); camera.lookAt(...earthHubLookAt); return
+    }
+
+    // ---- PERU ----
+    if (scrollChapter === 'peru') {
+      const jrProg = journeyLocalProgress('peru', p)
+      const exitStart = .92
+      const exit = smoothstep(Math.min(1, Math.max(0, (p - exitStart) / (1 - exitStart))))
+
+      if (exit > 0) {
+        // Peru exit: bridge to South America
+        const journeyFinal = jrProg > .01 ? sampleJourneyCameraProgress(1).position : peruFocusCamera
+        const journeyFinalTarget = jrProg > .01 ? sampleJourneyCameraProgress(1).target : peruFocusLookAt
+        camera.position.set(...lerpTuple(journeyFinal, bridgeCameraComposition.camera, exit))
+        camera.lookAt(...lerpTuple(journeyFinalTarget, bridgeCameraComposition.lookAt, exit))
         return
       }
 
-      const transitionEnd = .12
-      if (journeyProgress <= transitionEnd) {
-        const local = smoothstep(journeyProgress / transitionEnd)
+      // Peru entry: Earth hub → Peru focus, then Journey
+      const entryEnd = .12
+      if (p <= entryEnd) {
+        const local = smoothstep(p / entryEnd)
+        camera.position.set(...lerpTuple(earthHubCamera, peruFocusCamera, local))
+        camera.lookAt(...lerpTuple(earthHubLookAt, peruFocusLookAt, local))
+        return
+      }
+
+      // Peru superpowers/journey camera
+      if (jrProg <= .12) {
+        const local = smoothstep(jrProg / .12)
         const journeyStart = sampleJourneyCameraProgress(0)
-        camera.position.set(...lerpTuple(countryTarget.camera, journeyStart.position, local))
-        camera.lookAt(...lerpTuple(countryTarget.lookAt, journeyStart.target, local))
+        camera.position.set(...lerpTuple(peruFocusCamera, journeyStart.position, local))
+        camera.lookAt(...lerpTuple(peruFocusLookAt, journeyStart.target, local))
       } else {
-        const normalized = (journeyProgress - transitionEnd) / (1 - transitionEnd)
-        const journey = sampleJourneyCameraProgress(normalized)
-        camera.position.set(...journey.position)
-        camera.lookAt(...journey.target)
+        const { position, target } = sampleJourneyCameraProgress((jrProg - .12) / .88)
+        camera.position.set(...position); camera.lookAt(...target)
       }
       return
     }
 
-    if (scrollChapter === 'opening') {
-      const { position, target } = sampleOpeningCameraProgress(p)
-      camera.position.set(...position)
-      camera.lookAt(...target)
+    // ---- CHILE ----
+    if (scrollChapter === 'chile') {
+      const entryEnd = .16
+      const exitStart = .88
+      const exitP = smoothstep(Math.min(1, Math.max(0, (p - exitStart) / (1 - exitStart))))
+
+      if (exitP > 0) {
+        // Chile exit → Convergence
+        camera.position.set(...lerpTuple(chileFocusCamera, convergenceStartCameraComposition.camera, exitP))
+        camera.lookAt(...lerpTuple(chileFocusLookAt, convergenceStartCameraComposition.lookAt, exitP))
+        return
+      }
+
+      const entryP = smoothstep(Math.min(1, p / entryEnd))
+      // Chile entry: South America bridge → Chile focus
+      camera.position.set(...lerpTuple(bridgeCameraComposition.camera, chileFocusCamera, entryP))
+      camera.lookAt(...lerpTuple(bridgeCameraComposition.lookAt, chileFocusLookAt, entryP))
       return
     }
-    if (scrollChapter === 'earth') {
-      camera.position.set(...earthHubCamera)
-      camera.lookAt(...earthHubLookAt)
-      return
-    }
+
+    // ---- CONVERGENCE ----
     if (scrollChapter === 'convergence') {
       camera.position.set(lerpNumber(0, 0, p), lerpNumber(-.1, .05, p), lerpNumber(7, 7.4, p))
       camera.lookAt(lerpNumber(.5, 0, p), lerpNumber(-.85, 0, p), 0)
       return
     }
+
     if (scrollChapter === 'ai') {
-      camera.position.set(0, 0, lerpNumber(7.4, 7.9, p))
-      camera.lookAt(0, 0, 0)
-      return
+      camera.position.set(0, 0, lerpNumber(7.4, 7.9, p)); camera.lookAt(0,0,0); return
     }
     if (scrollChapter === 'ibiol') {
-      camera.position.set(0, lerpNumber(0, .12, p), lerpNumber(7.9, 8.2, p))
-      camera.lookAt(0, 0, 0)
-      return
+      camera.position.set(0, lerpNumber(0,.12,p), lerpNumber(7.9,8.2,p)); camera.lookAt(0,0,0); return
     }
     if (scrollChapter === 'closing') {
-      camera.position.set(0, lerpNumber(0, .08, p), lerpNumber(8.2, 9.2, p))
-      camera.lookAt(0, 0, 0)
+      camera.position.set(0, lerpNumber(0,.08,p), lerpNumber(8.2,9.2,p)); camera.lookAt(0,0,0)
     }
   })
   return null

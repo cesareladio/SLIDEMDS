@@ -9,24 +9,20 @@ import { Lights } from './Lights/Lights'
 import { WorldObjects } from './WorldObjects'
 import { AIScrollParticleMorph } from './AIScrollParticleMorph'
 import { IBIOLScrollNetwork } from './IBIOLScrollNetwork'
-import type { CountryId } from '../data/countryProfiles'
 import type { ScrollChapter } from '../app/ScrollContext'
 
 interface ExperienceCanvasProps {
-  selectedCountry?: CountryId | null
-  onSelectCountry?: (id: CountryId) => void
   scrollChapter?: ScrollChapter
   scrollProgress?: number
 }
 
-export function ExperienceCanvas({ selectedCountry = null, onSelectCountry, scrollChapter = 'opening', scrollProgress = 0 }: ExperienceCanvasProps) {
-  const isOpeningOrEarth = scrollChapter === 'opening' || scrollChapter === 'earth'
-  const isCountry = scrollChapter === 'country'
-  const isConvergence = scrollChapter === 'convergence'
+export function ExperienceCanvas({ scrollChapter = 'opening', scrollProgress = 0 }: ExperienceCanvasProps) {
   const isAI = scrollChapter === 'ai'
   const isIBIOL = scrollChapter === 'ibiol'
   const isClosing = scrollChapter === 'closing'
-  const showSpaceBackdrop = isOpeningOrEarth || isCountry || isConvergence || isAI || isIBIOL || (isClosing && scrollProgress < .9)
+  const showSpaceBackdrop = scrollChapter !== 'ibiol' || scrollProgress < .9
+    ? !isClosing || scrollProgress < .9
+    : false
 
   return <Canvas className="experience-canvas" dpr={[1, 1.6]} camera={{ position: [0, .15, 8.5], fov: 42 }} gl={{ antialias: true, powerPreference: 'high-performance', alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0 }}>
     <Suspense fallback={null}>
@@ -34,12 +30,12 @@ export function ExperienceCanvas({ selectedCountry = null, onSelectCountry, scro
       <fog attach="fog" args={['#040816', 8, 18]} />
       <Lights />
       <Starfield visible={showSpaceBackdrop} />
-      <Globe selectedCountry={selectedCountry} onSelectCountry={onSelectCountry} scrollChapter={scrollChapter} scrollProgress={scrollProgress} />
+      <Globe scrollChapter={scrollChapter} scrollProgress={scrollProgress} />
       {isAI && <AIScrollParticleMorph progress={scrollProgress} visible />}
       {isIBIOL && <AIScrollParticleMorph progress={1} opacity={Math.max(0, 1 - Math.min(1, scrollProgress / .12))} visible />}
       {isIBIOL && <IBIOLScrollNetwork progress={scrollProgress} opacity={Math.min(1, scrollProgress / .12)} visible />}
-      <WorldObjects selectedCountry={selectedCountry} countryScrollProgress={scrollProgress} scrollChapter={scrollChapter} />
-      <CameraRig selectedCountry={selectedCountry} scrollChapter={scrollChapter} scrollProgress={scrollProgress} />
+      <WorldObjects scrollChapter={scrollChapter} countryScrollProgress={scrollProgress} />
+      <CameraRig scrollChapter={scrollChapter} scrollProgress={scrollProgress} />
       <SceneEffects scrollChapter={scrollChapter} />
     </Suspense>
   </Canvas>

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react'
 
-export type ScrollChapter = 'opening' | 'earth' | 'country' | 'convergence' | 'ai' | 'ibiol' | 'closing'
+export type ScrollChapter = 'opening' | 'earth' | 'peru' | 'chile' | 'convergence' | 'ai' | 'ibiol' | 'closing'
 
 export interface ScrollStoryState {
   chapter: ScrollChapter
