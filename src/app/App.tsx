@@ -20,8 +20,8 @@ import { ClosingScrollScene } from '../scenes/ClosingScrollScene'
 import { CountryExperience } from '../scenes/CountryExperience'
 
 function Experience() {
-  const { scene, capabilityFocus, setAIPhase, ibiolPhase, selectedCountry, selectCountry, clearCountry } = useStory()
-  const { chapter, chapterProgress, globalProgress } = useScrollStory()
+  const { selectedCountry, selectCountry, clearCountry } = useStory()
+  const { chapter, chapterProgress } = useScrollStory()
   const previousChapterRef = useRef(chapter)
 
   useEffect(() => {
@@ -30,45 +30,27 @@ function Experience() {
     previousChapterRef.current = chapter
   }, [chapter, selectedCountry, clearCountry])
 
-  const isScrollDriven = true
-
-  return <main className={`app scene-index-${scene}`}>
+  return <main className="app">
     <div className="grain" />
     <ErrorBoundary fallback={<WebGLFallback />}>
-      <ExperienceCanvas
-        scene={scene}
-        capabilityFocus={capabilityFocus}
-        onAIPhase={setAIPhase}
-        ibiolPhase={ibiolPhase}
-        selectedCountry={selectedCountry}
-        onSelectCountry={selectCountry}
-        scrollChapter={chapter}
-        scrollProgress={chapterProgress}
-        globalScrollProgress={globalProgress}
-      />
+      <ExperienceCanvas selectedCountry={selectedCountry} onSelectCountry={selectCountry} scrollChapter={chapter} scrollProgress={chapterProgress} />
     </ErrorBoundary>
     <div className="ambient-wash" />
     <Brand />
-
-
-    {/* Scroll-driven scenes */}
     <OpeningScene />
     <EarthHubScene />
     <ConvergenceScene />
     <AIScrollScene />
     <IBIOLScrollScene />
     <ClosingScrollScene />
-
-    {/* Country overlay — independent of scroll */}
     {selectedCountry && <CountryExperience key={`country-${selectedCountry}`} />}
-
     <ScrollAvatarOverlay />
     <Navigation />
     <PresenterMode />
     <ScrollDirector />
     <ScrollStory />
     <ScrollDebugOverlay />
-    {import.meta.env.DEV && <span className="mock-indicator">Chile · datos demo</span>}
+    {import.meta.env.DEV && chapter === 'country' && selectedCountry === 'chile' && <span className="mock-indicator">Chile · datos demo</span>}
   </main>
 }
 
