@@ -5,7 +5,13 @@ import { capabilityNodes, finitePosition, type CapabilityFocus } from '../data/c
 import { AIParticleMorph } from './AIParticleMorph'
 import { JourneyFlight } from './JourneyFlight'
 import { IBIOLNetwork } from './IBIOLNetwork'
+import { CountryCapabilityConstellation } from './CountryCapabilityConstellation'
+import { JourneyScrollFlight } from './JourneyScrollFlight'
 import type { IBIOLPhase } from '../data/ibiol'
+import type { CountryId } from '../data/countryProfiles'
+import { countryProfiles } from '../data/countryProfiles'
+import { journeyWaypoints } from '../data/journeyPath'
+import { getSegmentProgress, journeyLocalProgress } from '../data/countryScroll'
 
 function CapabilityConstellation({ focus }: { focus: CapabilityFocus }) {
   const nodes = useMemo(() => capabilityNodes.map(node => ({ ...node, position: finitePosition(node.position) })), [])
@@ -31,7 +37,42 @@ function CapabilityConstellation({ focus }: { focus: CapabilityFocus }) {
   </group>
 }
 
-export function WorldObjects({ scene, capabilityFocus = 'overview', onAIPhase, ibiolPhase = 'today' }: { scene: number; capabilityFocus?: CapabilityFocus; onAIPhase?: (phase: 'certifications' | 'gh300' | 'concepts') => void; ibiolPhase?: IBIOLPhase }) {
+interface WorldObjectsProps {
+  scene: number
+  capabilityFocus?: CapabilityFocus
+  onAIPhase?: (phase: 'certifications' | 'gh300' | 'concepts') => void
+  ibiolPhase?: IBIOLPhase
+  selectedCountry?: CountryId | null
+  countryScrollProgress?: number
+  scrollChapter?: string
+}
+
+export function WorldObjects({
+  scene, capabilityFocus = 'overview', onAIPhase, ibiolPhase = 'today',
+  selectedCountry = null, countryScrollProgress = 0, scrollChapter = 'opening',
+}: WorldObjectsProps) {
+  const isCountryChapter = scrollChapter === 'country' && selectedCountry !== null
+
+  if (isCountryChapter && selectedCountry) {
+    const profile = countryProfiles[selectedCountry]
+    const supProg = getSegmentProgress(selectedCountry, 'superpowers', countryScrollProgress)
+    const jrProg  = journeyLocalProgress(selectedCountry, countryScrollProgress)
+    const showSup = supProg > 0.01
+    const showJrn = jrProg > 0.01 && profile.journeyHistory !== undefined
+    return <>
+      {showSup && <CountryCapabilityConstellation
+        capabilities={profile.data.capabilities}
+        progress={supProg}
+        visible
+      />}
+      {showJrn && <JourneyScrollFlight
+        waypoints={journeyWaypoints}
+        progress={jrProg}
+        visible
+      />}
+    </>
+  }
+
   return <>
     {scene === 3 && <CapabilityConstellation focus={capabilityFocus} />}
     <AIParticleMorph visible={scene === 4} onPhase={onAIPhase} />

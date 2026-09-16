@@ -1,32 +1,35 @@
-import { motion } from 'framer-motion'
 import type { TalentProfile } from '../../data/countryProfiles'
+import { getSegmentProgress, segmentFadeOpacity } from '../../data/countryScroll'
 
-export function CountryTalent({ talent }: { talent: TalentProfile }) {
-  return <motion.div className="country-talent" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-    <div className="country-gender">
-      <div className="c-stat"><strong>{talent.womenPercent}</strong><sup>%</sup><span>MUJERES</span></div>
-      <div className="c-stat c-stat-muted"><strong>{talent.menPercent}</strong><sup>%</sup><span>HOMBRES</span></div>
+export function CountryTalent({ talent, progress }: { talent: TalentProfile; progress: number }) {
+  const local = getSegmentProgress('peru', 'talent', progress)
+  const opacity = segmentFadeOpacity('peru', 'talent', progress, .025)
+  const gender = Math.min(1, local / .28)
+  const executive = Math.min(1, Math.max(0, (local - .2) / .26))
+  const leadership = Math.min(1, Math.max(0, (local - .42) / .25))
+  const careers = Math.min(1, Math.max(0, (local - .65) / .25))
+
+  return <section className="country-scroll-talent" style={{ opacity }}>
+    <p className="country-scroll-kicker">TALENTO</p>
+    <div className="country-scroll-gender" style={{ opacity: gender, transform: `translateX(${(1 - gender) * 24}px)` }}>
+      <div><strong>{talent.womenPercent}</strong><sup>%</sup><span>MUJERES</span></div>
+      <div className="muted"><strong>{talent.menPercent}</strong><sup>%</sup><span>HOMBRES</span></div>
     </div>
-    <div className="c-flowline" />
-    <div className="country-leadership">
-      <div className="c-block">
-        <header><strong>{talent.executiveWomen.percent}</strong><sup>%</sup></header>
-        <p>DE EJECUTIVOS SON MUJERES</p>
-        <small>{talent.executiveWomen.of} DE {talent.executiveWomen.outOf}</small>
-      </div>
-      <div className="c-block">
-        <header><strong>{talent.leadershipWomen.percent}</strong><sup>%</sup></header>
-        <p>DEL LIDERAZGO ES FEMENINO</p>
-        <small>{talent.leadershipWomen.of} DE {talent.leadershipWomen.outOf}</small>
-      </div>
+    <div className="country-scroll-flow" style={{ opacity: executive }} />
+    <div className="country-scroll-leadership">
+      <article style={{ opacity: executive, transform: `translateY(${(1 - executive) * 18}px)` }}>
+        <strong>{talent.executiveWomen.percent}</strong><sup>%</sup>
+        <p>EJECUTIVOS MUJERES</p><small>{talent.executiveWomen.of} DE {talent.executiveWomen.outOf}</small>
+      </article>
+      <article style={{ opacity: leadership, transform: `translateY(${(1 - leadership) * 18}px)` }}>
+        <strong>{talent.leadershipWomen.percent}</strong><sup>%</sup>
+        <p>LIDERAZGO FEMENINO</p><small>{talent.leadershipWomen.of} DE {talent.leadershipWomen.outOf}</small>
+      </article>
     </div>
-    <div className="country-careers">
-      {talent.careers.map(career => <div key={career.name} className="c-career">
-        <h3>{career.name}</h3>
-        <div><span>{career.from}</span><i>→</i><span>{career.to}</span></div>
-        <p>{career.since}</p>
-      </div>)}
+    <div className="country-scroll-careers" style={{ opacity: careers }}>
+      {talent.careers.map(career => <article key={career.name}>
+        <h3>{career.name}</h3><p>{career.from} <i>→</i> {career.to}</p>
+      </article>)}
     </div>
-    <p className="country-quote">{talent.quote}</p>
-  </motion.div>
+  </section>
 }

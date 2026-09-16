@@ -106,10 +106,13 @@ export function Globe({
 
     if (selectedCountry) {
       const comp = countryCompositions[selectedCountry]
+      // During country chapter, Earth fades to background as journey progress increases
+      const jrProg = scrollChapter === 'country' ? Math.min(1, scrollProgress > 0.72 ? (scrollProgress - 0.72) / 0.22 : 0) : 0
+      const scaleBoost = scrollChapter === 'country' && scrollProgress < 0.14 ? 0.06 * (1 - scrollProgress / 0.14) : 0
       earthPosition    = comp.position
-      earthScale       = comp.scale
+      earthScale       = comp.scale + scaleBoost - jrProg * 0.12
       targetQuaternion = selectedCountry === 'peru' ? peruQ : chileQ
-      outlineTarget    = .2
+      outlineTarget    = scrollChapter === 'country' ? (0.2 + Math.min(0.3, scrollProgress * 1.5)) : .2
     } else if (scrollChapter === 'opening') {
       const sample     = sampleEarthChoreographyProgress(scrollProgress)
       earthPosition    = sample.position
@@ -155,10 +158,10 @@ export function Globe({
     }
   })
 
-  const globeVisible = scrollChapter === 'opening' || scrollChapter === 'earth' || scene === 1 || scene === 7 || selectedCountry !== null
+  const globeVisible = scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scene === 1 || scene === 7 || selectedCountry !== null
   const showHotspots = (scrollChapter === 'earth' || hotspotOpacity > 0.01) && !selectedCountry
-  const showPeruHubs = scene === 1 || selectedCountry === 'peru'
-  const showChileHubs = (scene === 1 && !selectedCountry) || selectedCountry === 'chile'
+  const showPeruHubs = (scene === 1 || selectedCountry === 'peru') && scrollChapter !== 'country'
+  const showChileHubs = ((scene === 1 && !selectedCountry) || selectedCountry === 'chile') && scrollChapter !== 'country'
 
   return <group ref={transformGroup} visible={globeVisible}>
     <group ref={orientationGroup}>

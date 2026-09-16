@@ -8,6 +8,8 @@ import type { CountryId } from '../../data/countryProfiles'
 import type { ScrollChapter } from '../../app/ScrollContext'
 import { journeyCameraPath, journeyWaypoints } from '../../data/journeyPath'
 import { sampleOpeningCameraProgress } from '../../data/earthJourney'
+import { journeyLocalProgress } from '../../data/countryScroll'
+import { sampleJourneyCameraProgress } from '../JourneyScrollFlight'
 
 const scenePositions: [number, number, number][] = [
   [0, .15, 8.5], [1.05, .1, 6.3], [.3, .2, 7.4], [0, 0, 7.1], [0, 0, 9.5], [-1.6, .1, 7.5], [0, -.2, 8.6], [0, .1, 8.2],
@@ -53,8 +55,8 @@ export function CameraRig({
   }, [camera, scene, capabilityFocus, ibiolPhase, selectedCountry, scrollChapter])
 
   useFrame(state => {
-    // 1 — Country Focus has highest priority
-    if (selectedCountry) {
+    // 1 — Country focus is stable until the country chapter takes over.
+    if (selectedCountry && scrollChapter !== 'country') {
       const target = countryFocusTargets[selectedCountry]
       countryLookAt.current.set(...target.lookAt)
       camera.position.lerp(new THREE.Vector3(...target.camera), 1 - Math.exp(-5.4 * state.clock.getDelta()))
@@ -78,7 +80,22 @@ export function CameraRig({
       return
     }
 
-    // 4 — Journey
+    // 4 — Country chapter scroll camera
+    if (scrollChapter === 'country' && selectedCountry) {
+      const jrProg = journeyLocalProgress(selectedCountry, scrollProgress)
+      if (jrProg > 0.01) {
+        const { position, target } = sampleJourneyCameraProgress(jrProg)
+        camera.position.lerp(new THREE.Vector3(...position), 1 - Math.exp(-4.0 * state.clock.getDelta()))
+        camera.lookAt(...target)
+      } else {
+        const ct = countryFocusTargets[selectedCountry]
+        camera.position.lerp(new THREE.Vector3(...ct.camera), 1 - Math.exp(-3.5 * state.clock.getDelta()))
+        camera.lookAt(...ct.lookAt)
+      }
+      return
+    }
+
+    // 5 — Legacy Journey
     if (scene !== 5) return
     if (journeyStartedAt.current === null) journeyStartedAt.current = state.clock.elapsedTime
     const elapsed  = state.clock.elapsedTime - journeyStartedAt.current

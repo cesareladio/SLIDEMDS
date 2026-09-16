@@ -52,7 +52,11 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   }
   const next = () => goTo(sceneRef.current === story.length - 1 ? 0 : sceneRef.current + 1)
   const previous = () => goTo(sceneRef.current - 1)
-  const selectCountry = (country: CountryId) => { setSelectedCountry(country); setCountrySection('overview') }
+  const selectCountry = (country: CountryId) => {
+    setSelectedCountry(country)
+    setCountrySection('overview')
+    window.requestAnimationFrame(() => document.querySelector('[data-chapter="country"]')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
   const clearCountry = () => { setSelectedCountry(null); setCountrySection('overview') }
 
   useEffect(() => {

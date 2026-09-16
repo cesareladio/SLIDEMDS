@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { countryPolygon } from '../../data/countryGeo'
 import type { CountryId } from '../../data/countryProfiles'
 import type { Hub, TerritorialNode } from '../../data/types'
@@ -13,28 +12,34 @@ function project(country: CountryId, lat: number, lon: number) {
 }
 
 function polygonPath(country: CountryId) {
-  const polygon = countryPolygon(country)
-  return polygon.map(([lon, lat], index) => {
+  return countryPolygon(country).map(([lon, lat], index) => {
     const { x, y } = project(country, lat, lon)
     return `${index === 0 ? 'M' : 'L'} ${x} ${y}`
   }).join(' ') + ' Z'
 }
 
-export function CountryMap({ country, territories = [], hubs = [] }: { country: CountryId; territories?: TerritorialNode[]; hubs?: Hub[] }) {
+export function CountryMap({ country, territories = [], hubs = [], progress = 1, opacity = 1 }: {
+  country: CountryId
+  territories?: TerritorialNode[]
+  hubs?: Hub[]
+  progress?: number
+  opacity?: number
+}) {
   const locations = territories.length > 0 ? territories : hubs
-  return <motion.div className={`country-map country-map-${country}`} initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: .65 }}>
+  const reveal = Math.min(1, Math.max(0, progress))
+  return <div className={`country-map country-map-${country}`} style={{ opacity, transform: `scale(${.92 + reveal * .08})` }}>
     <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-label={`Mapa de ${country}`}>
       <path d={polygonPath(country)} className="country-map-surface" />
       <path d={polygonPath(country)} className="country-map-outline" />
     </svg>
     {locations.map((location, index) => {
+      const itemP = Math.min(1, Math.max(0, (reveal - index * .12) / .3))
       const { x, y } = project(country, location.lat, location.lon)
       const label = 'label' in location ? location.label : location.name
-      const people = location.people
-      return <motion.div key={label} className="country-map-pin" style={{ left: `${x}%`, top: `${y}%` }} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .25 + index * .12, type: 'spring', stiffness: 190 }}>
+      return <div key={label} className="country-map-pin" style={{ left: `${x}%`, top: `${y}%`, opacity: itemP, transform: `translate(-50%, -50%) scale(${.6 + itemP * .4})` }}>
         <i />
-        <span>{label}<b>{people.toLocaleString('es-PE')}</b></span>
-      </motion.div>
+        <span>{label}<b>{location.people.toLocaleString('es-PE')}</b></span>
+      </div>
     })}
-  </motion.div>
+  </div>
 }

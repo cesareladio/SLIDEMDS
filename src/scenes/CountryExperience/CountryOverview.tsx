@@ -1,22 +1,36 @@
-import { motion } from 'framer-motion'
 import type { CountryProfile } from '../../data/countryProfiles'
+import { getSegmentProgress, segmentFadeOpacity } from '../../data/countryScroll'
 import { CountryMap } from './CountryMap'
 
-export function CountryOverview({ profile }: { profile: CountryProfile }) {
+export function CountryOverview({ profile, progress, opacity }: { profile: CountryProfile; progress: number; opacity: number }) {
   const { data } = profile
   const territorial = data.territorialDistribution ?? []
   const delivery = data.deliveryDistribution ?? []
-  return <motion.div className="country-overview" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-    <div className="country-hero-number">
+  const local = getSegmentProgress(data.id, 'overview', progress)
+  const revealTotal = Math.min(1, local / .24)
+  const revealNodes = Math.min(1, Math.max(0, (local - .2) / .38))
+  const revealTop3 = Math.min(1, Math.max(0, (local - .48) / .22))
+  const revealDelivery = Math.min(1, Math.max(0, (local - .7) / .25))
+  const overallOpacity = Math.min(1, opacity)
+  const exitOpacity = 1 - segmentFadeOpacity(data.id, 'exit', progress, .015)
+
+  return <section className="country-scroll-overview" style={{ opacity: overallOpacity * exitOpacity }}>
+    <p className="country-scroll-kicker">HUELLA</p>
+    <div className="country-scroll-number" style={{ opacity: revealTotal, transform: `translateY(${(1 - revealTotal) * 18}px)` }}>
       <strong>{data.total.toLocaleString('es-PE')}</strong><span>PERSONAS</span>
     </div>
-    <CountryMap country={data.id} territories={territorial} hubs={data.operationalHubs ?? []} />
-    {territorial.length > 0 && <motion.div className="country-top3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}>
-      <strong>64.7%</strong>
-      <span>TOP 3 · La Libertad · Arequipa · Lima</span>
-    </motion.div>}
-    {delivery.length > 0 && <motion.div className="country-delivery" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }}>
+    <CountryMap
+      country={data.id}
+      territories={territorial}
+      hubs={data.operationalHubs ?? []}
+      progress={revealNodes}
+      opacity={Math.max(.16, overallOpacity)}
+    />
+    {territorial.length > 0 && <div className="country-scroll-top3" style={{ opacity: revealTop3, transform: `translateY(${(1 - revealTop3) * 14}px)` }}>
+      <strong>64.7%</strong><span>DEL HC EN EL TOP 3<br /><small>La Libertad · Arequipa · Lima</small></span>
+    </div>}
+    {delivery.length > 0 && <div className="country-scroll-delivery" style={{ opacity: revealDelivery }}>
       {delivery.map(item => <div key={item.label}><span>{item.label}</span><b>{item.percent}%</b></div>)}
-    </motion.div>}
-  </motion.div>
+    </div>}
+  </section>
 }

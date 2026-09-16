@@ -31,9 +31,16 @@ export function ExperienceCanvas({
   scrollChapter = 'opening', scrollProgress = 0,
 }: ExperienceCanvasProps) {
   const isOpeningOrEarth = scrollChapter === 'opening' || scrollChapter === 'earth'
-  const showSpaceBackdrop = isOpeningOrEarth || scene === 1 || scene === 7
-  const ambientActive = !isOpeningOrEarth && scene === 4
-  return <Canvas className="experience-canvas" dpr={[1, 1.6]} camera={{ position: [0, .15, 8.5], fov: 42 }} gl={{ antialias: true, powerPreference: 'high-performance', alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0 }}>
+  const isCountry = scrollChapter === 'country'
+  const showSpaceBackdrop = isOpeningOrEarth || isCountry || scene === 1 || scene === 7
+  const ambientActive = !isOpeningOrEarth && !isCountry && scene === 4
+
+  return <Canvas
+    className="experience-canvas"
+    dpr={[1, 1.6]}
+    camera={{ position: [0, .15, 8.5], fov: 42 }}
+    gl={{ antialias: true, powerPreference: 'high-performance', alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0 }}
+  >
     <Suspense fallback={null}>
       <color attach="background" args={['#040816']} />
       <fog attach="fog" args={['#040816', 8, 18]} />
@@ -47,7 +54,15 @@ export function ExperienceCanvas({
         scrollChapter={scrollChapter}
         scrollProgress={scrollProgress}
       />
-      {scene !== 0 && <WorldObjects scene={scene} capabilityFocus={capabilityFocus} onAIPhase={onAIPhase} ibiolPhase={ibiolPhase} />}
+      <WorldObjects
+        scene={scene}
+        capabilityFocus={capabilityFocus}
+        onAIPhase={onAIPhase}
+        ibiolPhase={ibiolPhase}
+        selectedCountry={selectedCountry}
+        countryScrollProgress={scrollProgress}
+        scrollChapter={scrollChapter}
+      />
       <CameraRig
         scene={scene}
         capabilityFocus={capabilityFocus}

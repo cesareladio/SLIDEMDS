@@ -1,16 +1,21 @@
-import { motion } from 'framer-motion'
 import type { CountryProfile } from '../../data/countryProfiles'
+import { getSegmentProgress, segmentFadeOpacity } from '../../data/countryScroll'
 
-export function CountrySuperpowers({ profile }: { profile: CountryProfile }) {
-  const caps = profile.data.capabilities
-  return <motion.div className="country-superpowers" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-    <p className="country-section-kicker">CAPACIDAD CONECTADA</p>
-    <div className="country-cap-constellation">
-      {caps.map((cap, index) => <motion.div key={cap.id} className={`country-cap-node country-cap-node-${index + 1}`} initial={{ opacity: 0, scale: .7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .12 + index * .1, type: 'spring', stiffness: 170 }}>
-        <i />
-        <span>{cap.label}</span>
-        <b>{cap.value}</b>
-      </motion.div>)}
+export function CountrySuperpowers({ profile, progress }: { profile: CountryProfile; progress: number }) {
+  const local = getSegmentProgress(profile.data.id, 'superpowers', progress)
+  const opacity = segmentFadeOpacity(profile.data.id, 'superpowers', progress, .025)
+  const headline = Math.min(1, local / .22)
+  const details = Math.min(1, Math.max(0, (local - .48) / .28))
+  const focusCapabilities = profile.data.capabilities.filter(cap => cap.details)
+
+  return <section className="country-scroll-superpowers" style={{ opacity }}>
+    <p className="country-scroll-kicker">SUPERPODERES</p>
+    <h2 style={{ opacity: headline, transform: `translateY(${(1 - headline) * 18}px)` }}>CAPACIDAD<br /><em>CONECTADA</em></h2>
+    <div className="country-scroll-capability-copy" style={{ opacity: details }}>
+      {focusCapabilities.map(cap => <div key={cap.id}>
+        <span>{cap.label}</span><b>{cap.value}</b>
+        {cap.details && <small>{cap.details.map(detail => `${detail.label} ${detail.value}`).join(' · ')}</small>}
+      </div>)}
     </div>
-  </motion.div>
+  </section>
 }

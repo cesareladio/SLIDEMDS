@@ -29,7 +29,7 @@ function Experience() {
   const { scene, capabilityFocus, setAIPhase, ibiolPhase, selectedCountry, selectCountry } = useStory()
   const { chapter, chapterProgress, globalProgress } = useScrollStory()
 
-  const isScrollDriven = chapter === 'opening' || chapter === 'earth'
+  const isScrollDriven = chapter === 'opening' || chapter === 'earth' || chapter === 'country'
   const LegacyScene = !isScrollDriven && !selectedCountry ? legacyScenes[scene] : null
 
   return <main className={`app scene-index-${scene}`}>

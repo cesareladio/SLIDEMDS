@@ -1,18 +1,18 @@
-import { motion } from 'framer-motion'
+import { getSegmentProgress, segmentFadeOpacity } from '../../data/countryScroll'
 
-export function CountryJourney({ history }: { history: { year: number; people: number; milestone?: string; inflection?: boolean }[] }) {
-  return <motion.div className="country-journey" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-    <p className="country-section-kicker">UNA TRAYECTORIA QUE ACELERA</p>
-    <div className="country-journey-path">
-      {history.map((item, index) => <motion.div key={item.year} className={`country-journey-stop${item.inflection ? ' country-journey-inflection' : ''}`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .08 + index * .11 }}>
-        <i />
-        <span>{item.year}</span>
-        <b>{item.people.toLocaleString('es-PE')}</b>
-        {item.milestone && <small>{item.milestone}</small>}
-      </motion.div>)}
+export function CountryJourney({ history, progress }: { history: { year: number; people: number; milestone?: string; inflection?: boolean }[]; progress: number }) {
+  const local = getSegmentProgress('peru', 'journey', progress)
+  const opacity = segmentFadeOpacity('peru', 'journey', progress, .025)
+  const visible = history.filter((_, index) => local >= index / (history.length - 1) - .04)
+  const scale = Math.min(1, Math.max(0, (local - .55) / .2))
+
+  return <section className="country-scroll-journey" style={{ opacity }}>
+    <p className="country-scroll-kicker">NUESTRO CAMINO</p>
+    <div className="country-scroll-journey-years">
+      {visible.map(item => <span key={item.year} className={item.inflection ? 'inflection' : ''}>{item.year}<b>{item.people.toLocaleString('es-PE')}</b></span>)}
     </div>
-    <motion.div className="cj-inflection-label" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}>
-      <span>2020</span><b>PUNTO DE INFLEXIÓN</b>
-    </motion.div>
-  </motion.div>
+    <div className="country-scroll-scale" style={{ opacity: scale, transform: `translateY(${(1 - scale) * 18}px)` }}>
+      <strong>5×</strong><span>ESCALA EN<br />~24 MESES</span>
+    </div>
+  </section>
 }
