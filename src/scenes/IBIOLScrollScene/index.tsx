@@ -10,15 +10,32 @@ export function IBIOLScrollScene() {
   const grow = fadeWindow(p, .36, .44, .60, .68)
   const ask = fadeWindow(p, .62, .70, .82, .89)
   const final = fadeWindow(p, .84, .91, 1, 1.02)
-  const style = (opacity: number, y = 0) => ({ opacity, transform: `translateY(${y}px)`, filter: `blur(${(1 - opacity) * 7}px)` })
+  const style = (opacity: number) => ({ opacity, transform: `translateY(${(1 - opacity) * 16}px)`, filter: `blur(${(1 - opacity) * 7}px)` })
   return <section className="scene ibiol-scroll-scene">
     <div className="ibiol-scroll-copy">
       <p className="eyebrow" style={style(handoff)}>AI CAPABILITY → BUSINESS CAPABILITY</p>
       <div className="ibiol-scroll-stage">
-        <div className="ibiol-scroll-beat" style={style(today)}><strong>HOY</strong><span>CAPACIDADES LISTAS PARA ESCALAR</span><p>{ibiol.todayCapabilities.map(item => item.label).join(' · ')}</p></div>
-        <div className="ibiol-scroll-beat" style={style(grow)}><strong>CRECER</strong><span>FY26 / FY27</span><p>{ibiol.growthIndustries.map(item => item.label).join(' · ')}</p><small>{ibiol.growthCapabilities.map(item => item.label).join(' · ')}</small></div>
-        <div className="ibiol-scroll-beat" style={style(ask)}><strong>ACELERAR</strong><span>{ibiol.asks.join(' · ')}</span></div>
-        <div className="ibiol-scroll-beat ibiol-scroll-final" style={style(final)}><p>{ibiol.finalMessage}</p></div>
+        <div className="ibiol-scroll-beat" style={style(today)}>
+          <strong>HOY</strong>
+          <span>CAPACIDADES LISTAS PARA ESCALAR</span>
+          <p>{ibiol.todayCapabilities.map(item => item.label).join(' · ')}</p>
+        </div>
+        <div className="ibiol-scroll-beat" style={style(grow)}>
+          <strong>CRECER</strong>
+          <span>FY26 / FY27</span>
+          <p>{ibiol.growthIndustries.map(item => item.label).join(' · ')}</p>
+          <small>{ibiol.growthCapabilities.map(item => item.label).join(' · ')}</small>
+        </div>
+        <div className="ibiol-scroll-beat" style={style(ask)}>
+          <strong>ACELERAR</strong>
+          <span>{ibiol.asks.join(' · ')}</span>
+        </div>
+        <div className="ibiol-scroll-beat ibiol-scroll-final" style={style(final)}>
+          <p className="ibiol-final-p">
+            TENEMOS CAPACIDAD.<br />TENEMOS TALENTO.<br /><br />
+            AHORA NECESITAMOS <em>ESCALA.</em>
+          </p>
+        </div>
       </div>
     </div>
   </section>

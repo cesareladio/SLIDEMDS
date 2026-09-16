@@ -74,16 +74,7 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase()
-      if (selectedCountry && key === 'escape') {
-        event.preventDefault()
-        document.querySelector('[data-chapter="earth"]')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        return
-      }
-      if (key === ' ' && event.shiftKey) { event.preventDefault(); window.scrollBy({ top: -window.innerHeight * .72, behavior: 'smooth' }); return }
-      if (key === 'arrowright' || key === 'arrowdown' || key === ' ') { event.preventDefault(); window.scrollBy({ top: window.innerHeight * .72, behavior: 'smooth' }) }
-      if (key === 'arrowleft' || key === 'arrowup') { event.preventDefault(); window.scrollBy({ top: -window.innerHeight * .72, behavior: 'smooth' }) }
       if (key === 'p') setPresenter(value => !value)
-      if (key === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()
       if (key === 'escape') setPresenter(false)
     }
     window.addEventListener('keydown', onKey)
