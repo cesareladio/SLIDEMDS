@@ -3,6 +3,7 @@ import { sceneDurations, story } from '../data/story'
 import { clamp } from '../utils/math'
 import type { CapabilityFocus } from '../data/capabilityConstellation'
 import type { IBIOLPhase } from '../data/ibiol'
+import type { CountryId, CountrySection } from '../data/countryProfiles'
 
 interface StoryState {
   scene: number
@@ -16,6 +17,11 @@ interface StoryState {
   setAIPhase: (phase: 'certifications' | 'gh300' | 'concepts') => void
   ibiolPhase: IBIOLPhase
   setIBIOLPhase: (phase: IBIOLPhase) => void
+  selectedCountry: CountryId | null
+  countrySection: CountrySection
+  selectCountry: (country: CountryId) => void
+  clearCountry: () => void
+  setCountrySection: (section: CountrySection) => void
   goTo: (index: number) => void
   next: () => void
   previous: () => void
@@ -34,6 +40,8 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   const [capabilityFocus, setCapabilityFocus] = useState<CapabilityFocus>('overview')
   const [aiPhase, setAIPhase] = useState<'certifications' | 'gh300' | 'concepts'>('certifications')
   const [ibiolPhase, setIBIOLPhase] = useState<IBIOLPhase>('today')
+  const [selectedCountry, setSelectedCountry] = useState<CountryId | null>(null)
+  const [countrySection, setCountrySection] = useState<CountrySection>('overview')
   const sceneRef = useRef(scene)
 
   const goTo = (raw: number) => {
@@ -55,6 +63,8 @@ export function StoryProvider({ children }: { children: ReactNode }) {
     if (scene !== 3) setCapabilityFocus('overview')
     if (scene !== 4) setAIPhase('certifications')
     if (scene !== 6) setIBIOLPhase('today')
+    setSelectedCountry(null)
+    setCountrySection('overview')
   }, [scene])
 
   useEffect(() => {
@@ -71,13 +81,16 @@ export function StoryProvider({ children }: { children: ReactNode }) {
       if (key === 'a') setAutoplay(value => !value)
       if (key === 'p') setPresenter(value => !value)
       if (key === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()
-      if (key === 'escape') setPresenter(false)
+      if (key === 'escape') { setPresenter(false); setSelectedCountry(null); setCountrySection('overview') }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, goTo, next, previous])
+  const selectCountry = (country: CountryId) => { setSelectedCountry(country); setCountrySection('overview') }
+  const clearCountry = () => { setSelectedCountry(null); setCountrySection('overview') }
+
+  const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, selectedCountry, countrySection, selectCountry, clearCountry, setCountrySection, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, selectedCountry, countrySection, goTo, next, previous])
   return <StoryContext.Provider value={value}>{children}</StoryContext.Provider>
 }
 

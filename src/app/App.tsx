@@ -15,19 +15,20 @@ import { AISkillingScene } from '../scenes/AISkillingScene'
 import { JourneyScene } from '../scenes/JourneyScene'
 import { IBIOLScene } from '../scenes/IBIOLScene'
 import { ClosingScene } from '../scenes/ClosingScene'
+import { CountryExperience } from '../scenes/CountryExperience'
 
 const scenes = [OpeningScene, FootprintScene, PeopleScene, SuperpowersScene, AISkillingScene, JourneyScene, IBIOLScene, ClosingScene]
 
 function Experience() {
-  const { scene, capabilityFocus, setAIPhase, ibiolPhase } = useStory()
+  const { scene, capabilityFocus, setAIPhase, ibiolPhase, selectedCountry, selectCountry } = useStory()
   const Scene = scenes[scene]
   return <main className={`app scene-index-${scene}`}>
     <div className="grain" />
-    <ErrorBoundary fallback={<WebGLFallback />}><ExperienceCanvas scene={scene} capabilityFocus={capabilityFocus} onAIPhase={setAIPhase} ibiolPhase={ibiolPhase} /></ErrorBoundary>
+    <ErrorBoundary fallback={<WebGLFallback />}><ExperienceCanvas scene={scene} capabilityFocus={capabilityFocus} onAIPhase={setAIPhase} ibiolPhase={ibiolPhase} selectedCountry={selectedCountry} onSelectCountry={selectCountry} /></ErrorBoundary>
     <div className="ambient-wash" />
     <Brand />
     {scene !== 0 && <div className="chapter-label">GDN-e / EXPERIENCIA EJECUTIVA</div>}
-    <AnimatePresence mode="wait"><Scene key={scene} /></AnimatePresence>
+    <AnimatePresence mode="wait">{selectedCountry ? <CountryExperience key={`country-${selectedCountry}`} /> : <Scene key={scene} />}</AnimatePresence>
     <AvatarOverlay moment={scene === 0 ? 'opening' : scene === 1 ? 'bridge' : scene === 7 ? 'closing' : undefined} />
     <Navigation />
     <PresenterMode />

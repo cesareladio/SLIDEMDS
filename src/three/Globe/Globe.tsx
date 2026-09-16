@@ -12,20 +12,47 @@ import { EarthSurface } from './EarthSurface'
 import { Clouds } from './Clouds'
 import { Atmosphere } from './Atmosphere'
 import { sampleEarthChoreography, earthChoreographyDuration, footprintComposition, closingComposition, type EarthChoreographyPhase } from '../../data/earthJourney'
+import type { CountryId } from '../../data/countryProfiles'
 
 function finiteScalar(value: number, fallback = 0) { return Number.isFinite(value) ? value : fallback }
 
-function Hotspot({ point, label, color = '#bdf3ff' }: { point: THREE.Vector3; label: string; color?: string }) {
+const countryOrientations = {
+  peru:  { lat: -10, lon: -75 },
+  chile: { lat: -33, lon: -71 },
+} as const
+
+const countryCompositions: Record<CountryId, { position: [number, number, number]; scale: number }> = {
+  peru:  { position: [.15, -.45, 0], scale: 1.28 },
+  chile: { position: [.2, -.52, 0], scale: 1.22 },
+}
+
+function InteractiveHotspot({ point, label, color = '#bdf3ff', onSelect }: { point: THREE.Vector3; label: string; color?: string; onSelect: () => void }) {
+  const [hovered, setHovered] = useState(false)
+  const leaderEnd = useMemo(() => point.clone().normalize().multiplyScalar(point.length() + .3), [point])
+  const glowSize = hovered ? .032 : .018
+  const halosOpacity = hovered ? .28 : .1
+  return <group
+    onPointerEnter={e => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer' }}
+    onPointerLeave={e => { e.stopPropagation(); setHovered(false); document.body.style.cursor = '' }}
+    onClick={e => { e.stopPropagation(); onSelect() }}
+  >
+    <mesh position={point}><sphereGeometry args={[glowSize, 12, 12]} /><meshBasicMaterial color={color} toneMapped={false} /></mesh>
+    <mesh position={point} scale={2.8}><sphereGeometry args={[glowSize, 12, 12]} /><meshBasicMaterial color={color} transparent opacity={halosOpacity} depthWrite={false} /></mesh>
+    <Line points={[point, leaderEnd]} color={color} transparent opacity={hovered ? .7 : .42} lineWidth={.7} />
+    <Html position={leaderEnd} center distanceFactor={9} className={`hub-label hub-label-minimal${hovered ? ' hub-label-hover' : ''}`}><span>{label}</span></Html>
+  </group>
+}
+
+function PlainHotspot({ point, label, color = '#eaffff' }: { point: THREE.Vector3; label: string; color?: string }) {
   const leaderEnd = useMemo(() => point.clone().normalize().multiplyScalar(point.length() + .3), [point])
   return <group>
     <mesh position={point}><sphereGeometry args={[.018, 12, 12]} /><meshBasicMaterial color={color} toneMapped={false} /></mesh>
-    <mesh position={point} scale={2.6}><sphereGeometry args={[.018, 12, 12]} /><meshBasicMaterial color={color} transparent opacity={.14} depthWrite={false} /></mesh>
     <Line points={[point, leaderEnd]} color={color} transparent opacity={.42} lineWidth={.7} />
     <Html position={leaderEnd} center distanceFactor={9} className="hub-label hub-label-minimal"><span>{label}</span></Html>
   </group>
 }
 
-export function Globe({ scene }: { scene: number }) {
+export function Globe({ scene, selectedCountry = null, onSelectCountry }: { scene: number; selectedCountry?: CountryId | null; onSelectCountry?: (id: CountryId) => void }) {
   const transformGroup = useRef<THREE.Group>(null)
   const orientationGroup = useRef<THREE.Group>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,17 +69,25 @@ export function Globe({ scene }: { scene: number }) {
 
   const southAmericaQuaternion = useMemo(() => getGlobeOrientationForLatLon(geoAnchors.southAmerica.lat, geoAnchors.southAmerica.lon), [])
   const peruChileQuaternion = useMemo(() => getGlobeOrientationForLatLon(geoAnchors.peruChile.lat, geoAnchors.peruChile.lon), [])
+  const peruQuaternion = useMemo(() => getGlobeOrientationForLatLon(countryOrientations.peru.lat, countryOrientations.peru.lon), [])
+  const chileQuaternion = useMemo(() => getGlobeOrientationForLatLon(countryOrientations.chile.lat, countryOrientations.chile.lon), [])
 
   useFrame(state => {
     if (scene !== 0) openingStartedAt.current = null
 
-    let earthPosition: [number, number, number] = footprintComposition.position
-    let earthScale = footprintComposition.scale
-    let targetQuaternion = peruChileQuaternion
+    let earthPosition: [number, number, number]
+    let earthScale: number
+    let targetQuaternion: THREE.Quaternion
     let nextPhase: EarthChoreographyPhase = 'settle'
     let outlineTarget = .38
 
-    if (scene === 0) {
+    if (selectedCountry) {
+      const comp = countryCompositions[selectedCountry]
+      earthPosition = comp.position
+      earthScale = comp.scale
+      targetQuaternion = selectedCountry === 'peru' ? peruQuaternion : chileQuaternion
+      outlineTarget = .52
+    } else if (scene === 0) {
       if (openingStartedAt.current === null) openingStartedAt.current = state.clock.elapsedTime
       const elapsed = state.clock.elapsedTime - openingStartedAt.current
       const sample = sampleEarthChoreography(Math.min(elapsed, earthChoreographyDuration))
@@ -61,10 +96,20 @@ export function Globe({ scene }: { scene: number }) {
       nextPhase = sample.phase
       targetQuaternion = nextPhase === 'hero' || nextPhase === 'shift' ? southAmericaQuaternion : peruChileQuaternion
       outlineTarget = nextPhase === 'hero' ? 0 : nextPhase === 'shift' ? .22 : .38
+    } else if (scene === 1) {
+      earthPosition = footprintComposition.position
+      earthScale = footprintComposition.scale
+      targetQuaternion = peruChileQuaternion
+      outlineTarget = .38
     } else if (scene === 7) {
       earthPosition = closingComposition.position
       earthScale = closingComposition.scale
+      targetQuaternion = peruChileQuaternion
       outlineTarget = .3
+    } else {
+      earthPosition = footprintComposition.position
+      earthScale = footprintComposition.scale
+      targetQuaternion = peruChileQuaternion
     }
 
     if (nextPhase !== visualPhase) setVisualPhase(nextPhase)
@@ -80,10 +125,10 @@ export function Globe({ scene }: { scene: number }) {
     if (outlineRef.current?.material) outlineRef.current.material.opacity = THREE.MathUtils.lerp(outlineRef.current.material.opacity, outlineTarget, .05)
   })
 
-  const globeVisible = scene === 0 || scene === 1 || scene === 7
-  const showCountryHotspots = visualPhase === 'focus' || visualPhase === 'settle'
-  const showPeruHubs = scene === 1
-  const showChileHubs = scene === 1 || scene === 7
+  const globeVisible = scene === 0 || scene === 1 || scene === 7 || selectedCountry !== null
+  const showSelectableHotspots = (visualPhase === 'focus' || visualPhase === 'settle') && !selectedCountry && scene === 0
+  const showCountryHubs = scene === 1 || (selectedCountry !== null)
+  const showEnergyArc = showSelectableHotspots || (scene === 1 && !selectedCountry)
 
   return <group ref={transformGroup} visible={globeVisible}>
     <group ref={orientationGroup}>
@@ -91,13 +136,13 @@ export function Globe({ scene }: { scene: number }) {
       {textures && !failed && <Clouds textures={textures} />}
       <Atmosphere />
       <Line ref={outlineRef} points={outline} color="#8fe6ff" lineWidth={1} transparent opacity={0} />
-      {showCountryHotspots && <>
-        <Hotspot point={peruPoint} label="PERÚ" color="#00e6ff" />
-        <Hotspot point={chilePoint} label="CHILE" color="#4aa8ff" />
-        <EnergyArc from={chilePoint} to={peruPoint} visible />
+      {showSelectableHotspots && <>
+        <InteractiveHotspot point={peruPoint} label="PERÚ" color="#00e6ff" onSelect={() => onSelectCountry?.('peru')} />
+        <InteractiveHotspot point={chilePoint} label="CHILE" color="#4aa8ff" onSelect={() => onSelectCountry?.('chile')} />
+        {showEnergyArc && <EnergyArc from={chilePoint} to={peruPoint} visible />}
       </>}
-      {showPeruHubs && peruHubs.map(hub => <Hotspot key={hub.name} point={latLonToVector3(hub.lat, hub.lon, 2.52)} label={hub.name} color="#eaffff" />)}
-      {showChileHubs && chileHubs.map(hub => <Hotspot key={hub.name} point={latLonToVector3(hub.lat, hub.lon, 2.52)} label={hub.name} color="#eaffff" />)}
+      {showCountryHubs && peruHubs.map(hub => <PlainHotspot key={hub.name} point={latLonToVector3(hub.lat, hub.lon, 2.52)} label={hub.name} />)}
+      {showCountryHubs && chileHubs.map(hub => <PlainHotspot key={hub.name} point={latLonToVector3(hub.lat, hub.lon, 2.52)} label={hub.name} color="#8fd8ff" />)}
     </group>
     <OrbitArcs visible={globeVisible} />
   </group>
