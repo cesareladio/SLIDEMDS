@@ -4,10 +4,10 @@ import { getSegmentProgress, segmentFadeOpacity } from '../../data/countryScroll
 export function CountryTalent({ talent, progress }: { talent: TalentProfile; progress: number }) {
   const local = getSegmentProgress('peru', 'talent', progress)
   const opacity = segmentFadeOpacity('peru', 'talent', progress, .025)
-  const gender = Math.min(1, local / .28)
-  const executive = Math.min(1, Math.max(0, (local - .2) / .26))
-  const leadership = Math.min(1, Math.max(0, (local - .42) / .25))
-  const careers = Math.min(1, Math.max(0, (local - .65) / .25))
+  const gender = Math.min(1, local / .22)
+  const executive = Math.min(1, Math.max(0, (local - .12) / .2))
+  const leadership = Math.min(1, Math.max(0, (local - .26) / .2))
+  const careers = Math.min(1, Math.max(0, (local - .42) / .22))
 
   return <section className="country-scroll-talent" style={{ opacity }}>
     <p className="country-scroll-kicker">TALENTO</p>

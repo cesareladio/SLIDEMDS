@@ -12,7 +12,7 @@ export function CountrySuperpowers({ profile, progress }: { profile: CountryProf
     <h2 style={{ opacity: headlineReveal, transform: `translateY(${(1 - headlineReveal) * 18}px)` }}>CAPACIDAD<br /><em>CONECTADA</em></h2>
     <div className="country-capabilities-grid">
       {caps.map((cap, index) => {
-        const reveal = Math.min(1, Math.max(0, (local - .12 - index * .1) / .18))
+        const reveal = Math.min(1, Math.max(0, (local - .06 - index * .075) / .14))
         return <div key={cap.id} className="country-cap-row" style={{ opacity: reveal, transform: `translateX(${(1 - reveal) * 20}px)` }}>
           <span className="cap-label">{cap.label}</span>
           <span className="cap-value">{cap.value}</span>

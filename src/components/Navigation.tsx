@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
 import { useScrollStory } from '../app/ScrollContext'
-import { storyBeats, getNextBeat, getPreviousBeat, getStoryBeatIndex, scrollToBeat } from '../data/storyBeats'
+import { storyBeats, getNextBeat, getPreviousBeat, getStoryBeatIndex, getStoryBeatTarget } from '../data/storyBeats'
 
 function isTypingTarget(target: EventTarget | null) {
   if (!(target instanceof HTMLElement)) return false
@@ -12,28 +13,50 @@ export function Navigation() {
   const [visible, setVisible] = useState(false)
   const [busy, setBusy] = useState(false)
   const busyRef = useRef(false)
-  const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const tweenRef = useRef<gsap.core.Tween | null>(null)
+  const scrollState = useRef({ y: 0 })
   const beatIndex = getStoryBeatIndex(chapter, chapterProgress)
 
   const unlock = useCallback(() => {
+    tweenRef.current = null
     busyRef.current = false
     setBusy(false)
-    if (settleTimer.current) { clearTimeout(settleTimer.current); settleTimer.current = null }
   }, [])
 
   const goToStoryBeat = useCallback((beat: typeof storyBeats[number] | null) => {
     if (!beat || busyRef.current) return
+    const targetY = getStoryBeatTarget(beat)
+    if (targetY === null) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) { window.scrollTo(0, targetY); return }
     busyRef.current = true
     setBusy(true)
-    scrollToBeat(beat)
-    if ('onscrollend' in window) window.addEventListener('scrollend', unlock, { once: true })
-    else settleTimer.current = setTimeout(unlock, 750)
+    scrollState.current.y = window.scrollY
+    tweenRef.current = gsap.to(scrollState.current, {
+      y: targetY,
+      duration: .7,
+      ease: 'power2.inOut',
+      onUpdate: () => window.scrollTo(0, scrollState.current.y),
+      onComplete: unlock,
+      onInterrupt: unlock,
+    })
   }, [unlock])
 
   const next = useCallback(() => goToStoryBeat(getNextBeat(chapter, chapterProgress)), [chapter, chapterProgress, goToStoryBeat])
   const previous = useCallback(() => goToStoryBeat(getPreviousBeat(chapter, chapterProgress)), [chapter, chapterProgress, goToStoryBeat])
 
-  useEffect(() => () => { if (settleTimer.current) clearTimeout(settleTimer.current) }, [])
+  useEffect(() => {
+    const cancelForManualScroll = () => {
+      if (tweenRef.current) { tweenRef.current.kill(); unlock() }
+    }
+    window.addEventListener('wheel', cancelForManualScroll, { passive: true })
+    window.addEventListener('touchstart', cancelForManualScroll, { passive: true })
+    return () => {
+      window.removeEventListener('wheel', cancelForManualScroll)
+      window.removeEventListener('touchstart', cancelForManualScroll)
+      tweenRef.current?.kill()
+    }
+  }, [unlock])
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {

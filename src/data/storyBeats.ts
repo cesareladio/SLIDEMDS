@@ -11,15 +11,15 @@ export const storyBeats: StoryBeat[] = [
   { id: 'opening-identities', chapter: 'opening', progress: .25, label: 'DOS IDENTIDADES' },
   { id: 'opening-team', chapter: 'opening', progress: .62, label: 'UN SOLO EQUIPO' },
   { id: 'earth-hub', chapter: 'earth', progress: .50, label: 'PERÚ × CHILE' },
-  { id: 'peru-geo', chapter: 'peru', progress: .07, label: 'PERÚ · GEO' },
-  { id: 'peru-footprint', chapter: 'peru', progress: .23, label: 'PERÚ · HUELLA' },
-  { id: 'peru-talent', chapter: 'peru', progress: .43, label: 'PERÚ · TALENTO' },
-  { id: 'peru-capabilities', chapter: 'peru', progress: .62, label: 'PERÚ · CAPACIDADES' },
-  { id: 'peru-timeline', chapter: 'peru', progress: .82, label: 'PERÚ · CAMINO' },
+  { id: 'peru-geo', chapter: 'peru', progress: .12, label: 'PERÚ · GEO' },
+  { id: 'peru-footprint', chapter: 'peru', progress: .28, label: 'PERÚ · HUELLA' },
+  { id: 'peru-talent', chapter: 'peru', progress: .48, label: 'PERÚ · TALENTO' },
+  { id: 'peru-capabilities', chapter: 'peru', progress: .68, label: 'PERÚ · CAPACIDADES' },
+  { id: 'peru-timeline', chapter: 'peru', progress: .89, label: 'PERÚ · CAMINO' },
   { id: 'peru-exit', chapter: 'peru', progress: .96, label: 'PERÚ → CHILE' },
-  { id: 'chile-geo', chapter: 'chile', progress: .08, label: 'CHILE · GEO' },
-  { id: 'chile-footprint', chapter: 'chile', progress: .34, label: 'CHILE · HUELLA' },
-  { id: 'chile-capabilities', chapter: 'chile', progress: .72, label: 'CHILE · CAPACIDADES' },
+  { id: 'chile-geo', chapter: 'chile', progress: .15, label: 'CHILE · GEO' },
+  { id: 'chile-footprint', chapter: 'chile', progress: .46, label: 'CHILE · HUELLA' },
+  { id: 'chile-capabilities', chapter: 'chile', progress: .82, label: 'CHILE · CAPACIDADES' },
   { id: 'chile-exit', chapter: 'chile', progress: .95, label: 'CHILE → CONVERGENCIA' },
   { id: 'convergence-identities', chapter: 'convergence', progress: .46, label: 'DOS IDENTIDADES' },
   { id: 'convergence-team', chapter: 'convergence', progress: .67, label: 'UN SOLO EQUIPO' },
@@ -63,12 +63,17 @@ export function getPreviousBeat(chapter: ScrollChapter, progress: number): Story
   return candidates[candidates.length - 1] ?? null
 }
 
-export function scrollToBeat(beat: StoryBeat) {
+export function getStoryBeatTarget(beat: StoryBeat): number | null {
   const chapter = document.querySelector<HTMLElement>(`[data-chapter="${beat.chapter}"]`)
-  if (!chapter) return
+  if (!chapter) return null
   const rawTarget = chapter.offsetTop + beat.progress * chapter.offsetHeight
   const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0)
-  const target = Math.min(rawTarget, maxScroll)
+  return Math.min(rawTarget, maxScroll)
+}
+
+export function scrollToBeat(beat: StoryBeat) {
+  const target = getStoryBeatTarget(beat)
+  if (target === null) return
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   window.scrollTo({ top: target, behavior: prefersReduced ? 'auto' : 'smooth' })
 }

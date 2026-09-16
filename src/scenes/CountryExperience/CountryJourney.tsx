@@ -5,8 +5,8 @@ const milestoneYears = [2016, 2020, 2021, 2022, 2026]
 export function CountryJourney({ history, progress }: { history: { year: number; people: number; milestone?: string; inflection?: boolean }[]; progress: number }) {
   const local = getSegmentProgress('peru', 'journey', progress)
   const opacity = segmentFadeOpacity('peru', 'journey', progress, .025)
-  const scaleReveal = Math.min(1, Math.max(0, (local - .5) / .3))
-  const lineProgress = Math.min(1, local)
+  const scaleReveal = Math.min(1, Math.max(0, (local - .22) / .2))
+  const lineProgress = Math.min(1, local / .85)
   const milestones = milestoneYears
     .map(year => history.find(item => item.year === year))
     .filter((item): item is { year: number; people: number; milestone?: string; inflection?: boolean } => Boolean(item))

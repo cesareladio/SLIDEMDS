@@ -7,9 +7,9 @@ export function CountryOverview({ profile, progress }: { profile: CountryProfile
   const delivery = data.deliveryDistribution ?? []
   const local = getSegmentProgress(data.id, 'overview', progress)
   const opacity = segmentFadeOpacity(data.id, 'overview', progress, .035)
-  const revealTotal = Math.min(1, local / .24)
-  const revealTop3 = Math.min(1, Math.max(0, (local - .48) / .22))
-  const revealDelivery = Math.min(1, Math.max(0, (local - .7) / .25))
+  const revealTotal = Math.min(1, local / .18)
+  const revealTop3 = Math.min(1, Math.max(0, (local - .28) / .18))
+  const revealDelivery = Math.min(1, Math.max(0, (local - .48) / .2))
 
   return <section className="country-scroll-overview" style={{ opacity }}>
     <p className="country-scroll-kicker">HUELLA</p>
