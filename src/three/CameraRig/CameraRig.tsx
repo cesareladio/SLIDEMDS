@@ -32,14 +32,7 @@ export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 't
   const { camera } = useThree()
   const journeyStartedAt = useRef<number | null>(null)
 
-  useEffect(() => {
-    if (selectedCountry || scene === 5 || scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scrollChapter === 'convergence' || scrollChapter === 'ai') { journeyStartedAt.current = null; return }
-    const target = scene === 6 ? ibiolTargets[ibiolPhase] : capabilityFocus === 'overview' || scene !== 3 ? { camera: scenePositions[scene] ?? scenePositions[0], lookAt: [0, 0, 0] as [number, number, number] } : focusTargets[capabilityFocus]
-    const cameraTarget = finiteVector(target.camera)
-    const lookAtTarget = finiteVector(target.lookAt)
-    const tween = gsap.to(camera.position, { x: cameraTarget[0], y: cameraTarget[1], z: cameraTarget[2], duration: 1.8, ease: 'power3.inOut', onUpdate: () => camera.lookAt(...lookAtTarget) })
-    return () => { tween.kill() }
-  }, [camera, scene, capabilityFocus, ibiolPhase, selectedCountry, scrollChapter])
+  useEffect(() => { journeyStartedAt.current = null }, [scrollChapter, selectedCountry, scene])
 
   useFrame(state => {
     if (scrollChapter === 'country' && selectedCountry) {

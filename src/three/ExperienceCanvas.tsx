@@ -36,7 +36,8 @@ export function ExperienceCanvas({
   const isCountry = scrollChapter === 'country'
   const isConvergence = scrollChapter === 'convergence'
   const isAI = scrollChapter === 'ai'
-  const showSpaceBackdrop = isOpeningOrEarth || isCountry || isConvergence || isAI || scene === 1 || scene === 7
+  const isIBIOL = scrollChapter === 'ibiol'
+  const showSpaceBackdrop = isOpeningOrEarth || isCountry || isConvergence || isAI || isIBIOL || scene === 1 || scene === 7
   const ambientActive = !isOpeningOrEarth && !isCountry && !isConvergence && !isAI && scene === 4
 
   return <Canvas
@@ -59,7 +60,8 @@ export function ExperienceCanvas({
         scrollProgress={scrollProgress}
       />
       {isAI && <AIScrollParticleMorph progress={scrollProgress} visible />}
-      {scrollChapter === 'ibiol' && <IBIOLScrollNetwork progress={scrollProgress} visible />}
+      {isIBIOL && <AIScrollParticleMorph progress={1} opacity={Math.max(0, 1 - Math.min(1, scrollProgress / .12))} visible />}
+      {isIBIOL && <IBIOLScrollNetwork progress={scrollProgress} opacity={Math.min(1, scrollProgress / .12)} visible />}
       <WorldObjects
         scene={scene}
         capabilityFocus={capabilityFocus}

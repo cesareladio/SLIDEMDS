@@ -5,6 +5,8 @@ import { ibiol, finiteIBIOLPosition } from '../data/ibiol'
 export function IBIOLScrollNetwork({ progress, visible, opacity = 1 }: { progress: number; visible: boolean; opacity?: number }) {
   if (!visible) return null
   const p = Math.min(1, Math.max(0, progress))
+  const finalFade = p > .84 ? 1 - (p - .84) / .16 : 1
+  opacity *= Math.max(0, Math.min(1, finalFade))
   const todayP = Math.min(1, p / .35)
   const growP = Math.min(1, Math.max(0, (p - .25) / .4))
   const askP = Math.min(1, Math.max(0, (p - .55) / .3))

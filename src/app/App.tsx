@@ -1,4 +1,3 @@
-import { AnimatePresence } from 'framer-motion'
 import { useEffect, useRef } from 'react'
 import { StoryProvider, useStory } from './StoryContext'
 import { ScrollProvider, useScrollStory } from './ScrollContext'
@@ -11,24 +10,14 @@ import { ExperienceCanvas } from '../three/ExperienceCanvas'
 import { Navigation } from '../components/Navigation'
 import { PresenterMode } from '../components/PresenterMode'
 import { Brand } from '../components/Brand'
-import { AvatarOverlay } from '../components/AvatarOverlay/AvatarOverlay'
+import { ScrollAvatarOverlay } from '../components/ScrollAvatarOverlay'
 import { OpeningScene } from '../scenes/OpeningScene'
 import { EarthHubScene } from '../scenes/EarthHubScene'
 import { ConvergenceScene } from '../scenes/ConvergenceScene'
 import { AIScrollScene } from '../scenes/AIScrollScene'
 import { IBIOLScrollScene } from '../scenes/IBIOLScrollScene'
 import { ClosingScrollScene } from '../scenes/ClosingScrollScene'
-import { FootprintScene } from '../scenes/FootprintScene'
-import { PeopleScene } from '../scenes/PeopleScene'
-import { SuperpowersScene } from '../scenes/SuperpowersScene'
-import { AISkillingScene } from '../scenes/AISkillingScene'
-import { JourneyScene } from '../scenes/JourneyScene'
-import { IBIOLScene } from '../scenes/IBIOLScene'
-import { ClosingScene } from '../scenes/ClosingScene'
 import { CountryExperience } from '../scenes/CountryExperience'
-
-// Legacy slide scenes — still active for non-migrated chapters
-const legacyScenes = [null, FootprintScene, PeopleScene, SuperpowersScene, AISkillingScene, JourneyScene, IBIOLScene, ClosingScene]
 
 function Experience() {
   const { scene, capabilityFocus, setAIPhase, ibiolPhase, selectedCountry, selectCountry, clearCountry } = useStory()
@@ -41,8 +30,7 @@ function Experience() {
     previousChapterRef.current = chapter
   }, [chapter, selectedCountry, clearCountry])
 
-  const isScrollDriven = chapter === 'opening' || chapter === 'earth' || chapter === 'country' || chapter === 'convergence' || chapter === 'ai' || chapter === 'ibiol' || chapter === 'closing'
-  const LegacyScene = !isScrollDriven && !selectedCountry ? legacyScenes[scene] : null
+  const isScrollDriven = true
 
   return <main className={`app scene-index-${scene}`}>
     <div className="grain" />
@@ -61,7 +49,7 @@ function Experience() {
     </ErrorBoundary>
     <div className="ambient-wash" />
     <Brand />
-    {!isScrollDriven && scene !== 0 && <div className="chapter-label">GDN-e / EXPERIENCIA EJECUTIVA</div>}
+
 
     {/* Scroll-driven scenes */}
     <OpeningScene />
@@ -74,12 +62,7 @@ function Experience() {
     {/* Country overlay — independent of scroll */}
     {selectedCountry && <CountryExperience key={`country-${selectedCountry}`} />}
 
-    {/* Legacy slides for not-yet-migrated chapters */}
-    {!isScrollDriven && !selectedCountry && LegacyScene && (
-      <AnimatePresence mode="wait"><LegacyScene key={scene} /></AnimatePresence>
-    )}
-
-    <AvatarOverlay moment={undefined} />
+    <ScrollAvatarOverlay />
     <Navigation />
     <PresenterMode />
     <ScrollDirector />

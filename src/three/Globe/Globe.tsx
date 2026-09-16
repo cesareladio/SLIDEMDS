@@ -98,9 +98,9 @@ export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollCh
   const hotspotOpacity = scrollChapter === 'earth' ? 1 : rangeProgress(p, .72, 1)
   const convergenceP = isConvergence ? p : 0
   const convergenceCountryIntensity = fadeWindow(convergenceP, .12, .24, .72, .9)
-  const earthOpacity = isCountry ? 1 - earthHidden : 1
+  const earthOpacity = isCountry ? 1 - earthHidden : scrollChapter === 'ai' ? 1 - rangeProgress(p, 0, .14) : scrollChapter === 'closing' ? fadeWindow(p, .65, .72, .84, .92) : 1
   const highlightIntensity = isCountry ? fadeWindow(p, 0, .05, .18, .52) + fadeWindow(p, .90, .95, 1, 1.02) : 0
-  const globeVisible = scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scene === 1 || scene === 7 || selectedCountry !== null
+  const globeVisible = scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scrollChapter === 'convergence' || scrollChapter === 'closing' || (scrollChapter === 'ai' && p < .15) || scene === 1 || scene === 7 || selectedCountry !== null
   const showHotspots = (scrollChapter === 'earth' || hotspotOpacity > .01) && !selectedCountry
   const showPeruHubs = scene === 1 && !isCountry
   const showChileHubs = scene === 1 && !isCountry
@@ -115,7 +115,7 @@ export function Globe({ scene, selectedCountry = null, onSelectCountry, scrollCh
       {isConvergence && <>
         <CountrySurfaceHighlight country="peru" visible intensity={convergenceCountryIntensity} />
         <CountrySurfaceHighlight country="chile" visible intensity={convergenceCountryIntensity} />
-        <EnergyArc from={chilePoint} to={peruPoint} visible={convergenceCountryIntensity > .01} />
+        <EnergyArc from={chilePoint} to={peruPoint} visible opacity={convergenceCountryIntensity} />
       </>}
       {showHotspots && <>
         <InteractiveHotspot point={peruPoint} label="PERÚ" color="#00e6ff" onSelect={() => onSelectCountry?.('peru')} opacity={hotspotOpacity} />
