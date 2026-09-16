@@ -8,81 +8,67 @@ export interface StoryBeat {
 }
 
 export const storyBeats: StoryBeat[] = [
-  { id: 'opening-identities',   chapter: 'opening',     progress: .25, label: 'DOS IDENTIDADES' },
-  { id: 'opening-team',         chapter: 'opening',     progress: .62, label: 'UN SOLO EQUIPO' },
-  { id: 'earth-hub',            chapter: 'earth',       progress: .50, label: 'PERÚ × CHILE' },
-  { id: 'peru-geo',             chapter: 'peru',        progress: .07, label: 'PERÚ · GEO' },
-  { id: 'peru-footprint',       chapter: 'peru',        progress: .23, label: 'PERÚ · HUELLA' },
-  { id: 'peru-talent',          chapter: 'peru',        progress: .43, label: 'PERÚ · TALENTO' },
-  { id: 'peru-capabilities',    chapter: 'peru',        progress: .62, label: 'PERÚ · CAPACIDADES' },
-  { id: 'peru-timeline',        chapter: 'peru',        progress: .82, label: 'PERÚ · CAMINO' },
-  { id: 'peru-exit',            chapter: 'peru',        progress: .96, label: 'PERÚ → CHILE' },
-  { id: 'chile-geo',            chapter: 'chile',       progress: .08, label: 'CHILE · GEO' },
-  { id: 'chile-footprint',      chapter: 'chile',       progress: .34, label: 'CHILE · HUELLA' },
-  { id: 'chile-capabilities',   chapter: 'chile',       progress: .72, label: 'CHILE · CAPACIDADES' },
-  { id: 'chile-exit',           chapter: 'chile',       progress: .95, label: 'CHILE → CONVERGENCIA' },
+  { id: 'opening-identities', chapter: 'opening', progress: .25, label: 'DOS IDENTIDADES' },
+  { id: 'opening-team', chapter: 'opening', progress: .62, label: 'UN SOLO EQUIPO' },
+  { id: 'earth-hub', chapter: 'earth', progress: .50, label: 'PERÚ × CHILE' },
+  { id: 'peru-geo', chapter: 'peru', progress: .07, label: 'PERÚ · GEO' },
+  { id: 'peru-footprint', chapter: 'peru', progress: .23, label: 'PERÚ · HUELLA' },
+  { id: 'peru-talent', chapter: 'peru', progress: .43, label: 'PERÚ · TALENTO' },
+  { id: 'peru-capabilities', chapter: 'peru', progress: .62, label: 'PERÚ · CAPACIDADES' },
+  { id: 'peru-timeline', chapter: 'peru', progress: .82, label: 'PERÚ · CAMINO' },
+  { id: 'peru-exit', chapter: 'peru', progress: .96, label: 'PERÚ → CHILE' },
+  { id: 'chile-geo', chapter: 'chile', progress: .08, label: 'CHILE · GEO' },
+  { id: 'chile-footprint', chapter: 'chile', progress: .34, label: 'CHILE · HUELLA' },
+  { id: 'chile-capabilities', chapter: 'chile', progress: .72, label: 'CHILE · CAPACIDADES' },
+  { id: 'chile-exit', chapter: 'chile', progress: .95, label: 'CHILE → CONVERGENCIA' },
   { id: 'convergence-identities', chapter: 'convergence', progress: .46, label: 'DOS IDENTIDADES' },
-  { id: 'convergence-team',     chapter: 'convergence', progress: .67, label: 'UN SOLO EQUIPO' },
-  { id: 'convergence-one',      chapter: 'convergence', progress: .88, label: 'ONE GDN-e' },
-  { id: 'ai-4000',              chapter: 'ai',          progress: .32, label: '4,000 CERT IA' },
-  { id: 'ai-50',                chapter: 'ai',          progress: .68, label: '50% GH-300' },
-  { id: 'ai-ecosystem',         chapter: 'ai',          progress: .92, label: 'PIMS SKILLING UPSKILLING' },
-  { id: 'ibiol-today',          chapter: 'ibiol',       progress: .25, label: 'IBIOL · HOY' },
-  { id: 'ibiol-grow',           chapter: 'ibiol',       progress: .52, label: 'IBIOL · CRECER' },
-  { id: 'ibiol-accelerate',     chapter: 'ibiol',       progress: .76, label: 'IBIOL · ACELERAR' },
-  { id: 'ibiol-final',          chapter: 'ibiol',       progress: .94, label: 'IBIOL · FINAL' },
-  { id: 'closing-chile',        chapter: 'closing',     progress: .15, label: 'CHILE' },
-  { id: 'closing-peru',         chapter: 'closing',     progress: .34, label: 'PERÚ' },
-  { id: 'closing-pair',         chapter: 'closing',     progress: .47, label: 'PERÚ × CHILE' },
-  { id: 'closing-identities',   chapter: 'closing',     progress: .58, label: 'DOS IDENTIDADES' },
-  { id: 'closing-team',         chapter: 'closing',     progress: .69, label: 'UN SOLO EQUIPO' },
-  { id: 'closing-one',          chapter: 'closing',     progress: .89, label: 'ONE GDN-e' },
-  { id: 'closing-ntt',          chapter: 'closing',     progress: .955, label: 'NTT DATA' },
-  { id: 'closing-everywhere',   chapter: 'closing',     progress: .995, label: 'AI EVERYWHERE' },
+  { id: 'convergence-team', chapter: 'convergence', progress: .67, label: 'UN SOLO EQUIPO' },
+  { id: 'convergence-one', chapter: 'convergence', progress: .88, label: 'ONE GDN-e' },
+  { id: 'ai-4000', chapter: 'ai', progress: .32, label: '4,000 CERT IA' },
+  { id: 'ai-50', chapter: 'ai', progress: .68, label: '50% GH-300' },
+  { id: 'ai-ecosystem', chapter: 'ai', progress: .92, label: 'PIMS SKILLING UPSKILLING' },
+  { id: 'ibiol-today', chapter: 'ibiol', progress: .25, label: 'IBIOL · HOY' },
+  { id: 'ibiol-grow', chapter: 'ibiol', progress: .52, label: 'IBIOL · CRECER' },
+  { id: 'ibiol-accelerate', chapter: 'ibiol', progress: .76, label: 'IBIOL · ACELERAR' },
+  { id: 'ibiol-final', chapter: 'ibiol', progress: .94, label: 'IBIOL · FINAL' },
+  { id: 'closing-chile', chapter: 'closing', progress: .15, label: 'CHILE' },
+  { id: 'closing-peru', chapter: 'closing', progress: .34, label: 'PERÚ' },
+  { id: 'closing-pair', chapter: 'closing', progress: .47, label: 'PERÚ × CHILE' },
+  { id: 'closing-identities', chapter: 'closing', progress: .58, label: 'DOS IDENTIDADES' },
+  { id: 'closing-team', chapter: 'closing', progress: .69, label: 'UN SOLO EQUIPO' },
+  { id: 'closing-one', chapter: 'closing', progress: .89, label: 'ONE GDN-e' },
+  { id: 'closing-ntt', chapter: 'closing', progress: .955, label: 'NTT DATA' },
+  { id: 'closing-everywhere', chapter: 'closing', progress: .995, label: 'AI EVERYWHERE' },
 ]
 
 export function getStoryBeatIndex(chapter: ScrollChapter, progress: number): number {
-  let closest = 0
-  let closestDistance = Infinity
-  storyBeats.forEach((beat, index) => {
-    const beatGlobalIndex = storyBeats.indexOf(beat)
-    // Compare by sequential order
-    if (beat.chapter === chapter) {
-      const distance = Math.abs(beat.progress - progress)
-      if (distance < closestDistance) { closestDistance = distance; closest = beatGlobalIndex }
-    }
-  })
-  return closest
+  const chapterBeats = storyBeats.map((beat, index) => ({ beat, index })).filter(({ beat }) => beat.chapter === chapter)
+  if (chapterBeats.length === 0) return 0
+  const current = chapterBeats.filter(({ beat }) => beat.progress <= progress + .005)
+  return (current[current.length - 1] ?? chapterBeats[0]).index
 }
 
 export function getNextBeat(chapter: ScrollChapter, progress: number): StoryBeat | null {
-  for (const beat of storyBeats) {
-    if (beat.chapter === chapter && beat.progress > progress + .005) return beat
-    // Check if we've passed into a later chapter
-    const chapters: ScrollChapter[] = ['opening','earth','peru','chile','convergence','ai','ibiol','closing']
-    const currentChapterIndex = chapters.indexOf(chapter)
-    const beatChapterIndex = chapters.indexOf(beat.chapter)
-    if (beatChapterIndex > currentChapterIndex) return beat
-  }
-  return null
+  const chapters: ScrollChapter[] = ['opening','earth','peru','chile','convergence','ai','ibiol','closing']
+  const currentChapterIndex = chapters.indexOf(chapter)
+  return storyBeats.find(beat => beat.chapter === chapter && beat.progress > progress + .005)
+    ?? storyBeats.find(beat => chapters.indexOf(beat.chapter) > currentChapterIndex)
+    ?? null
 }
 
 export function getPreviousBeat(chapter: ScrollChapter, progress: number): StoryBeat | null {
   const chapters: ScrollChapter[] = ['opening','earth','peru','chile','convergence','ai','ibiol','closing']
   const currentChapterIndex = chapters.indexOf(chapter)
-  const candidates = storyBeats.filter(beat => {
-    const beatChapterIndex = chapters.indexOf(beat.chapter)
-    if (beatChapterIndex < currentChapterIndex) return true
-    if (beat.chapter === chapter && beat.progress < progress - .005) return true
-    return false
-  })
-  return candidates.length > 0 ? candidates[candidates.length - 1] : null
+  const candidates = storyBeats.filter(beat => chapters.indexOf(beat.chapter) < currentChapterIndex || (beat.chapter === chapter && beat.progress < progress - .005))
+  return candidates[candidates.length - 1] ?? null
 }
 
 export function scrollToBeat(beat: StoryBeat) {
-  const el = document.querySelector<HTMLElement>(`[data-chapter="${beat.chapter}"]`)
-  if (!el) return
-  const targetY = el.offsetTop + beat.progress * el.offsetHeight
+  const chapter = document.querySelector<HTMLElement>(`[data-chapter="${beat.chapter}"]`)
+  if (!chapter) return
+  const rawTarget = chapter.offsetTop + beat.progress * chapter.offsetHeight
+  const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0)
+  const target = Math.min(rawTarget, maxScroll)
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  window.scrollTo({ top: targetY, behavior: prefersReduced ? 'auto' : 'smooth' })
+  window.scrollTo({ top: target, behavior: prefersReduced ? 'auto' : 'smooth' })
 }

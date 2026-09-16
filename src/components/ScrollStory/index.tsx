@@ -14,5 +14,6 @@ const chapters: { id: string; height: string }[] = [
 export function ScrollStory() {
   return <div className="scroll-story">
     {chapters.map(chapter => <ScrollChapterBlock key={chapter.id} chapter={chapter.id} height={chapter.height} />)}
+    <div className="scroll-end-spacer" aria-hidden="true" />
   </div>
 }

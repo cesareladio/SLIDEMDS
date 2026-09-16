@@ -1,15 +1,14 @@
 import { useMemo } from 'react'
-import { Line, Html } from '@react-three/drei'
-import * as THREE from 'three'
-import { capabilityNodes, finitePosition } from '../data/capabilityConstellation'
+import { Line } from '@react-three/drei'
 import type { Capability } from '../data/types'
+import { capabilityNodes, finitePosition } from '../data/capabilityConstellation'
 
 interface Props { capabilities: Capability[]; progress: number; visible: boolean; opacity?: number }
 
-// Pulls the constellation slightly inward so nodes/labels stay within the
-// safe viewport frame (x: 8vw-92vw / y: 12vh-88vh) instead of drifting to
-// the edges of the composition.
-const SAFE_AREA_SCALE = .82
+// Atmospheric only: typography in CountrySuperpowers is the information hero.
+const SAFE_AREA_SCALE = .76
+const NODE_SCALE = .44
+const HALO_SCALE = 1.3
 
 export function CountryCapabilityConstellation({ capabilities, progress, visible, opacity = 1 }: Props) {
   const nodes = useMemo(() => capabilities.map((cap, index) => {
@@ -18,26 +17,23 @@ export function CountryCapabilityConstellation({ capabilities, progress, visible
       const angle = index / capabilities.length * Math.PI * 2
       return finitePosition([Math.cos(angle) * 2.2, Math.sin(angle) * 1.5, Math.sin(angle * 1.5) * .7])
     })()
-    const position: [number, number, number] = [base[0] * SAFE_AREA_SCALE, base[1] * SAFE_AREA_SCALE, base[2] * SAFE_AREA_SCALE]
-    return { ...cap, position }
+    return { ...cap, position: [base[0] * SAFE_AREA_SCALE, base[1] * SAFE_AREA_SCALE, base[2] * SAFE_AREA_SCALE] as [number, number, number] }
   }), [capabilities])
 
   if (!visible) return null
-  const p = Math.min(1, Math.max(0, progress)) * opacity
+  const coreOpacity = Math.min(1, Math.max(0, progress)) * opacity
 
-  return <group>
-    <mesh position={[0, 0, 0]}><sphereGeometry args={[.07, 14, 14]} /><meshBasicMaterial color="#d9fbff" toneMapped={false} transparent opacity={Math.min(1, p * 4)} /></mesh>
+  return <group position={[1.15, -.05, 0]} scale={.86}>
+    <mesh position={[0, 0, 0]}><sphereGeometry args={[.035, 12, 12]} /><meshBasicMaterial color="#d9fbff" toneMapped={false} transparent opacity={coreOpacity * .5} /></mesh>
     {nodes.map((node, index) => {
       const reveal = Math.min(1, Math.max(0, (progress - (index / nodes.length) * .6) / .15)) * opacity
-      const size = .08 + node.value / 2200
-      const labelPos: [number, number, number] = [node.position[0] + .12, node.position[1] + .14, node.position[2]]
+      const size = (.08 + node.value / 2200) * NODE_SCALE
       return <group key={node.id}>
-        <Line points={[[0, 0, 0], node.position]} color="#168ac2" transparent opacity={reveal * .22} lineWidth={1} />
+        <Line points={[[0, 0, 0], node.position]} color="#168ac2" transparent opacity={reveal * .09} lineWidth={.65} />
         <group position={node.position}>
-          <mesh><icosahedronGeometry args={[size, 2]} /><meshBasicMaterial color={index < 3 ? '#00d4ff' : '#0878d2'} toneMapped={false} transparent opacity={reveal} /></mesh>
-          <mesh scale={1.7}><sphereGeometry args={[size, 14, 14]} /><meshBasicMaterial color="#00a6ff" transparent opacity={reveal * .07} depthWrite={false} /></mesh>
+          <mesh><icosahedronGeometry args={[size, 1]} /><meshBasicMaterial color={index < 3 ? '#00d4ff' : '#0878d2'} toneMapped={false} transparent opacity={reveal * .5} /></mesh>
+          <mesh scale={HALO_SCALE}><sphereGeometry args={[size, 10, 10]} /><meshBasicMaterial color="#00a6ff" transparent opacity={reveal * .018} depthWrite={false} /></mesh>
         </group>
-        {reveal > .02 && <Html position={labelPos} distanceFactor={8} style={{ opacity: reveal }} className="country-cap-label"><span>{node.label}</span><b>{node.value}</b></Html>}
       </group>
     })}
   </group>

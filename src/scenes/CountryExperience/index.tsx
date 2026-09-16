@@ -23,12 +23,9 @@ export function CountryExperience() {
   const segments = profile.sections.filter(s => sectionLabels[s])
 
   // Persistent anchor map opacities — different per segment
-  const geoP    = getSegmentProgress(activeCountry, 'geo-focus', p)
-  const ovP     = getSegmentProgress(activeCountry, 'overview', p)
-  const talP    = activeCountry === 'peru' ? getSegmentProgress('peru', 'talent', p) : 0
-  const supP    = getSegmentProgress(activeCountry, 'superpowers', p)
-  const jrP     = activeCountry === 'peru' ? getSegmentProgress('peru', 'journey', p) : 0
-  const exitP   = rangeProgress(p, active.start < .88 ? .90 : .88, 1)
+  const geoP = getSegmentProgress(activeCountry, 'geo-focus', p)
+  const exitStart = activeCountry === 'peru' ? .92 : .88
+  const exitP = rangeProgress(p, exitStart, 1)
 
   const isExit = exitP > .01
 
