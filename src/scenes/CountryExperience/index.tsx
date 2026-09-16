@@ -2,7 +2,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useStory } from '../../app/StoryContext'
 import { useScrollStory } from '../../app/ScrollContext'
 import { countryProfiles } from '../../data/countryProfiles'
-import { getActiveSegment, segmentFadeOpacity } from '../../data/countryScroll'
+import { getActiveSegment } from '../../data/countryScroll'
 import { CountryOverview } from './CountryOverview'
 import { CountryTalent } from './CountryTalent'
 import { CountrySuperpowers } from './CountrySuperpowers'
@@ -22,12 +22,6 @@ export function CountryExperience() {
 
   const profile = countryProfiles[selectedCountry]
   const active = getActiveSegment(selectedCountry, chapterProgress)
-  const mapOpacity = Math.max(
-    segmentFadeOpacity(selectedCountry, 'geo-focus', chapterProgress, .03),
-    segmentFadeOpacity(selectedCountry, 'overview', chapterProgress, .035),
-    segmentFadeOpacity(selectedCountry, 'talent', chapterProgress, .04) * .48,
-    segmentFadeOpacity(selectedCountry, 'exit', chapterProgress, .02),
-  )
 
   const returnToEarth = () => {
     document.querySelector('[data-chapter="earth"]')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -46,7 +40,7 @@ export function CountryExperience() {
     </div>
 
     <div className="country-scroll-content">
-      <CountryOverview profile={profile} progress={chapterProgress} opacity={mapOpacity} />
+      <CountryOverview profile={profile} progress={chapterProgress} />
       {profile.talent && <CountryTalent talent={profile.talent} progress={chapterProgress} />}
       <CountrySuperpowers profile={profile} progress={chapterProgress} />
       {profile.journeyHistory && <CountryJourney history={profile.journeyHistory} progress={chapterProgress} />}

@@ -10,9 +10,9 @@ export function AIScrollScene() {
   const style = (opacity: number, y = 0) => ({ opacity, transform: `translateY(${y}px)`, filter: `blur(${(1 - opacity) * 7}px)` })
   return <section className="scene ai-scroll-scene">
     <div className="ai-scroll-copy">
-      <div style={style(cert)}><strong>4,000</strong><span>CERTIFICACIONES IA / OPENAI</span></div>
-      <div style={style(gh)}><strong>50%</strong><span>GH-300<br /><small>DEL COLECTIVO PERÚ</small></span></div>
-      <div className="ai-scroll-concepts" style={style(concepts)}><strong>PIMS</strong><strong>SKILLING</strong><strong>UPSKILLING</strong><p>PREPARANDO EL TALENTO<br />PARA LO QUE VIENE</p></div>
+      <div className="ai-scroll-beat" style={style(cert)}><strong>4,000</strong><span>CERTIFICACIONES IA / OPENAI</span></div>
+      <div className="ai-scroll-beat" style={style(gh)}><strong>50%</strong><span>GH-300<br /><small>DEL COLECTIVO PERÚ</small></span></div>
+      <div className="ai-scroll-beat ai-scroll-concepts" style={style(concepts)}><strong>PIMS</strong><strong>SKILLING</strong><strong>UPSKILLING</strong><p>PREPARANDO EL TALENTO<br />PARA LO QUE VIENE</p></div>
     </div>
   </section>
 }

@@ -2,7 +2,7 @@ import type { CountryProfile } from '../../data/countryProfiles'
 import { getSegmentProgress, segmentFadeOpacity } from '../../data/countryScroll'
 import { CountryMap } from './CountryMap'
 
-export function CountryOverview({ profile, progress, opacity }: { profile: CountryProfile; progress: number; opacity: number }) {
+export function CountryOverview({ profile, progress }: { profile: CountryProfile; progress: number }) {
   const { data } = profile
   const territorial = data.territorialDistribution ?? []
   const delivery = data.deliveryDistribution ?? []
@@ -11,26 +11,39 @@ export function CountryOverview({ profile, progress, opacity }: { profile: Count
   const revealNodes = Math.min(1, Math.max(0, (local - .2) / .38))
   const revealTop3 = Math.min(1, Math.max(0, (local - .48) / .22))
   const revealDelivery = Math.min(1, Math.max(0, (local - .7) / .25))
-  const overallOpacity = Math.min(1, opacity)
-  const exitOpacity = 1 - segmentFadeOpacity(data.id, 'exit', progress, .015)
 
-  return <section className="country-scroll-overview" style={{ opacity: overallOpacity * exitOpacity }}>
-    <p className="country-scroll-kicker">HUELLA</p>
-    <div className="country-scroll-number" style={{ opacity: revealTotal, transform: `translateY(${(1 - revealTotal) * 18}px)` }}>
-      <strong>{data.total.toLocaleString('es-PE')}</strong><span>PERSONAS</span>
-    </div>
+  // The written copy (HUELLA, total, top3, delivery) is exclusive to the
+  // "overview" segment — it must never bleed into "talent".
+  const overviewCopyOpacity = segmentFadeOpacity(data.id, 'overview', progress, .035)
+
+  // The map is rendered as a SIBLING (not a child) of the copy section so
+  // its own opacity is independent — it can linger faintly as a background
+  // continuity cue during talent without being multiplied by the copy fade.
+  const mapOpacity = Math.max(
+    segmentFadeOpacity(data.id, 'overview', progress, .035),
+    segmentFadeOpacity(data.id, 'talent', progress, .04) * .24,
+    segmentFadeOpacity(data.id, 'exit', progress, .02),
+  )
+
+  return <>
     <CountryMap
       country={data.id}
       territories={territorial}
       hubs={data.operationalHubs ?? []}
       progress={revealNodes}
-      opacity={overallOpacity * exitOpacity}
+      opacity={mapOpacity}
     />
-    {territorial.length > 0 && <div className="country-scroll-top3" style={{ opacity: revealTop3, transform: `translateY(${(1 - revealTop3) * 14}px)` }}>
-      <strong>64.7%</strong><span>DEL HC EN EL TOP 3<br /><small>La Libertad · Arequipa · Lima</small></span>
-    </div>}
-    {delivery.length > 0 && <div className="country-scroll-delivery" style={{ opacity: revealDelivery }}>
-      {delivery.map(item => <div key={item.label}><span>{item.label}</span><b>{item.percent}%</b></div>)}
-    </div>}
-  </section>
+    <section className="country-scroll-overview" style={{ opacity: overviewCopyOpacity }}>
+      <p className="country-scroll-kicker">HUELLA</p>
+      <div className="country-scroll-number" style={{ opacity: revealTotal, transform: `translateY(${(1 - revealTotal) * 18}px)` }}>
+        <strong>{data.total.toLocaleString('es-PE')}</strong><span>PERSONAS</span>
+      </div>
+      {territorial.length > 0 && <div className="country-scroll-top3" style={{ opacity: revealTop3, transform: `translateY(${(1 - revealTop3) * 14}px)` }}>
+        <strong>64.7%</strong><span>DEL HC EN EL TOP 3<br /><small>La Libertad · Arequipa · Lima</small></span>
+      </div>}
+      {delivery.length > 0 && <div className="country-scroll-delivery" style={{ opacity: revealDelivery }}>
+        {delivery.map(item => <div key={item.label}><span>{item.label}</span><b>{item.percent}%</b></div>)}
+      </div>}
+    </section>
+  </>
 }

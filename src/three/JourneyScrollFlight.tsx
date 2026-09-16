@@ -65,7 +65,7 @@ export function JourneyScrollFlight({ waypoints, progress, visible, opacity = 1 
     {waypoints.map((waypoint, index) => {
       const frac = index / (waypoints.length - 1); const nodeOpacity = Math.min(1, Math.max(0, (p - (frac - .05)) / .06)) * opacity
       if (nodeOpacity <= .01) return null
-      const position = finitePos(waypoint.position); const size = waypoint.milestone ? .09 + waypoint.people / 9000 : .034 + waypoint.people / 30000
+      const position = finitePos(waypoint.position); const size = (waypoint.milestone ? .09 + waypoint.people / 9000 : .034 + waypoint.people / 30000) * .74
       return <group key={waypoint.year} position={position}>
         <mesh><sphereGeometry args={[size, 14, 14]} /><meshBasicMaterial color={waypoint.inflection ? '#eaffff' : '#00c8f5'} transparent opacity={nodeOpacity} toneMapped={false} /></mesh>
         {waypoint.inflection && <pointLight color="#47dbff" intensity={nodeOpacity} distance={3} />}

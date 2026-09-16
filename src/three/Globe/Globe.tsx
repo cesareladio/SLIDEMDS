@@ -15,6 +15,7 @@ import { sampleEarthChoreographyProgress, earthHubComposition } from '../../data
 import type { CountryId } from '../../data/countryProfiles'
 import type { ScrollChapter } from '../../app/ScrollContext'
 import { fadeWindow, lerpNumber, rangeProgress } from '../../utils/scrollMotion'
+import { segmentFadeOpacity } from '../../data/countryScroll'
 
 const countryOrientations = { peru: { lat: -10, lon: -75 }, chile: { lat: -33, lon: -71 } } as const
 const countryCompositions: Record<CountryId, { position: [number, number, number]; scale: number }> = {
@@ -100,19 +101,19 @@ export function Globe({ selectedCountry = null, onSelectCountry, scrollChapter =
     } else if (p < .72) {
       const local = rangeProgress(p, .65, .72)
       position = [0, -.05, 0]
-      scale = lerpNumber(.98, .92, local)
+      scale = lerpNumber(1.05, .98, local)
       quaternion = southAmericaQ.clone().slerp(peruChileQ, smoothstep(local * .35))
       outlineOpacity = local * .42
     } else if (p < .84) {
       const local = rangeProgress(p, .72, .84)
       position = [0, lerpNumber(-.05, 0, local), 0]
-      scale = lerpNumber(.92, .74, local)
+      scale = lerpNumber(.98, .8, local)
       quaternion = southAmericaQ.clone().slerp(peruChileQ, smoothstep(local))
       outlineOpacity = lerpNumber(.42, .18, local)
     } else {
       const local = rangeProgress(p, .84, .92)
       position = [0, 0, 0]
-      scale = lerpNumber(.74, .66, local)
+      scale = lerpNumber(.8, .7, local)
       quaternion = peruChileQ
       outlineOpacity = lerpNumber(.18, 0, local)
     }
@@ -121,7 +122,12 @@ export function Globe({ selectedCountry = null, onSelectCountry, scrollChapter =
   const hotspotOpacity = scrollChapter === 'earth' ? 1 : 0
   const convergenceCountryIntensity = isConvergence ? fadeWindow(p, .12, .24, .72, .9) : 0
   const earthOpacity = isCountry ? 1 - earthHidden : scrollChapter === 'ai' ? 1 - rangeProgress(p, 0, .14) : isClosing ? (p < .65 ? 0 : p < .84 ? 1 : 1 - rangeProgress(p, .84, .92)) : 1
-  const highlightIntensity = isCountry ? fadeWindow(p, 0, .05, .18, .52) + fadeWindow(p, .90, .95, 1, 1.02) : 0
+  const highlightIntensity = isCountry && selectedCountry
+    ? Math.max(
+        segmentFadeOpacity(selectedCountry, 'geo-focus', p, .04),
+        segmentFadeOpacity(selectedCountry, 'exit', p, .02),
+      )
+    : 0
   const globeVisible = scrollChapter === 'opening' || scrollChapter === 'earth' || scrollChapter === 'country' || scrollChapter === 'convergence' || (scrollChapter === 'ai' && p < .15) || scrollChapter === 'closing' || selectedCountry !== null
   const showHotspots = scrollChapter === 'earth' && !selectedCountry
 

@@ -5,7 +5,7 @@ import { ClosingCountrySilhouette } from './ClosingCountrySilhouette'
 export function ClosingScrollScene() {
   const { chapter, chapterProgress: p } = useScrollStory()
   if (chapter !== 'closing') return null
-  const chile = fadeWindow(p, .10, .18, .22, .30)
+  const chile = fadeWindow(p, .02, .10, .22, .30)
   const peru = fadeWindow(p, .24, .31, .36, .44)
   const pair = fadeWindow(p, .38, .44, .50, .56)
   const identities = fadeWindow(p, .50, .54, .61, .65)

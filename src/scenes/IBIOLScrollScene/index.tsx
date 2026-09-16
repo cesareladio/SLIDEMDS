@@ -14,10 +14,12 @@ export function IBIOLScrollScene() {
   return <section className="scene ibiol-scroll-scene">
     <div className="ibiol-scroll-copy">
       <p className="eyebrow" style={style(handoff)}>AI CAPABILITY → BUSINESS CAPABILITY</p>
-      <div style={style(today)}><strong>HOY</strong><span>CAPACIDADES LISTAS PARA ESCALAR</span><p>{ibiol.todayCapabilities.map(item => item.label).join(' · ')}</p></div>
-      <div style={style(grow)}><strong>CRECER</strong><span>FY26 / FY27</span><p>{ibiol.growthIndustries.map(item => item.label).join(' · ')}</p><small>{ibiol.growthCapabilities.map(item => item.label).join(' · ')}</small></div>
-      <div style={style(ask)}><strong>ACELERAR</strong><span>{ibiol.asks.join(' · ')}</span></div>
-      <div className="ibiol-scroll-final" style={style(final)}><p>{ibiol.finalMessage}</p></div>
+      <div className="ibiol-scroll-stage">
+        <div className="ibiol-scroll-beat" style={style(today)}><strong>HOY</strong><span>CAPACIDADES LISTAS PARA ESCALAR</span><p>{ibiol.todayCapabilities.map(item => item.label).join(' · ')}</p></div>
+        <div className="ibiol-scroll-beat" style={style(grow)}><strong>CRECER</strong><span>FY26 / FY27</span><p>{ibiol.growthIndustries.map(item => item.label).join(' · ')}</p><small>{ibiol.growthCapabilities.map(item => item.label).join(' · ')}</small></div>
+        <div className="ibiol-scroll-beat" style={style(ask)}><strong>ACELERAR</strong><span>{ibiol.asks.join(' · ')}</span></div>
+        <div className="ibiol-scroll-beat ibiol-scroll-final" style={style(final)}><p>{ibiol.finalMessage}</p></div>
+      </div>
     </div>
   </section>
 }

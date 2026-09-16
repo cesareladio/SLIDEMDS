@@ -6,13 +6,19 @@ import type { Capability } from '../data/types'
 
 interface Props { capabilities: Capability[]; progress: number; visible: boolean; opacity?: number }
 
+// Pulls the constellation slightly inward so nodes/labels stay within the
+// safe viewport frame (x: 8vw-92vw / y: 12vh-88vh) instead of drifting to
+// the edges of the composition.
+const SAFE_AREA_SCALE = .82
+
 export function CountryCapabilityConstellation({ capabilities, progress, visible, opacity = 1 }: Props) {
   const nodes = useMemo(() => capabilities.map((cap, index) => {
     const match = capabilityNodes.find(node => node.id === cap.id)
-    const position = match ? finitePosition(match.position) : (() => {
+    const base = match ? finitePosition(match.position) : (() => {
       const angle = index / capabilities.length * Math.PI * 2
       return finitePosition([Math.cos(angle) * 2.2, Math.sin(angle) * 1.5, Math.sin(angle * 1.5) * .7])
     })()
+    const position: [number, number, number] = [base[0] * SAFE_AREA_SCALE, base[1] * SAFE_AREA_SCALE, base[2] * SAFE_AREA_SCALE]
     return { ...cap, position }
   }), [capabilities])
 
