@@ -18,7 +18,7 @@ const ibiolTargets: Record<IBIOLPhase, { camera: [number, number, number]; lookA
   today: { camera: [0, .25, 7.3], lookAt: [0, 0, 0] }, grow: { camera: [0, .5, 8.8], lookAt: [0, .15, .25] }, ask: { camera: [0, .1, 6.2], lookAt: [0, 0, 0] },
 }
 const countryFocusTargets: Record<CountryId, { camera: [number, number, number]; lookAt: [number, number, number] }> = {
-  peru:  { camera: [.05, -.35, 5.4], lookAt: [.15, -.45, 0] },
+  peru: { camera: [.05, -.35, 5.4], lookAt: [.15, -.45, 0] },
   chile: { camera: [.1, -.38, 5.2], lookAt: [.2, -.52, 0] },
 }
 function finiteVector(vector: readonly number[]) { return vector.length === 3 && vector.every(Number.isFinite) ? vector as [number, number, number] : [0, 0, 8.5] as [number, number, number] }
@@ -27,12 +27,13 @@ export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 't
   const { camera } = useThree()
   const journeyStartedAt = useRef<number | null>(null)
   const openingStartedAt = useRef<number | null>(null)
+  const countryTarget = useRef(new THREE.Vector3())
+
   useEffect(() => {
-    if (scene === 5 || scene === 0) { journeyStartedAt.current = null; openingStartedAt.current = null; return }
-    if (selectedCountry) {
-      const target = countryFocusTargets[selectedCountry]
-      const tween = gsap.to(camera.position, { x: target.camera[0], y: target.camera[1], z: target.camera[2], duration: 2.1, ease: 'power3.inOut', onUpdate: () => camera.lookAt(...target.lookAt) })
-      return () => { tween.kill() }
+    if (selectedCountry || scene === 5 || scene === 0) {
+      journeyStartedAt.current = null
+      openingStartedAt.current = null
+      return
     }
     const target = scene === 6 ? ibiolTargets[ibiolPhase] : capabilityFocus === 'overview' || scene !== 3 ? { camera: scenePositions[scene] ?? scenePositions[0], lookAt: [0, 0, 0] as [number, number, number] } : focusTargets[capabilityFocus]
     const cameraTarget = finiteVector(target.camera)
@@ -40,7 +41,15 @@ export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 't
     const tween = gsap.to(camera.position, { x: cameraTarget[0], y: cameraTarget[1], z: cameraTarget[2], duration: 1.8, ease: 'power3.inOut', onUpdate: () => camera.lookAt(...lookAtTarget) })
     return () => { tween.kill() }
   }, [camera, scene, capabilityFocus, ibiolPhase, selectedCountry])
+
   useFrame(state => {
+    if (selectedCountry) {
+      const target = countryFocusTargets[selectedCountry]
+      countryTarget.current.set(...target.lookAt)
+      if (!camera.position.equals(new THREE.Vector3(...target.camera))) camera.position.lerp(new THREE.Vector3(...target.camera), 1 - Math.exp(-5.4 * state.clock.getDelta()))
+      camera.lookAt(countryTarget.current)
+      return
+    }
     if (scene === 0) {
       if (openingStartedAt.current === null) openingStartedAt.current = state.clock.elapsedTime
       const elapsed = state.clock.elapsedTime - openingStartedAt.current

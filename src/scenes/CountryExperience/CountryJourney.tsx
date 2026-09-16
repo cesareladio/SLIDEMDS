@@ -1,15 +1,15 @@
 import { motion } from 'framer-motion'
 
 export function CountryJourney({ history }: { history: { year: number; people: number; milestone?: string; inflection?: boolean }[] }) {
-  const max = Math.max(...history.map(h => h.people), 1)
   return <motion.div className="country-journey" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-    <div className="cj-bars">
-      {history.map((item, i) => <motion.div key={item.year} className={`cj-bar${item.inflection ? ' cj-bar-inflection' : ''}`} initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: .08 + i * .06, duration: .5, ease: 'easeOut' }} style={{ '--h': `${(item.people / max) * 100}%` } as React.CSSProperties}>
-        {item.milestone && <span className="cj-milestone">{item.milestone}</span>}
+    <p className="country-section-kicker">UNA TRAYECTORIA QUE ACELERA</p>
+    <div className="country-journey-path">
+      {history.map((item, index) => <motion.div key={item.year} className={`country-journey-stop${item.inflection ? ' country-journey-inflection' : ''}`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .08 + index * .11 }}>
+        <i />
+        <span>{item.year}</span>
+        <b>{item.people.toLocaleString('es-PE')}</b>
+        {item.milestone && <small>{item.milestone}</small>}
       </motion.div>)}
-    </div>
-    <div className="cj-years">
-      {history.map(item => <span key={item.year}>{item.year}</span>)}
     </div>
     <motion.div className="cj-inflection-label" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}>
       <span>2020</span><b>PUNTO DE INFLEXIÓN</b>

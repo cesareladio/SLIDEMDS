@@ -7,7 +7,7 @@ import { useStory } from '../app/StoryContext'
 const HIDE_DELAY = 2200
 
 export function Navigation() {
-  const { scene, goTo, next, previous, autoplay, toggleAutoplay } = useStory()
+  const { scene, goTo, next, previous, autoplay, toggleAutoplay, selectedCountry } = useStory()
   const [visible, setVisible] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -29,6 +29,8 @@ export function Navigation() {
   }, [show])
 
   useEffect(() => { if (timerRef.current) clearTimeout(timerRef.current) }, [scene])
+
+  if (selectedCountry) return null
 
   return <AnimatePresence>
     {visible && <motion.div

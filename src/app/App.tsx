@@ -29,7 +29,7 @@ function Experience() {
     <Brand />
     {scene !== 0 && <div className="chapter-label">GDN-e / EXPERIENCIA EJECUTIVA</div>}
     <AnimatePresence mode="wait">{selectedCountry ? <CountryExperience key={`country-${selectedCountry}`} /> : <Scene key={scene} />}</AnimatePresence>
-    <AvatarOverlay moment={scene === 0 ? 'opening' : scene === 1 ? 'bridge' : scene === 7 ? 'closing' : undefined} />
+    <AvatarOverlay moment={selectedCountry ? undefined : scene === 0 ? 'opening' : scene === 1 ? 'bridge' : scene === 7 ? 'closing' : undefined} />
     <Navigation />
     <PresenterMode />
     {import.meta.env.DEV && <span className="mock-indicator">Chile · datos demo</span>}

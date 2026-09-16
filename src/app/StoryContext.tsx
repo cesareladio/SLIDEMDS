@@ -3,7 +3,7 @@ import { sceneDurations, story } from '../data/story'
 import { clamp } from '../utils/math'
 import type { CapabilityFocus } from '../data/capabilityConstellation'
 import type { IBIOLPhase } from '../data/ibiol'
-import type { CountryId, CountrySection } from '../data/countryProfiles'
+import { countryProfiles, type CountryId, type CountrySection } from '../data/countryProfiles'
 
 interface StoryState {
   scene: number
@@ -52,6 +52,8 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   }
   const next = () => goTo(sceneRef.current === story.length - 1 ? 0 : sceneRef.current + 1)
   const previous = () => goTo(sceneRef.current - 1)
+  const selectCountry = (country: CountryId) => { setSelectedCountry(country); setCountrySection('overview') }
+  const clearCountry = () => { setSelectedCountry(null); setCountrySection('overview') }
 
   useEffect(() => {
     const started = performance.now()
@@ -68,14 +70,22 @@ export function StoryProvider({ children }: { children: ReactNode }) {
   }, [scene])
 
   useEffect(() => {
-    if (!autoplay) return
+    if (!autoplay || selectedCountry) return
     const timeout = window.setTimeout(next, sceneDurations[scene] * 1000)
     return () => window.clearTimeout(timeout)
-  }, [autoplay, scene])
+  }, [autoplay, scene, selectedCountry])
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase()
+      if (selectedCountry) {
+        const sections = countryProfiles[selectedCountry].sections
+        const index = sections.indexOf(countrySection)
+        if (key === 'arrowright' || key === ' ') { event.preventDefault(); if (index < sections.length - 1) setCountrySection(sections[index + 1]) }
+        if (key === 'arrowleft' && index > 0) setCountrySection(sections[index - 1])
+        if (key === 'escape') { setPresenter(false); clearCountry() }
+        return
+      }
       if (key === 'arrowright' || key === ' ') { event.preventDefault(); next() }
       if (key === 'arrowleft') previous()
       if (key === 'a') setAutoplay(value => !value)
@@ -85,10 +95,7 @@ export function StoryProvider({ children }: { children: ReactNode }) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
-
-  const selectCountry = (country: CountryId) => { setSelectedCountry(country); setCountrySection('overview') }
-  const clearCountry = () => { setSelectedCountry(null); setCountrySection('overview') }
+  }, [selectedCountry, countrySection])
 
   const value = useMemo(() => ({ scene, direction, autoplay, presenter, elapsed, capabilityFocus, setCapabilityFocus, aiPhase, setAIPhase, ibiolPhase, setIBIOLPhase, selectedCountry, countrySection, selectCountry, clearCountry, setCountrySection, goTo, next, previous, toggleAutoplay: () => setAutoplay(v => !v), togglePresenter: () => setPresenter(v => !v) }), [scene, direction, autoplay, presenter, elapsed, capabilityFocus, aiPhase, ibiolPhase, selectedCountry, countrySection, goTo, next, previous])
   return <StoryContext.Provider value={value}>{children}</StoryContext.Provider>

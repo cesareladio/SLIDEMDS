@@ -25,8 +25,8 @@ export function CountryExperience() {
         <ArrowLeft size={12} /><span>ONE GDN-e</span>
       </motion.button>
       <motion.div className="country-nav" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .4 }}>
-        {profile.sections.map(section => <button key={section} className={section === countrySection ? 'active' : ''} onClick={() => setCountrySection(section)}>
-          {sectionLabels[section]}
+        {profile.sections.map((section, index) => <button key={section} className={section === countrySection ? 'active' : ''} onClick={() => setCountrySection(section)}>
+          <i>{String(index + 1).padStart(2, '0')}</i><span>{sectionLabels[section].replace(/^\d{2} /, '')}</span>
         </button>)}
       </motion.div>
       <motion.div className="country-identity" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .25 }}>
