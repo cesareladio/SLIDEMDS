@@ -1,5 +1,9 @@
 import { AnimatePresence } from 'framer-motion'
 import { StoryProvider, useStory } from './StoryContext'
+import { ScrollProvider } from './ScrollContext'
+import { ScrollDirector } from './ScrollDirector'
+import { ScrollStory } from '../components/ScrollStory'
+import { ScrollDebugOverlay } from '../components/ScrollDebugOverlay'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { WebGLFallback } from '../components/WebGLFallback'
 import { ExperienceCanvas } from '../three/ExperienceCanvas'
@@ -32,8 +36,11 @@ function Experience() {
     <AvatarOverlay moment={selectedCountry ? undefined : scene === 0 ? 'opening' : scene === 1 ? 'bridge' : scene === 7 ? 'closing' : undefined} />
     <Navigation />
     <PresenterMode />
+    <ScrollDirector />
+    <ScrollStory />
+    <ScrollDebugOverlay />
     {import.meta.env.DEV && <span className="mock-indicator">Chile · datos demo</span>}
   </main>
 }
 
-export default function App() { return <StoryProvider><Experience /></StoryProvider> }
+export default function App() { return <StoryProvider><ScrollProvider><Experience /></ScrollProvider></StoryProvider> }
