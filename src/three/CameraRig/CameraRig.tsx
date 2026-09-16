@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import type { CapabilityFocus } from '../../data/capabilityConstellation'
 import type { IBIOLPhase } from '../../data/ibiol'
 import { journeyCameraPath, journeyWaypoints } from '../../data/journeyPath'
+import { earthJourneyDuration, sampleEarthJourney } from '../../data/earthJourney'
 
 const scenePositions: [number, number, number][] = [
   [0, .15, 8.5], [1.05, .1, 6.3], [.3, .2, 7.4], [0, 0, 7.1], [0, 0, 9.5], [-1.6, .1, 7.5], [0, -.2, 8.6], [0, .1, 8.2],
@@ -20,8 +21,9 @@ function finiteVector(vector: readonly number[]) { return vector.length === 3 &&
 export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 'today' }: { scene: number; capabilityFocus?: CapabilityFocus; ibiolPhase?: IBIOLPhase }) {
   const { camera } = useThree()
   const journeyStartedAt = useRef<number | null>(null)
+  const openingStartedAt = useRef<number | null>(null)
   useEffect(() => {
-    if (scene === 5) { journeyStartedAt.current = null; return }
+    if (scene === 5 || scene === 0) { journeyStartedAt.current = null; openingStartedAt.current = null; return }
     const target = scene === 6 ? ibiolTargets[ibiolPhase] : capabilityFocus === 'overview' || scene !== 3 ? { camera: scenePositions[scene] ?? scenePositions[0], lookAt: [0, 0, 0] as [number, number, number] } : focusTargets[capabilityFocus]
     const cameraTarget = finiteVector(target.camera)
     const lookAtTarget = finiteVector(target.lookAt)
@@ -29,6 +31,14 @@ export function CameraRig({ scene, capabilityFocus = 'overview', ibiolPhase = 't
     return () => { tween.kill() }
   }, [camera, scene, capabilityFocus, ibiolPhase])
   useFrame(state => {
+    if (scene === 0) {
+      if (openingStartedAt.current === null) openingStartedAt.current = state.clock.elapsedTime
+      const elapsed = state.clock.elapsedTime - openingStartedAt.current
+      const { position, target } = sampleEarthJourney(Math.min(elapsed, earthJourneyDuration))
+      camera.position.set(...position)
+      camera.lookAt(...target)
+      return
+    }
     if (scene !== 5) return
     if (journeyStartedAt.current === null) journeyStartedAt.current = state.clock.elapsedTime
     const elapsed = state.clock.elapsedTime - journeyStartedAt.current
