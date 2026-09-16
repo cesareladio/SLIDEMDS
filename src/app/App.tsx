@@ -26,7 +26,7 @@ function Experience() {
     <ErrorBoundary fallback={<WebGLFallback />}><ExperienceCanvas scene={scene} capabilityFocus={capabilityFocus} onAIPhase={setAIPhase} ibiolPhase={ibiolPhase} /></ErrorBoundary>
     <div className="ambient-wash" />
     <Brand />
-    <div className="chapter-label">GDN-e / EXPERIENCIA EJECUTIVA</div>
+    {scene !== 0 && <div className="chapter-label">GDN-e / EXPERIENCIA EJECUTIVA</div>}
     <AnimatePresence mode="wait"><Scene key={scene} /></AnimatePresence>
     <AvatarOverlay moment={scene === 0 ? 'opening' : scene === 1 ? 'bridge' : scene === 7 ? 'closing' : undefined} />
     <Navigation />

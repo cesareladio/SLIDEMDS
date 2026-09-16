@@ -7,6 +7,14 @@ export const peru: CountryData = {
     { name: 'Arequipa', people: 360, lat: -16.4, lon: -71.54 },
   ],
   territorialDistribution: [
+    { label: 'La Libertad', percent: 36.2, people: 509, lat: -8.11, lon: -79.03 },
+    { label: 'Arequipa', percent: 14.9, people: 210, lat: -16.40, lon: -71.54 },
+    { label: 'Lima', percent: 13.6, people: 192, lat: -12.05, lon: -77.04 },
+    { label: 'Lambayeque', percent: 7.3, people: 103, lat: -6.77, lon: -79.84 },
+    { label: 'Piura', percent: 6.5, people: 91, lat: -5.19, lon: -80.63 },
+    { label: 'Ica', percent: 4.4, people: 62, lat: -14.07, lon: -75.73 },
+  ],
+  deliveryDistribution: [
     { label: 'Local', percent: 63, people: 894 },
     { label: 'Offshore', percent: 28, people: 399 },
     { label: 'Nearshore', percent: 8, people: 115 },

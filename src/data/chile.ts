@@ -7,7 +7,8 @@ export const chile: CountryData = {
     { name: 'Temuco', people: 180, lat: -38.74, lon: -72.59 },
     { name: 'Concepción', people: 110, lat: -36.83, lon: -73.05 },
   ],
-  territorialDistribution: [
+  territorialDistribution: undefined,
+  deliveryDistribution: [
     { label: 'Local', percent: 68 }, { label: 'Offshore', percent: 22 }, { label: 'Nearshore', percent: 10 },
   ],
   capabilities: [

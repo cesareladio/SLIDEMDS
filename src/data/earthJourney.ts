@@ -10,11 +10,11 @@ interface EarthKeyframe {
 }
 
 const keyframes: EarthKeyframe[] = [
-  { time: 0, position: [.85, -1.05, 0], scale: 1.16, phase: 'hero' },
-  { time: 3, position: [.65, -1.2, 0], scale: 1.12, phase: 'hero' },
-  { time: 5.5, position: [.25, -1.35, 0], scale: 1.02, phase: 'shift' },
-  { time: 8, position: [1.05, -1.15, 0], scale: .95, phase: 'focus' },
-  { time: 11, position: [1.35, -.95, 0], scale: .92, phase: 'settle' },
+  { time: 0,  position: [.55, -1.25, 0], scale: 1.35, phase: 'hero' },
+  { time: 3,  position: [.45, -1.38, 0], scale: 1.32, phase: 'hero' },
+  { time: 5.5, position: [.15, -1.5, 0], scale: 1.12, phase: 'shift' },
+  { time: 8,  position: [.95, -1.3, 0],  scale: .96,  phase: 'focus' },
+  { time: 11, position: [1.45, -1.0, 0], scale: .92,  phase: 'settle' },
 ]
 
 export const earthChoreographyDuration = keyframes[keyframes.length - 1].time
@@ -38,8 +38,8 @@ export function sampleEarthChoreography(elapsed: number) {
   return { position, scale, phase: to.phase }
 }
 
-export const footprintComposition = { position: [1.35, -.95, 0] as [number, number, number], scale: .92 }
-export const closingComposition = { position: [1.1, -.7, 0] as [number, number, number], scale: .9 }
+export const footprintComposition = { position: [1.45, -1.0, 0] as [number, number, number], scale: .76 }
+export const closingComposition  = { position: [1.2, -.75, 0] as [number, number, number], scale: .82 }
 
 const cameraPositionPoints = [
   new THREE.Vector3(0, .12, 7.6),
