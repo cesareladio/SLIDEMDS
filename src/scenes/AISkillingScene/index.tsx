@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
 import { certifications } from '../../data/capabilities'
 import { SceneShell } from '../../components/SceneShell'
-import { useStory } from '../../app/StoryContext'
+import { useState } from 'react'
 
 export function AISkillingScene() {
-  const { aiPhase: phase } = useStory()
+  const [phase] = useState<'certifications' | 'gh300' | 'concepts'>('certifications')
   const isGH = phase !== 'certifications'
   return <SceneShell eyebrow="04 · TALENTO EN MOVIMIENTO" align="center" className="ai-scene">
     <motion.div className="ai-number" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>

@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion'
 import { SceneShell } from '../../components/SceneShell'
 import { ibiol, type IBIOLPhase } from '../../data/ibiol'
-import { useStory } from '../../app/StoryContext'
+import { useState } from 'react'
 
 const chapters: { id: IBIOLPhase; label: string }[] = [{ id: 'today', label: 'HOY' }, { id: 'grow', label: 'CRECER' }, { id: 'ask', label: 'ACELERAR' }]
 
 export function IBIOLScene() {
-  const { ibiolPhase, setIBIOLPhase } = useStory()
+  const [ibiolPhase, setIBIOLPhase] = useState<IBIOLPhase>('today')
   return <SceneShell eyebrow="06 · ESTRATEGIA COMPARTIDA" title="NUESTRA AMBICIÓN PARA IBIOL" align="center" className={`ibiol-scene ibiol-${ibiolPhase}`}>
     <motion.p className="ibiol-subtitle" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>{ibiol.subtitle}</motion.p>
     <div className="ibiol-chapters">

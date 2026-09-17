@@ -2,12 +2,12 @@ import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { SceneShell } from '../../components/SceneShell'
 import { capabilityNodes, type CapabilityFocus } from '../../data/capabilityConstellation'
-import { useStory } from '../../app/StoryContext'
+import { useState } from 'react'
 
 const selectable = capabilityNodes.filter(node => node.focus)
 
 export function SuperpowersScene() {
-  const { capabilityFocus, setCapabilityFocus } = useStory()
+  const [capabilityFocus, setCapabilityFocus] = useState<CapabilityFocus>('overview')
   const selected = selectable.find(node => node.focus === capabilityFocus)
 
   return <SceneShell eyebrow="03 · LO QUE NOS HACE ÚNICOS" title="NUESTROS SUPERPODERES" className={`superpowers-scene ${selected ? 'superpowers-focus' : ''}`}>
