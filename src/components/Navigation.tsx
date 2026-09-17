@@ -7,7 +7,8 @@ function isTypingTarget(target: EventTarget | null) { return target instanceof H
 export function Navigation() {
   const { activeSceneIndex, transitioning, navigateToScene } = usePresentation()
   const [visible, setVisible] = useState(false)
-  const next = useCallback(() => navigateToScene(activeSceneIndex + 1), [activeSceneIndex, navigateToScene])
+  const isLast = activeSceneIndex >= presentationScenes.length - 1
+  const next = useCallback(() => { if (!isLast) navigateToScene(activeSceneIndex + 1) }, [activeSceneIndex, isLast, navigateToScene])
   const previous = useCallback(() => navigateToScene(activeSceneIndex - 1), [activeSceneIndex, navigateToScene])
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -23,6 +24,6 @@ export function Navigation() {
   return <nav className={`beat-nav ${transitioning ? 'busy' : ''}`} aria-label="Navegación de historia" onMouseEnter={() => setVisible(true)} onMouseLeave={() => setVisible(false)}>
     <button className="beat-nav-btn" onClick={previous} disabled={transitioning} aria-label="Escena anterior">↑</button>
     <div className={`beat-nav-info ${visible ? 'visible' : ''}`}><span>{String(activeSceneIndex + 1).padStart(2, '0')} / {String(presentationScenes.length).padStart(2, '0')}</span></div>
-    <button className="beat-nav-btn beat-nav-primary" onClick={next} disabled={transitioning} aria-label="Siguiente escena">↓</button>
+    <button className="beat-nav-btn beat-nav-primary" onClick={next} disabled={transitioning || isLast} aria-label="Siguiente escena" style={{ opacity: isLast ? 0.25 : undefined, pointerEvents: isLast ? 'none' : undefined }}>↓</button>
   </nav>
 }

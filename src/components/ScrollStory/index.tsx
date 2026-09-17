@@ -4,7 +4,7 @@ const chapters: { id: string; height: string }[] = [
   { id: 'opening', height: '220vh' },
   { id: 'earth', height: '180vh' },
   { id: 'peru', height: '500vh' },
-  { id: 'chile', height: '340vh' },
+  { id: 'chile', height: '720vh' },  // Expanded for 6 canonical scenes (was 340vh for 3)
   { id: 'convergence', height: '140vh' },
   { id: 'ai', height: '240vh' },
   { id: 'ibiol', height: '260vh' },

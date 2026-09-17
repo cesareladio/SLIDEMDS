@@ -7,8 +7,9 @@ interface Props { capabilities: Capability[]; progress: number; visible: boolean
 
 // Atmospheric only: typography in CountrySuperpowers is the information hero.
 const SAFE_AREA_SCALE = .76
-const NODE_SCALE = .44
-const HALO_SCALE = 1.3
+const NODE_RADIUS_MIN = 0.012  // ~4–5px
+const NODE_RADIUS_MAX = 0.018  // ~6px
+const HALO_RADIUS = 0.024      // ~8px glow
 
 export function CountryCapabilityConstellation({ capabilities, progress, visible, opacity = 1 }: Props) {
   const nodes = useMemo(() => capabilities.map((cap, index) => {
@@ -24,15 +25,45 @@ export function CountryCapabilityConstellation({ capabilities, progress, visible
   const coreOpacity = Math.min(1, Math.max(0, progress)) * opacity
 
   return <group position={[1.15, -.05, 0]} scale={.86}>
-    <mesh position={[0, 0, 0]}><sphereGeometry args={[.035, 12, 12]} /><meshBasicMaterial color="#d9fbff" toneMapped={false} transparent opacity={coreOpacity * .5} /></mesh>
+    {/* Core hub node: reduced to a tiny premium point */}
+    <mesh position={[0, 0, 0]}>
+      <sphereGeometry args={[NODE_RADIUS_MIN * 0.9, 10, 10]} />
+      <meshBasicMaterial color="#e5fbff" toneMapped={false} transparent opacity={coreOpacity * .6} />
+    </mesh>
     {nodes.map((node, index) => {
       const reveal = Math.min(1, Math.max(0, (progress - (index / nodes.length) * .6) / .15)) * opacity
-      const size = (.08 + node.value / 2200) * NODE_SCALE
+      const t = Math.min(1, Math.max(0, node.value / 400))
+      const radius = NODE_RADIUS_MIN + (NODE_RADIUS_MAX - NODE_RADIUS_MIN) * t
       return <group key={node.id}>
-        <Line points={[[0, 0, 0], node.position]} color="#168ac2" transparent opacity={reveal * .09} lineWidth={.65} />
+        {/* Subtle network line */}
+        <Line
+          points={[[0, 0, 0], node.position]}
+          color="#5ddeff"
+          transparent
+          opacity={reveal * .12}
+          lineWidth={0.45}
+        />
         <group position={node.position}>
-          <mesh><icosahedronGeometry args={[size, 1]} /><meshBasicMaterial color={index < 3 ? '#00d4ff' : '#0878d2'} toneMapped={false} transparent opacity={reveal * .5} /></mesh>
-          <mesh scale={HALO_SCALE}><sphereGeometry args={[size, 10, 10]} /><meshBasicMaterial color="#00a6ff" transparent opacity={reveal * .018} depthWrite={false} /></mesh>
+          {/* Micro-node: 4–6px solid dot */}
+          <mesh>
+            <sphereGeometry args={[radius, 10, 10]} />
+            <meshBasicMaterial
+              color={index < 3 ? '#00e6ff' : '#0b6fbf'}
+              toneMapped={false}
+              transparent
+              opacity={reveal * .85}
+            />
+          </mesh>
+          {/* Very soft 8px glow */}
+          <mesh>
+            <sphereGeometry args={[HALO_RADIUS, 10, 10]} />
+            <meshBasicMaterial
+              color="#00bfff"
+              transparent
+              opacity={reveal * .10}
+              depthWrite={false}
+            />
+          </mesh>
         </group>
       </group>
     })}

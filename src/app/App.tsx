@@ -1,6 +1,6 @@
 import { StoryProvider, useStory } from './StoryContext'
 import { ScrollProvider, useScrollStory } from './ScrollContext'
-import { PresentationProvider } from './PresentationContext'
+import { PresentationProvider, usePresentation } from './PresentationContext'
 import { ScrollDirector } from './ScrollDirector'
 import { ScrollStory } from '../components/ScrollStory'
 import { ScrollDebugOverlay } from '../components/ScrollDebugOverlay'
@@ -12,6 +12,7 @@ import { PresenterMode } from '../components/PresenterMode'
 import { Brand } from '../components/Brand'
 import { OpeningScene } from '../scenes/OpeningScene'
 import { EarthHubScene } from '../scenes/EarthHubScene'
+import { OpeningEarthHandoff } from '../components/OpeningEarthHandoff'
 import { CountryExperience } from '../scenes/CountryExperience'
 import { ConvergenceScene } from '../scenes/ConvergenceScene'
 import { AIScrollScene } from '../scenes/AIScrollScene'
@@ -22,17 +23,19 @@ import { countryFromChapter } from '../data/countryScroll'
 function Experience() {
   const { presenter, elapsed } = useStory()
   const { chapter, chapterProgress } = useScrollStory()
+  const { activeSceneIndex } = usePresentation()
   const activeCountry = countryFromChapter(chapter)
 
   return <main className="app">
     <div className="grain" />
     <ErrorBoundary fallback={<WebGLFallback />}>
-      <ExperienceCanvas scrollChapter={chapter} scrollProgress={chapterProgress} />
+      <ExperienceCanvas scrollChapter={chapter} scrollProgress={chapterProgress} activeSceneIndex={activeSceneIndex} />
     </ErrorBoundary>
     <div className="ambient-wash" />
     <Brand />
     <OpeningScene />
     <EarthHubScene />
+    <OpeningEarthHandoff />
     {(chapter === 'peru' || chapter === 'chile') && <CountryExperience key={chapter} />}
     <ConvergenceScene />
     <AIScrollScene />

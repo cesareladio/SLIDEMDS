@@ -14,9 +14,10 @@ import type { ScrollChapter } from '../app/ScrollContext'
 interface ExperienceCanvasProps {
   scrollChapter?: ScrollChapter
   scrollProgress?: number
+  activeSceneIndex?: number
 }
 
-export function ExperienceCanvas({ scrollChapter = 'opening', scrollProgress = 0 }: ExperienceCanvasProps) {
+export function ExperienceCanvas({ scrollChapter = 'opening', scrollProgress = 0, activeSceneIndex = -1 }: ExperienceCanvasProps) {
   const isAI = scrollChapter === 'ai'
   const isIBIOL = scrollChapter === 'ibiol'
   const isClosing = scrollChapter === 'closing'
@@ -30,7 +31,7 @@ export function ExperienceCanvas({ scrollChapter = 'opening', scrollProgress = 0
       <fog attach="fog" args={['#040816', 8, 18]} />
       <Lights />
       <Starfield visible={showSpaceBackdrop} />
-      <Globe scrollChapter={scrollChapter} scrollProgress={scrollProgress} />
+      <Globe scrollChapter={scrollChapter} scrollProgress={scrollProgress} activeSceneIndex={activeSceneIndex} />
       {isAI && <AIScrollParticleMorph progress={scrollProgress} visible />}
       {isIBIOL && <AIScrollParticleMorph progress={1} opacity={Math.max(0, 1 - Math.min(1, scrollProgress / .12))} visible />}
       {isIBIOL && <IBIOLScrollNetwork progress={scrollProgress} opacity={Math.min(1, scrollProgress / .12)} visible />}

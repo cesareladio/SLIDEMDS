@@ -7,10 +7,10 @@ import type { ScrollChapter } from '../app/ScrollContext'
 const meta: Record<ScrollChapter, { title: string; points: string[] }> = {
   opening: { title: 'DOS IDENTIDADES · UN SOLO EQUIPO', points: ['Presentación de Perú y Chile.', 'La experiencia comienza.'] },
   earth: { title: 'DOS PAÍSES · UNA CAPACIDAD', points: ['El planeta conecta Perú y Chile.'] },
-  peru: { title: 'PERÚ · HUELLA · TALENTO · SUPERPODERES · CAMINO', points: ['1,408 personas en Perú.', 'Back-End, Testing y SAP a escala.', '2016→2026: crecimiento 5×.'] },
-  chile: { title: 'CHILE · HUELLA · SUPERPODERES', points: ['720 personas en Chile.', 'Santiago · Temuco · Concepción.', 'Salesforce, Testing, Front-End, Cloud.'] },
+  peru: { title: 'PERÚ · HUELLA · TALENTO · CAPACIDADES · HISTORIA', points: ['1,408 personas en Perú.', 'Back-End, Testing y SAP a escala.', '2016 Trujillo → 2023 Arequipa.'] },
+  chile: { title: 'CHILE · HUELLA · TALENTO · CAPACIDADES · CERTIFICACIONES · HISTORIA', points: ['609 personas bajo gestión.', 'La Araucanía · Biobío: 72% del HC.', 'Back-End, Data, Quality, Front-End.'] },
   convergence: { title: 'ONE GDN-e', points: ['Dos identidades. Un solo equipo.'] },
-  ai: { title: 'PREPARANDO EL TALENTO PARA LO QUE VIENE', points: ['4,000 certificaciones IA.', '50% GH-300 del colectivo Perú.'] },
+  ai: { title: 'CERTIFICACIONES Y UPSKILLING · PERÚ', points: ['860 certificaciones hoy → 1,500 proyección Q3.', '3 rutas de upskilling: Data · Backend · Frontend.', '150 certificaciones estratégicas FY26.'] },
   ibiol: { title: 'NUESTRA AMBICIÓN PARA IBIOL', points: ['De capacidad disponible a crecimiento compartido.'] },
   closing: { title: 'DOS IDENTIDADES · UN SOLO EQUIPO · ONE GDN-e', points: ['La magia del sur.', 'Talento que enciende el futuro.', 'AI Everywhere.'] },
 }

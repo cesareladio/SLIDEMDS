@@ -19,12 +19,17 @@ const peruSegments: CountryScrollSegment[] = [
   { id: 'exit',        start: 0.92, end: 1.00 },
 ]
 
-/** Chile's own dedicated ScrollChapter. */
+/** Chile's own dedicated ScrollChapter — 6 canonical scenes.
+ * Each segment boundary is designed so canonical landing targets fall in HOLD, not transition.
+ * Canonical targets: .10 (scale), .24 (footprint), .40 (talent), .56 (capabilities), .72 (certifications), .91 (history)
+ */
 const chileSegments: CountryScrollSegment[] = [
-  { id: 'geo-focus',   start: 0.00, end: 0.18 },
-  { id: 'overview',    start: 0.18, end: 0.58 },
-  { id: 'superpowers', start: 0.58, end: 0.88 },
-  { id: 'exit',        start: 0.88, end: 1.00 },
+  { id: 'geo-focus',      start: 0.00, end: 0.15 },  // Entry into scale, canonical lands at .10
+  { id: 'overview',       start: 0.15, end: 0.32 },  // Scale hold, exit transition; footprint entry, canonical lands at .24
+  { id: 'talent',         start: 0.32, end: 0.48 },  // Footprint transition out, talent entry; canonical lands at .40
+  { id: 'superpowers',    start: 0.48, end: 0.64 },  // Talent transition out, capabilities entry; canonical lands at .56
+  { id: 'certifications', start: 0.64, end: 0.80 },  // Capabilities transition out, certifications entry; canonical lands at .72
+  { id: 'journey',        start: 0.80, end: 1.00 },  // Certifications transition out, history entry; canonical lands at .91
 ]
 
 export const countryScrollSegments: Record<CountryId, CountryScrollSegment[]> = {

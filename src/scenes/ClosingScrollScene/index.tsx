@@ -13,7 +13,9 @@ export function ClosingScrollScene() {
   const pullback = fadeWindow(p, .72, .75, .84, .87)
   const one = fadeWindow(p, .84, .865, .915, .935)
   const ntt = fadeWindow(p, .94, .95, .968, .98)
-  const everywhere = fadeWindow(p, .982, .99, 1, 1.01)
+  // AI EVERYWHERE — final scene, no exit. Clamp to 1 once entered so scroll overrun
+  // can never reduce opacity. Unreachable exit window (2, 3) ensures full hold.
+  const everywhere = p >= .99 ? 1 : fadeWindow(p, .982, .99, 2, 3)
   const style = (opacity: number) => ({ opacity, transform: `translateY(${(1 - opacity) * 16}px)`, filter: `blur(${(1 - opacity) * 6}px)` })
   return <section className="scene closing-scroll-scene">
     <div className="closing-scroll-copy">

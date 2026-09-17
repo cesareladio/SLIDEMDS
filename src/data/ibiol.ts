@@ -1,7 +1,12 @@
 export type IBIOLPhase = 'today' | 'grow' | 'ask'
 export type SpatialPosition = [number, number, number]
 
+// IBIOL data below is retained from previous version for visual continuity.
+// Specific capabilities, industries, and growth targets have NOT been confirmed
+// by the V3 executive script. All content marked validationStatus:
+// 'pending-business-confirmation' must be reviewed before external delivery.
 export const ibiol = {
+  validationStatus: 'pending-business-confirmation' as const,
   subtitle: 'De capacidad disponible a crecimiento compartido.',
   todayCapabilities: [
     { label: 'Testing', position: [-2.1, .8, .3] as SpatialPosition },
@@ -22,6 +27,7 @@ export const ibiol = {
     { label: 'Automation', position: [2.1, -1.2, .15] as SpatialPosition },
     { label: 'Enterprise Platforms', position: [3.15, -.35, 1.2] as SpatialPosition },
   ],
+  // asks confirmed by V3 script — these six categories may remain as-is
   asks: ['Demanda', 'Visibilidad', 'Movilidad', 'Oportunidades', 'Inversión', 'Formación'],
   finalMessage: 'Tenemos capacidad. Tenemos talento. Ahora necesitamos escala.',
 } as const

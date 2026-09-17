@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { getSceneScrollTarget, presentationScenes } from '../data/presentationScenes'
+import { openingPreludeState } from '../data/openingPreludeState'
 
 export type PresentationPhase = 'idle' | 'transitioning' | 'settling'
 
@@ -31,8 +32,13 @@ export function PresentationProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const navigateToScene = useCallback((raw: number) => {
+    // CRITICAL: Never auto-advance during prelude
+    if (!openingPreludeState.done && activeSceneIndexRef.current === 0) return
     if (busy.current || phaseRef.current !== 'idle') return
-    const targetIndex = Math.min(presentationScenes.length - 1, Math.max(0, raw))
+    const lastIndex = presentationScenes.length - 1
+    // CRITICAL: Scene 28 is the final scene — never navigate beyond it
+    if (raw > activeSceneIndexRef.current && activeSceneIndexRef.current >= lastIndex) return
+    const targetIndex = Math.min(lastIndex, Math.max(0, raw))
     if (targetIndex === activeSceneIndexRef.current) return
     const targetY = getSceneScrollTarget(presentationScenes[targetIndex])
     if (targetY === null) return

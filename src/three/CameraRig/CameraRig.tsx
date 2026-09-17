@@ -1,6 +1,6 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import type { ScrollChapter } from '../../app/ScrollContext'
-import { sampleOpeningCameraProgress } from '../../data/earthJourney'
+import { sampleOpeningCameraProgress, openingLockedCameraComposition } from '../../data/earthJourney'
 import { journeyLocalProgress } from '../../data/countryScroll'
 import { sampleJourneyCameraProgress } from '../JourneyScrollFlight'
 import { bridgeCameraComposition, convergenceStartCameraComposition } from '../../data/sequentialCountryChoreography'
@@ -25,13 +25,25 @@ export function CameraRig({ scrollChapter = 'opening', scrollProgress = 0 }: { s
 
     // ---- OPENING ----
     if (scrollChapter === 'opening') {
+      // Entire Scene 01 hold: locked frozen camera through end of chapter
+      if (p >= 0.20) {
+        const { position, target } = openingLockedCameraComposition
+        camera.position.set(...position); camera.lookAt(...target); return
+      }
+      // Prelude entry (0–.20): continuous progression
       const { position, target } = sampleOpeningCameraProgress(p)
       camera.position.set(...position); camera.lookAt(...target); return
     }
 
     // ---- EARTH HUB ----
+    // Blend from locked opening state to earth hub during 02→03 reframe
     if (scrollChapter === 'earth') {
-      camera.position.set(...earthHubCamera); camera.lookAt(...earthHubLookAt); return
+      const reframeEnd = 0.82
+      const blend = smoothstep(Math.min(1, p / reframeEnd))
+      const { position: openingLocked, target: openingLockedTarget } = openingLockedCameraComposition
+      camera.position.set(...lerpTuple(openingLocked, earthHubCamera, blend))
+      camera.lookAt(...lerpTuple(openingLockedTarget, earthHubLookAt, blend))
+      return
     }
 
     // ---- PERU ----

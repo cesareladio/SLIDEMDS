@@ -5,6 +5,8 @@ import { formatNumber } from '../../utils/math'
 import type { TerritorialNode } from '../../data/types'
 
 const TOP3_LABELS = new Set(['La Libertad', 'Arequipa', 'Lima'])
+const TOP3_OPACITY = 1
+const OTHER_OPACITY = 0.5
 
 const PERU_BOUNDS = { latMin: -18.5, latMax: -0.1, lonMin: -81.5, lonMax: -68.2 }
 
@@ -18,11 +20,12 @@ function TerritoryPin({ node, index, isTop }: { node: TerritorialNode; index: nu
   const { x, y } = geoToPercent(node.lat, node.lon)
   const delay = 0.6 + index * 0.18
   const alignRight = x > 58
+  const baseOpacity = isTop ? TOP3_OPACITY : OTHER_OPACITY
   return <motion.div
     className={`geo-pin${isTop ? ' geo-pin-top' : ''}`}
     style={{ left: `${x}%`, top: `${y}%` } as React.CSSProperties}
     initial={{ opacity: 0, scale: 0 }}
-    animate={{ opacity: 1, scale: 1 }}
+    animate={{ opacity: baseOpacity, scale: 1 }}
     transition={{ delay, duration: 0.4, type: 'spring', stiffness: 220 }}
   >
     <span className="geo-dot" />

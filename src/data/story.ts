@@ -45,13 +45,13 @@ export const story = [
   },
   {
     id: 'ai-skilling',
-    eyebrow: '04 · IA / SKILLING',
-    title: 'PREPARANDO EL TALENTO PARA LO QUE VIENE',
+    eyebrow: '04 · CERTIFICACIONES / UPSKILLING',
+    title: 'DE CERTIFICAR PERSONAS A GESTIONAR CAPACIDADES',
     next: 'Nuestro camino',
     talkingPoints: [
-      '4,000 certificaciones IA.',
-      '50% GH-300 del colectivo Perú.',
-      'Skilling y upskilling como ventaja competitiva.',
+      '860 certificaciones hoy → 1,500 proyección Q3.',
+      '3 rutas de upskilling: Data · Backend · Frontend.',
+      '150 certificaciones estratégicas FY26.',
     ],
   },
   {

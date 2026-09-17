@@ -72,5 +72,20 @@ export function sampleOpeningCameraProgress(progress: number) {
   }
 }
 
+// --- OPENING LOCKED COMPOSITION (used by Scene 01 and Scene 02) ---
+// Sampled at progress .25 (Scene 01 position) to create a frozen state
+export const openingLockedEarthComposition = sampleEarthChoreographyProgress(.25)
+export const openingLockedCameraComposition = sampleOpeningCameraProgress(.25)
+
 // --- earth chapter hub composition ---
 export const earthHubComposition = { position: [.5, -.85, 0] as [number, number, number], scale: 1.0 }
+
+// --- cinematic prelude (non-navigable): Spain → South America ---
+// Spain approx lat:40 lon:-3
+// South America anchor lat:-17 lon:-60
+const SPAIN_LAT = 40; const SPAIN_LON = -3
+const SA_LAT = -17; const SA_LON = -60
+
+export function getCinematicPreludes(getOrientation: (lat: number, lon: number) => THREE.Quaternion) {
+  return { spainQ: getOrientation(SPAIN_LAT, SPAIN_LON), saQ: getOrientation(SA_LAT, SA_LON) }
+}
