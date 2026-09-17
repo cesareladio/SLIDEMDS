@@ -8,7 +8,7 @@ const chapters: { id: string; height: string }[] = [
   { id: 'convergence', height: '140vh' },
   { id: 'ai', height: '240vh' },
   { id: 'ibiol', height: '260vh' },
-  { id: 'closing', height: '280vh' },
+  { id: 'closing', height: '760vh' },
 ]
 
 export function ScrollStory() {
