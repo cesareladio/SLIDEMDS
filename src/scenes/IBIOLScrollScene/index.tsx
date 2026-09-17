@@ -13,7 +13,7 @@ export function IBIOLScrollScene() {
   const style = (opacity: number) => ({ opacity, transform: `translateY(${(1 - opacity) * 16}px)`, filter: `blur(${(1 - opacity) * 7}px)` })
   return <section className="scene ibiol-scroll-scene">
     <div className="ibiol-scroll-copy">
-      <p className="eyebrow" style={style(handoff)}>GDN-e · PERÚ · CHILE</p>
+      <p className="eyebrow" style={style(handoff)}>GDN-e · PERÚ · CHILE<br />CAPACIDAD CONSOLIDADA</p>
       <div className="ibiol-scroll-stage">
         <div className="ibiol-scroll-beat" style={style(today)}>
           <strong>HOY</strong>

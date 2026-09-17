@@ -28,6 +28,7 @@ button { color: inherit; font: inherit; }
 .closing-scroll-copy { position: relative; z-index: 1; }
 .closing-final-backdrop { position: fixed; inset: 0; z-index: 0; background: #040816; }
 .ai-scroll-copy { position: relative; width: min(820px, 78vw); height: 72vh; margin: 0 auto; }
+.ai-scroll-copy::before, .ibiol-scroll-copy::before { content: ''; position: absolute; inset: -6vh -6vw; background: radial-gradient(ellipse at center, rgba(3,10,24,.78) 0%, rgba(3,10,24,.44) 48%, transparent 76%); pointer-events: none; z-index: -1; }
 .ibiol-scroll-copy { position: fixed; left: 8vw; top: 50%; transform: translateY(-50%); width: min(38vw, 460px); text-align: left; pointer-events: none; }
 .ibiol-scroll-stage { position: relative; width: 100%; height: 56vh; }
 .opening-copy { width: min(580px, 44vw); margin-top: 5vh; justify-items: start; text-align: left; }.earth-hub-copy { width: min(620px, 48vw); margin-top: 5vh; }.earth-hub-copy h1 { font-size: clamp(54px, 5.5vw, 96px); }.earth-hub-hint { font-size: clamp(16px, 1.35vw, 24px); letter-spacing: .22em; }
@@ -124,6 +125,11 @@ button { color: inherit; font: inherit; }
 .country-identity-badge-peru i { background: linear-gradient(90deg, #ce1731 0 33%, #f8fafc 33% 67%, #ce1731 67%); }
 .country-identity-badge-chile i { background: linear-gradient(90deg, #174d9a 0 33%, #f8fafc 33% 100%); position: relative; }
 .country-identity-badge-chile i::after { content: ''; position: absolute; left: -1px; right: -1px; bottom: -1px; height: 4px; background: #ce1731; }
+.convergence-copy .eyebrow { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+.convergence-flag { width: 13px; height: 8px; display: inline-block; border: 1px solid rgba(229,251,255,.55); box-shadow: 0 0 8px rgba(0,212,255,.16); }
+.convergence-flag-peru { background: linear-gradient(90deg, #ce1731 0 33%, #f8fafc 33% 67%, #ce1731 67%); }
+.convergence-flag-chile { background: linear-gradient(90deg, #174d9a 0 33%, #f8fafc 33% 100%); position: relative; }
+.convergence-flag-chile::after { content: ''; position: absolute; left: -1px; right: -1px; bottom: -1px; height: 3px; background: #ce1731; }
 /* Country geo poster */
 .country-geo-poster { position: fixed; left: 7vw; top: 50%; transform: translateY(-50%); display: grid; gap: 14px; pointer-events: none; z-index: 3; }
 .country-geo-name { margin: 0; color: var(--cyan); font: 500 11px var(--mono); letter-spacing: .32em; }
