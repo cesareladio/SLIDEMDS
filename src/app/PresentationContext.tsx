@@ -17,19 +17,27 @@ export function PresentationProvider({ children }: { children: ReactNode }) {
   const [activeSceneIndex, setActiveSceneIndex] = useState(0)
   const [transitioning, setTransitioning] = useState(false)
   const [phase, setPhase] = useState<PresentationPhase>('idle')
+
   const busy = useRef(false)
+  const phaseRef = useRef<PresentationPhase>('idle')
   const tween = useRef<gsap.core.Tween | null>(null)
   const settle = useRef<ReturnType<typeof setTimeout> | null>(null)
   const state = useRef({ y: 0 })
   const activeSceneIndexRef = useRef(0)
 
+  const updatePhase = useCallback((next: PresentationPhase) => {
+    phaseRef.current = next
+    setPhase(next)
+  }, [])
+
   const navigateToScene = useCallback((raw: number) => {
-    if (busy.current || phase !== 'idle') return
+    if (busy.current || phaseRef.current !== 'idle') return
     const targetIndex = Math.min(presentationScenes.length - 1, Math.max(0, raw))
     if (targetIndex === activeSceneIndexRef.current) return
     const targetY = getSceneScrollTarget(presentationScenes[targetIndex])
     if (targetY === null) return
     busy.current = true
+    updatePhase('transitioning')
     setTransitioning(true)
     state.current.y = window.scrollY
     const transition = presentationScenes[targetIndex].transitionType
@@ -43,20 +51,20 @@ export function PresentationProvider({ children }: { children: ReactNode }) {
         window.scrollTo(0, targetY)
         activeSceneIndexRef.current = targetIndex
         setActiveSceneIndex(targetIndex)
-        setPhase('settling')
+        updatePhase('settling')
         settle.current = setTimeout(() => {
           busy.current = false
           setTransitioning(false)
-          setPhase('idle')
+          updatePhase('idle')
         }, 400)
       },
       onInterrupt: () => {
         busy.current = false
         setTransitioning(false)
-        setPhase('idle')
+        updatePhase('idle')
       },
     })
-  }, [phase])
+  }, [updatePhase])
 
   useEffect(() => {
     let accumulated = 0
