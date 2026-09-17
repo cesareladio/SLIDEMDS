@@ -82,7 +82,7 @@ export function CountryExperience() {
     {/* Chrome */}
     <div className="country-scroll-chrome">
       <div className="country-scroll-identity">
-        <span>{profile.data.name.toUpperCase()}</span>
+        <span className={`country-identity-badge country-identity-badge-${activeCountry}`}><i aria-hidden="true" />{profile.data.name.toUpperCase()}</span>
         <small>{profile.slogan}</small>
         {profile.data.isMock && import.meta.env.DEV && <small className="mock-badge">DATOS DEMO</small>}
       </div>

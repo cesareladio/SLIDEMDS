@@ -7,7 +7,7 @@ export function ConvergenceScene() {
   const context = fadeWindow(p, 0, .06, .14, .18)
   const identities = fadeWindow(p, .34, .39, .52, .545)
   const team = fadeWindow(p, .56, .595, .73, .755)
-  const one = fadeWindow(p, .78, .82, 1, 1.02)
+  const one = p >= .82 ? 1 : fadeWindow(p, .78, .82, 2, 3)
   const style = (opacity: number) => ({ opacity, transform: `translateY(${(1 - opacity) * 20}px)`, filter: `blur(${(1 - opacity) * 7}px)` })
   return <section className="scene convergence-scene">
     <div className="convergence-copy">

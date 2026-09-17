@@ -58,6 +58,25 @@ button { color: inherit; font: inherit; }
 .ai-upskill-routes { display: flex; gap: 22px; margin-top: 8px; }
 .ai-upskill-routes span { color: var(--cyan); font: 500 clamp(14px, 1.3vw, 20px) var(--mono); letter-spacing: .14em; }
 .ai-upskill-detail { margin: 4px 0 0; color: #d9f6ff; font: 500 clamp(10px, 0.9vw, 14px)/1.4 var(--mono); letter-spacing: .12em; text-align: center; }
+.one-gdne-identifier { margin: 0; color: #e8fbff; font: 500 10px/1.25 var(--mono); letter-spacing: .24em; text-align: center; }
+.one-gdne-identifier small { color: var(--cyan); font: inherit; letter-spacing: .18em; }
+.ai-peru-program > p { margin: 4px 0 0; color: var(--cyan); font: 500 8px var(--mono); letter-spacing: .18em; }
+.ai-capability-building { padding-top: 8vh; }
+.ai-capability-building h2 { margin: 0; color: #f1fcff; font: 280 clamp(52px, 6vw, 94px)/.82 var(--font-display); letter-spacing: -.08em; text-align: center; }
+.ai-capability-building h2 em { color: var(--cyan); font-style: normal; }
+.ai-capability-countries { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: start; gap: 2vw; width: min(980px, 76vw); margin-top: 2vh; }
+.ai-capability-countries article { display: grid; justify-items: center; gap: 6px; min-width: 0; }
+.ai-capability-countries article > p { margin: 0; color: var(--cyan); font: 500 9px var(--mono); letter-spacing: .2em; }
+.ai-capability-countries article > strong { font: 280 clamp(48px, 5vw, 80px)/.85 var(--font-display); letter-spacing: -.07em; }
+.ai-capability-countries article > span { color: #d9f6ff; font: 500 8px var(--mono); letter-spacing: .12em; text-align: center; }
+.ai-capability-countries article > small { color: #ffffff72; font: 400 7px var(--mono); letter-spacing: .09em; text-align: center; }
+.ai-capability-link { align-self: center; color: #ffffff60; font: 500 8px var(--mono); letter-spacing: .16em; font-style: normal; white-space: nowrap; }
+.ai-country-proof { display: flex; align-items: baseline; justify-content: center; gap: 7px; }
+.ai-country-proof b, .ai-chile-progression b { color: #baf5ff; font: 280 clamp(18px, 1.7vw, 28px) var(--font-display); }
+.ai-country-proof span { color: #ffffff72; font: 500 7px var(--mono); letter-spacing: .08em; }
+.ai-chile-progression { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 4px 7px; }
+.ai-chile-progression span { color: #ffffff72; font: 500 7px var(--mono); letter-spacing: .08em; }
+.ai-chile-progression i { color: var(--cyan); font-style: normal; margin: 0 2px; }
 .ibiol-scroll-beat { position: absolute; inset: 0; display: grid; align-content: center; justify-items: start; text-align: left; gap: 8px; pointer-events: none; }
 .ibiol-scroll-beat p { margin: 0; color: #e5f8ff; font-size: clamp(15px, 1.5vw, 21px); line-height: 1.35; max-width: 34vw; }
 .ibiol-scroll-final { position: fixed; inset: 0; padding: 0 9vw; display: grid; align-content: center; justify-items: start; }
@@ -100,6 +119,11 @@ button { color: inherit; font: inherit; }
 .country-scroll-identity { display: grid; justify-items: end; gap: 5px; }
 .country-scroll-identity span { color: #e5fbff; font: 500 10px var(--mono); letter-spacing: .24em; }
 .country-scroll-identity small { color: #ffffff57; font: 400 9px var(--mono); letter-spacing: .12em; }
+.country-identity-badge { display: inline-flex; align-items: center; gap: 6px; }
+.country-identity-badge i { width: 14px; height: 9px; display: inline-block; border: 1px solid rgba(229,251,255,.55); box-shadow: 0 0 9px rgba(0,212,255,.18); }
+.country-identity-badge-peru i { background: linear-gradient(90deg, #ce1731 0 33%, #f8fafc 33% 67%, #ce1731 67%); }
+.country-identity-badge-chile i { background: linear-gradient(90deg, #174d9a 0 33%, #f8fafc 33% 100%); position: relative; }
+.country-identity-badge-chile i::after { content: ''; position: absolute; left: -1px; right: -1px; bottom: -1px; height: 4px; background: #ce1731; }
 /* Country geo poster */
 .country-geo-poster { position: fixed; left: 7vw; top: 50%; transform: translateY(-50%); display: grid; gap: 14px; pointer-events: none; z-index: 3; }
 .country-geo-name { margin: 0; color: var(--cyan); font: 500 11px var(--mono); letter-spacing: .32em; }

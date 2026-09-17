@@ -6,6 +6,7 @@ export type SpatialPosition = [number, number, number]
 // by the V3 executive script. All content marked validationStatus:
 // 'pending-business-confirmation' must be reviewed before external delivery.
 export const ibiol = {
+  narrativeScope: 'one-gdne-after-convergence' as const,
   validationStatus: 'pending-business-confirmation' as const,
   subtitle: 'De capacidad disponible a crecimiento compartido.',
   todayCapabilities: [

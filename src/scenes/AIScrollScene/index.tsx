@@ -1,12 +1,13 @@
 import { useScrollStory } from '../../app/ScrollContext'
+import { oneGdneCapabilityBuilding, oneGdneCertificationScale } from '../../data/oneGdne'
 import { fadeWindow } from '../../utils/scrollMotion'
 
 export function AIScrollScene() {
   const { chapter, chapterProgress: p } = useScrollStory()
   if (chapter !== 'ai') return null
-  // Beat 1 — Peru Certifications (Scene 15 · canonical .32)
+  // Beat 1 — One GDN-e certification scale (Scene 15 · canonical .32)
   const cert = fadeWindow(p, .12, .20, .46, .54)
-  // Beat 2 — Peru Upskilling (Scene 16 · canonical .68)
+  // Beat 2 — Complementary Peru + Chile capability building (Scene 16 · canonical .68)
   const upskill = fadeWindow(p, .48, .56, .80, .87)
   // Beat 3 — Capability orientation (canonical .92)
   const concepts = fadeWindow(p, .80, .88, 1, 1.02)
@@ -14,36 +15,45 @@ export function AIScrollScene() {
   return <section className="scene ai-scroll-scene">
     <div className="ai-scroll-copy">
 
-      {/* Scene 15 — Peru Certifications scale */}
+      {/* Scene 15 — First One GDN-e proof point: certification scale */}
       <div className="ai-scroll-beat" style={style(cert)}>
-        <strong>860</strong>
-        <span>CERTIFICACIONES<br /><small>HOY · PERÚ</small></span>
+        <p className="one-gdne-identifier">GDN-e<br /><small>PERÚ · CHILE</small></p>
+        <strong>{oneGdneCertificationScale.currentCertifications}</strong>
+        <span>CERTIFICACIONES</span>
         <div className="ai-cert-progression">
           <div className="ai-cert-arrow">→</div>
-          <strong>1,500</strong>
-          <span>PROYECCIÓN<br />CIERRE Q3</span>
+          <strong>{oneGdneCertificationScale.projectedCertifications.toLocaleString('es-PE')}</strong>
+          <span>PROYECCIÓN<br />{oneGdneCertificationScale.projectionLabel}</span>
         </div>
-        <div className="ai-cert-proof">
-          <div><span>46 CUPOS</span><span>CERTIFICACIONES BONIFICADAS FY26</span></div>
-          <div><span>≥70%</span><span>META MÍNIMA DE APROBACIÓN</span></div>
+        <div className="ai-cert-proof ai-peru-program">
+          <p>{oneGdneCertificationScale.peruProgram.country}</p>
+          <div><span>{oneGdneCertificationScale.peruProgram.bonusCertificationSlots} CUPOS</span><span>CERTIFICACIONES BONIFICADAS FY26</span></div>
+          <div><span>≥{oneGdneCertificationScale.peruProgram.minimumApprovalTarget}%</span><span>META MÍNIMA DE APROBACIÓN</span></div>
         </div>
         <p className="ai-cert-message">DE CERTIFICAR PERSONAS<br />A GESTIONAR CAPACIDADES</p>
       </div>
 
-      {/* Scene 16 — Peru Upskilling routes + strategic certs */}
-      <div className="ai-scroll-beat" style={style(upskill)}>
-        <strong>3</strong>
-        <span>RUTAS DE UPSKILLING</span>
-        <div className="ai-upskill-routes">
-          <span>DATA</span>
-          <span>BACKEND</span>
-          <span>FRONTEND</span>
-        </div>
-        <p className="ai-upskill-detail">IA INTEGRADA · PERCIPIO<br /><small>CAPACIDADES ALINEADAS A LA DEMANDA · BANCA</small></p>
-        <div className="ai-cert-proof">
-          <div><span>150</span><span>CERTIFICACIONES ESTRATÉGICAS FY26</span></div>
-          <div><span>ISTQB · SAP LEARNING HUB · GOOGLE · AWS</span></div>
-          <div><span>MICROSOFT</span><span>GH-300 · AI-900 · AI-103</span></div>
+      {/* Scene 16 — Complementary country evidence, not an arithmetic comparison */}
+      <div className="ai-scroll-beat ai-capability-building" style={style(upskill)}>
+        <p className="one-gdne-identifier">GDN-e<br /><small>PERÚ · CHILE</small></p>
+        <h2>CAPACIDAD<br /><em>QUE EVOLUCIONA</em></h2>
+        <div className="ai-capability-countries">
+          <article>
+            <p>PERÚ</p>
+            <strong>{oneGdneCapabilityBuilding.peru.upskillingRoutes.length}</strong><span>RUTAS DE UPSKILLING</span>
+            <div className="ai-upskill-routes">{oneGdneCapabilityBuilding.peru.upskillingRoutes.map(route => <span key={route}>{route}</span>)}</div>
+            <small>{oneGdneCapabilityBuilding.peru.platforms.join(' · ')}</small>
+            <div className="ai-country-proof"><b>{oneGdneCapabilityBuilding.peru.strategicCertificationsFY26}</b><span>CERTIFICACIONES ESTRATÉGICAS FY26</span></div>
+            <small>{oneGdneCapabilityBuilding.peru.partners.join(' · ')}</small>
+            <small>MICROSOFT: {oneGdneCapabilityBuilding.peru.microsoftPrograms.join(' · ')}</small>
+          </article>
+          <i className="ai-capability-link">ONE GDN-e</i>
+          <article>
+            <p>CHILE</p>
+            <strong>{oneGdneCapabilityBuilding.chile.certifiedPeopleToday}</strong><span>PERSONAS CERTIFICADAS HOY</span>
+            <div className="ai-chile-progression"><b>{oneGdneCapabilityBuilding.chile.approvalFY26ToDate}%</b><span>APROBACIÓN FY26 A LA FECHA</span><i>→</i><b>{oneGdneCapabilityBuilding.chile.ambitionFY26}</b><span>AMBICIÓN FY26</span></div>
+            <small>{oneGdneCapabilityBuilding.chile.percentOfHeadcount}% DEL HC · ≥{oneGdneCapabilityBuilding.chile.approvalTarget}% APROBACIÓN OBJETIVO</small>
+          </article>
         </div>
       </div>
 
