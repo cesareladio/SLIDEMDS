@@ -164,13 +164,33 @@ button { color: inherit; font: inherit; }
 .timeline-node--first { transform: translateX(0); }
 /* Last node: shift text left for right-edge safety */
 .timeline-node--last { transform: translateX(-100%); }
-/* Chile-only: fix label overflow/collision on 4-node timeline.
-   Scoped strictly to Chile so the approved/frozen Peru timeline (Scene 07)
-   is never affected. */
-.country-scroll-journey--chile .timeline-node { width: clamp(160px, 14vw, 210px); max-width: clamp(160px, 14vw, 210px); }
+/* First node: shift text right so first milestone doesn't clip the left viewport edge */
+.timeline-node--first { transform: translateX(0); }
+/* Last node: shift text left for right-edge safety */
+.timeline-node--last { transform: translateX(-100%); }
+/* ---- Country-history timeline layout fix ----
+   Controlled node width prevents label text from expanding horizontally
+   into neighboring milestones. Dots/anchors are unaffected — they live
+   on the dot element, not the container transform.
+   Scoped per-country so Peru and Chile can have independent slot widths. */
+.country-scroll-journey--peru .timeline-node,
+.country-scroll-journey--chile .timeline-node {
+  min-width: 0;
+  overflow: hidden;
+}
+.country-scroll-journey--peru .timeline-node { width: clamp(200px, 20vw, 300px); max-width: clamp(200px, 20vw, 300px); }
+.country-scroll-journey--chile .timeline-node { width: clamp(150px, 14vw, 210px); max-width: clamp(150px, 14vw, 210px); }
+.country-scroll-journey--peru .timeline-people,
+.country-scroll-journey--peru .timeline-location,
+.country-scroll-journey--peru .timeline-sublabel,
 .country-scroll-journey--chile .timeline-people,
-.country-scroll-journey--chile .timeline-location { white-space: normal; text-wrap: balance; }
+.country-scroll-journey--chile .timeline-location,
+.country-scroll-journey--chile .timeline-sublabel { white-space: normal; overflow-wrap: break-word; text-wrap: balance; }
+/* First node — inward from left, text left-aligned */
+.country-scroll-journey--peru .timeline-node--first,
 .country-scroll-journey--chile .timeline-node--first { transform: translateX(0); justify-items: start; text-align: left; }
+/* Last node — inward from right, text right-aligned */
+.country-scroll-journey--peru .timeline-node--last,
 .country-scroll-journey--chile .timeline-node--last { transform: translateX(-100%); justify-items: end; text-align: right; }
 .timeline-dot { width: 9px; height: 9px; border-radius: 50%; background: #00c8f5; box-shadow: 0 0 12px #00d4ff; margin-top: 25px; }
 .timeline-node.inflection .timeline-dot { width: 11px; height: 11px; background: #fff; box-shadow: 0 0 18px #baf5ff; }
