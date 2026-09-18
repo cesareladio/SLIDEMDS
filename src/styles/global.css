@@ -159,39 +159,30 @@ button { color: inherit; font: inherit; }
 /* Editorial timeline */
 .editorial-timeline-track { position: relative; width: min(62vw, 980px); height: 108px; margin-top: 4vh; }
 .timeline-line { position: absolute; top: 29px; left: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), rgba(0,212,255,.6)); box-shadow: 0 0 10px rgba(0,212,255,.5); transition: width .08s linear; max-width: 100%; }
-.timeline-node { position: absolute; top: 0; transform: translateX(-50%); display: grid; justify-items: center; gap: 6px; min-width: 56px; padding: 4px 7px; border-radius: 8px; background: radial-gradient(ellipse at center, rgba(2,8,20,.5), rgba(2,8,20,.18) 72%, transparent 100%); text-shadow: 0 1px 8px rgba(2,8,20,.95); }
-/* First node: shift text right so 2007 doesn't clip the left viewport edge */
-.timeline-node--first { transform: translateX(0); }
-/* Last node: shift text left for right-edge safety */
-.timeline-node--last { transform: translateX(-100%); }
-/* First node: shift text right so first milestone doesn't clip the left viewport edge */
-.timeline-node--first { transform: translateX(0); }
-/* Last node: shift text left for right-edge safety */
-.timeline-node--last { transform: translateX(-100%); }
-/* ---- Country-history timeline layout fix ----
-   Controlled node width prevents label text from expanding horizontally
-   into neighboring milestones. Dots/anchors are unaffected — they live
-   on the dot element, not the container transform.
-   Scoped per-country so Peru and Chile can have independent slot widths. */
+.timeline-node { position: absolute; top: 0; transform: translateX(-50%); display: grid; justify-items: center; gap: 6px; min-width: 0; padding: 4px 7px; border-radius: 8px; background: radial-gradient(ellipse at center, rgba(2,8,20,.5), rgba(2,8,20,.18) 72%, transparent 100%); text-shadow: 0 1px 8px rgba(2,8,20,.95); }
+/* ---- 4-milestone history timeline: deterministic slot widths ----
+   Node anchor (left: X%) and dot position are untouched.
+   Width is clamped so no node can expand into its neighbor.
+   At 1440px track (~893px), 4 anchors are ~297px apart.
+   At 1920px track (980px), they are ~327px apart.
+   Both Peru and Chile use the same slot size; this leaves
+   ~80-100px visible gap between adjacent nodes at all breakpoints. */
 .country-scroll-journey--peru .timeline-node,
-.country-scroll-journey--chile .timeline-node {
-  min-width: 0;
-  overflow: hidden;
-}
-.country-scroll-journey--peru .timeline-node { width: clamp(200px, 20vw, 300px); max-width: clamp(200px, 20vw, 300px); }
-.country-scroll-journey--chile .timeline-node { width: clamp(150px, 14vw, 210px); max-width: clamp(150px, 14vw, 210px); }
+.country-scroll-journey--chile .timeline-node { width: clamp(150px, 15vw, 220px); max-width: clamp(150px, 15vw, 220px); overflow: hidden; }
+/* Wrapping: label text must wrap inside its slot, never push width out */
 .country-scroll-journey--peru .timeline-people,
 .country-scroll-journey--peru .timeline-location,
 .country-scroll-journey--peru .timeline-sublabel,
 .country-scroll-journey--chile .timeline-people,
 .country-scroll-journey--chile .timeline-location,
-.country-scroll-journey--chile .timeline-sublabel { white-space: normal; overflow-wrap: break-word; text-wrap: balance; }
-/* First node — inward from left, text left-aligned */
+.country-scroll-journey--chile .timeline-sublabel { white-space: normal; max-width: 100%; overflow-wrap: break-word; text-wrap: balance; }
+/* Edge alignment: first anchors inward-left, last anchors inward-right, middle centered */
 .country-scroll-journey--peru .timeline-node--first,
 .country-scroll-journey--chile .timeline-node--first { transform: translateX(0); justify-items: start; text-align: left; }
-/* Last node — inward from right, text right-aligned */
 .country-scroll-journey--peru .timeline-node--last,
 .country-scroll-journey--chile .timeline-node--last { transform: translateX(-100%); justify-items: end; text-align: right; }
+.country-scroll-journey--peru .timeline-node:not(.timeline-node--first):not(.timeline-node--last),
+.country-scroll-journey--chile .timeline-node:not(.timeline-node--first):not(.timeline-node--last) { transform: translateX(-50%); justify-items: center; text-align: center; }
 .timeline-dot { width: 9px; height: 9px; border-radius: 50%; background: #00c8f5; box-shadow: 0 0 12px #00d4ff; margin-top: 25px; }
 .timeline-node.inflection .timeline-dot { width: 11px; height: 11px; background: #fff; box-shadow: 0 0 18px #baf5ff; }
 .timeline-year { color: #ffffff72; font: 500 clamp(14px, 1vw, 18px) var(--mono); letter-spacing: .1em; }
