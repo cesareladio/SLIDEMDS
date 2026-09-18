@@ -24,9 +24,8 @@ export function AIScrollScene() {
           <span>PROYECCIÓN<br />{oneGdneCertificationScale.projectionLabel}</span>
         </div>
         <div className="ai-cert-proof ai-peru-program">
-          <p>{oneGdneCertificationScale.peruProgram.country}</p>
-          <div><span>{oneGdneCertificationScale.peruProgram.bonusCertificationSlots} CUPOS</span><span>CERTIFICACIONES BONIFICADAS FY26</span></div>
-          <div><span>≥{oneGdneCertificationScale.peruProgram.minimumApprovalTarget}%</span><span>META MÍNIMA DE APROBACIÓN</span></div>
+          <p className="ai-peru-inline">{oneGdneCertificationScale.peruProgram.country} · {oneGdneCertificationScale.peruProgram.bonusCertificationSlots} CUPOS · ≥{oneGdneCertificationScale.peruProgram.minimumApprovalTarget}% APROBACIÓN</p>
+          <span>CERTIFICACIONES BONIFICADAS FY26</span>
         </div>
         <p className="ai-cert-message">DE CERTIFICAR PERSONAS<br />A GESTIONAR CAPACIDADES</p>
       </div>
@@ -40,17 +39,15 @@ export function AIScrollScene() {
             <p>PERÚ</p>
             <strong>{oneGdneCapabilityBuilding.peru.upskillingRoutes.length}</strong><span>RUTAS DE UPSKILLING</span>
             <div className="ai-upskill-routes">{oneGdneCapabilityBuilding.peru.upskillingRoutes.map(route => <span key={route}>{route}</span>)}</div>
-            <small>{oneGdneCapabilityBuilding.peru.platforms.join(' · ')}</small>
-            <div className="ai-country-proof"><b>{oneGdneCapabilityBuilding.peru.strategicCertificationsFY26}</b><span>CERTIFICACIONES ESTRATÉGICAS FY26</span></div>
-            <small>{oneGdneCapabilityBuilding.peru.partners.join(' · ')}</small>
-            <small>MICROSOFT: {oneGdneCapabilityBuilding.peru.microsoftPrograms.join(' · ')}</small>
+            <div className="ai-country-proof"><b>{oneGdneCapabilityBuilding.peru.strategicCertificationsFY26}</b><span>CERTIFICACIONES ESTRATÉGICAS</span></div>
+            <small>{oneGdneCapabilityBuilding.peru.platforms.join(' · ')} · {oneGdneCapabilityBuilding.peru.partners.join(' · ')} · MICROSOFT</small>
           </article>
           <i className="ai-capability-link">ONE GDN-e</i>
           <article>
             <p>CHILE</p>
-            <strong>{oneGdneCapabilityBuilding.chile.certifiedPeopleToday}</strong><span>PERSONAS CERTIFICADAS HOY</span>
-            <div className="ai-chile-progression"><b>{oneGdneCapabilityBuilding.chile.approvalFY26ToDate}%</b><span>APROBACIÓN FY26 A LA FECHA</span><i>→</i><b>{oneGdneCapabilityBuilding.chile.ambitionFY26}</b><span>AMBICIÓN FY26</span></div>
-            <small>{oneGdneCapabilityBuilding.chile.percentOfHeadcount}% DEL HC · ≥{oneGdneCapabilityBuilding.chile.approvalTarget}% APROBACIÓN OBJETIVO</small>
+            <strong>{oneGdneCapabilityBuilding.chile.certifiedPeopleToday}</strong><span>CERTIFICADOS HOY</span>
+            <div className="ai-chile-progression"><i>→</i><b>{oneGdneCapabilityBuilding.chile.ambitionFY26}</b><span>FY26</span></div>
+            <small>100% APROBACIÓN HOY · {oneGdneCapabilityBuilding.chile.percentOfHeadcount}% HC · OBJETIVO ≥{oneGdneCapabilityBuilding.chile.approvalTarget}%</small>
           </article>
         </div>
       </div>

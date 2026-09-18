@@ -29,7 +29,8 @@ export function IBIOLScrollScene() {
         </div>
         <div className="ibiol-scroll-beat" style={style(ask)}>
           <strong>ACELERAR</strong>
-          <span className="ibiol-ask-list">{ibiol.asks.join(' · ')}</span>
+          <span className="ibiol-ask-row">{ibiol.asks.slice(0, 3).join(' · ')}</span>
+          <span className="ibiol-ask-row">{ibiol.asks.slice(3).join(' · ')}</span>
         </div>
         <div className="ibiol-scroll-beat ibiol-scroll-final" style={style(final)}>
           <p className="ibiol-final-p">

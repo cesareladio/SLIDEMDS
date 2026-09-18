@@ -36,12 +36,12 @@ export function IBIOLScrollNetwork({ progress, visible, opacity = 1 }: { progres
     })}
     {[...ibiol.growthIndustries, ...ibiol.growthCapabilities].map((item, index) => {
       const pos = finiteIBIOLPosition(item.position)
-      const labelOffset = item.label === 'Enterprise Platforms' ? -.55 : 0
-      const safePos: [number, number, number] = [pos[0] + labelOffset, pos[1], pos[2]]
+      const isRightEdge = item.label === 'Enterprise Platforms' || item.label === 'Insurance'
+      const labelClass = `ibiol-node-label${isRightEdge ? ' ibiol-node-label--right' : ''}`
       return <group key={item.label}>
         <Line points={[[0, 0, 0], pos]} color="#8defff" transparent opacity={growMesh * .3} lineWidth={1} />
         <mesh position={pos}><icosahedronGeometry args={[index < 3 ? .12 : .075, 2]} /><meshBasicMaterial color={index < 3 ? '#dffcff' : '#37bde9'} transparent opacity={growMesh} /></mesh>
-        {growLabel > .2 && <Html position={[safePos[0] + .12, safePos[1] + .12, safePos[2]]} distanceFactor={8} style={{ opacity: growLabel }} className="ibiol-node-label"><span>{item.label}</span></Html>}
+        {growLabel > .2 && <Html position={[pos[0] + .12, pos[1] + .12, pos[2]]} distanceFactor={8} style={{ opacity: growLabel }} className={labelClass}><span>{item.label}</span></Html>}
       </group>
     })}
     {ibiol.asks.map((ask, index) => {

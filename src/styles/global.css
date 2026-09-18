@@ -93,6 +93,12 @@ button { color: inherit; font: inherit; }
 .ibiol-scroll-final .ibiol-final-p em { color: var(--cyan); font-style: normal; font-weight: 280; }
 
 .ibiol-node-label, .country-cap-label { color: #e8fbff; font: 500 clamp(9.5px, .75vw, 12px) var(--mono); letter-spacing: .12em; white-space: nowrap; text-shadow: 0 1px 8px rgba(2,8,20,.9), 0 0 12px rgba(0,212,255,.32); }
+/* Right-edge network labels: anchor text inward so they don't clip */
+.ibiol-node-label--right { transform: translateX(-100%); }
+/* Scene 19 IBIOL ask rows — two lines, larger than metadata */
+.ibiol-ask-row { display: block; color: #d9f6ff; font: 500 clamp(12px, .92vw, 16px) var(--mono); letter-spacing: .14em; line-height: 1.65; white-space: nowrap; }
+/* Scene 15 Peru support — compact single-line */
+.ai-peru-inline { color: #8ff2ff; font: 500 clamp(11px, .78vw, 14px) var(--mono); letter-spacing: .1em; margin: 4px 0 1px; }
 .country-cap-label b { display: block; color: #fff; font: 280 18px var(--font-display); letter-spacing: -.04em; }
 .closing-silhouette { position: fixed; top: 14vh; width: min(42vw, 520px); height: min(56vh, 610px); display: grid; justify-items: center; gap: 14px; }.closing-silhouette-chile { height: min(60vh, 650px); }.closing-silhouette-peru { height: min(56vh, 610px); }
 .closing-silhouette-chile { left: 8vw; }
@@ -152,6 +158,10 @@ button { color: inherit; font: inherit; }
 .editorial-timeline-track { position: relative; width: min(62vw, 980px); height: 108px; margin-top: 4vh; }
 .timeline-line { position: absolute; top: 29px; left: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), rgba(0,212,255,.6)); box-shadow: 0 0 10px rgba(0,212,255,.5); transition: width .08s linear; max-width: 100%; }
 .timeline-node { position: absolute; top: 0; transform: translateX(-50%); display: grid; justify-items: center; gap: 6px; min-width: 56px; padding: 4px 7px; border-radius: 8px; background: radial-gradient(ellipse at center, rgba(2,8,20,.5), rgba(2,8,20,.18) 72%, transparent 100%); text-shadow: 0 1px 8px rgba(2,8,20,.95); }
+/* First node: shift text right so 2007 doesn't clip the left viewport edge */
+.timeline-node--first { transform: translateX(0); }
+/* Last node: shift text left for right-edge safety */
+.timeline-node--last { transform: translateX(-100%); }
 .timeline-dot { width: 9px; height: 9px; border-radius: 50%; background: #00c8f5; box-shadow: 0 0 12px #00d4ff; margin-top: 25px; }
 .timeline-node.inflection .timeline-dot { width: 11px; height: 11px; background: #fff; box-shadow: 0 0 18px #baf5ff; }
 .timeline-year { color: #ffffff72; font: 500 clamp(14px, 1vw, 18px) var(--mono); letter-spacing: .1em; }

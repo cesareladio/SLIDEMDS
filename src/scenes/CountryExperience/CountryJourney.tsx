@@ -19,7 +19,10 @@ export function CountryJourney({ history, progress, countryId = 'peru', heroLabe
       {milestones.map((item, index) => {
         const itemFrac = milestones.length > 1 ? index / (milestones.length - 1) : 0
         const itemReveal = Math.min(1, Math.max(0, (local - itemFrac * .7) / .15))
-        return <div key={`${item.year}-${index}`} className={`timeline-node ${item.inflection ? 'inflection' : ''}`} style={{ left: `${itemFrac * 100}%`, opacity: itemReveal }}>
+        const edgeClass = index === 0 ? 'timeline-node--first'
+          : index === milestones.length - 1 ? 'timeline-node--last'
+          : ''
+        return <div key={`${item.year}-${index}`} className={`timeline-node ${item.inflection ? 'inflection' : ''} ${edgeClass}`} style={{ left: `${itemFrac * 100}%`, opacity: itemReveal }}>
           <i className="timeline-dot" />
           <span className="timeline-year">{item.year}</span>
           {item.location && <span className="timeline-location">{item.location}</span>}
