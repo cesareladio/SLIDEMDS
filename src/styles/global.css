@@ -38,7 +38,7 @@ button { color: inherit; font: inherit; }
 .ibiol-scroll-copy span { color: #bff5ff; font: 500 clamp(10px, .72vw, 13px) var(--mono); letter-spacing: .16em; text-shadow: 0 1px 8px rgba(2,8,20,.9); }
 .ibiol-scroll-copy p { text-shadow: 0 1px 8px rgba(2,8,20,.9); }
 .ibiol-scroll-beat > p { font-size: clamp(16px, 1.35vw, 22px); color: #e8fbff; }
-.ibiol-scroll-beat > small { color: #c6f4ff; font: 500 clamp(10px, .72vw, 13px) var(--mono); letter-spacing: .08em; text-shadow: 0 1px 8px rgba(2,8,20,.9); }
+.ibiol-scroll-beat > small { color: #c6f4ff; font: 500 clamp(11.5px, .84vw, 15px) var(--mono); letter-spacing: .08em; text-shadow: 0 1px 8px rgba(2,8,20,.9); }
 .ibiol-scroll-copy .eyebrow { font-size: clamp(11px, .8vw, 14px); color: #e8fbff; text-shadow: 0 1px 8px rgba(2,8,20,.9); }
 .ibiol-ask-list { display: block; max-width: min(34vw, 500px); line-height: 1.65; }
 .ai-scroll-beat span { color: var(--cyan); font: 500 10px var(--mono); letter-spacing: .26em; }
@@ -75,7 +75,7 @@ button { color: inherit; font: inherit; }
 .ai-capability-countries article > p { margin: 0; color: #8ff2ff; font: 500 clamp(10px, .72vw, 13px) var(--mono); letter-spacing: .18em; }
 .ai-capability-countries article > strong { font: 280 clamp(48px, 5vw, 80px)/.85 var(--font-display); letter-spacing: -.07em; text-shadow: 0 1px 8px rgba(2,8,20,.9); }
 .ai-capability-countries article > span { color: #e8fbff; font: 500 clamp(10px, .72vw, 13px) var(--mono); letter-spacing: .1em; text-align: center; }
-.ai-capability-countries article > small { color: #c6f4ff; font: 500 clamp(9.5px, .68vw, 12px) var(--mono); letter-spacing: .07em; text-align: center; }
+.ai-capability-countries article > small { color: #c6f4ff; font: 500 clamp(10.5px, .76vw, 13.5px) var(--mono); letter-spacing: .07em; text-align: center; }
 .ai-capability-link { align-self: center; color: #bcefff; font: 500 clamp(10px, .72vw, 13px) var(--mono); letter-spacing: .12em; font-style: normal; white-space: nowrap; }
 .ai-country-proof { display: flex; align-items: baseline; justify-content: center; gap: 7px; }
 .ai-country-proof b, .ai-chile-progression b { color: #baf5ff; font: 280 clamp(18px, 1.7vw, 28px) var(--font-display); }
@@ -104,11 +104,13 @@ button { color: inherit; font: inherit; }
 .closing-silhouette-chile { left: 8vw; }
 .closing-silhouette-peru { right: 8vw; }
 .closing-silhouette svg { width: 100%; height: 100%; }
-.closing-map-surface { fill: rgba(0,114,206,.14); }
-.closing-map-outline { fill: none; stroke: #9beeff; stroke-width: .42; vector-effect: non-scaling-stroke; }
+.closing-map-surface { fill: rgba(0,120,214,.19); }
+.closing-map-outline { fill: none; stroke: #b9f5ff; stroke-width: .55; vector-effect: non-scaling-stroke; filter: drop-shadow(0 0 3px rgba(0,212,255,.55)); }
+.closing-country-copy strong { color: #fff; font-size: clamp(15px, 1.3vw, 19px); letter-spacing: .1em; text-shadow: 0 1px 10px rgba(2,8,20,.9), 0 0 24px rgba(0,212,255,.25); }
+.closing-country-copy span { color: #d7f6ff; font-size: clamp(10px, .78vw, 13px); letter-spacing: .16em; text-shadow: 0 1px 8px rgba(2,8,20,.9); }
 .closing-pair-stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; gap: 4vw; pointer-events: none; }
 .closing-pair-stage .closing-silhouette-pair { position: relative; top: 0; left: 0 !important; right: 0 !important; width: min(28vw, 360px); height: min(42vh, 460px); }.closing-pair-stage .closing-silhouette-chile { height: min(42vh, 460px); }.closing-pair-stage .closing-silhouette-peru { height: min(40vh, 440px); }
-.closing-pair-link { width: 3.5vw; height: 1px; background: linear-gradient(90deg, rgba(0,212,255,0), rgba(0,212,255,.75), rgba(0,212,255,0)); box-shadow: 0 0 12px rgba(0,212,255,.4); }
+.closing-pair-link { width: 3.5vw; height: 1px; background: linear-gradient(90deg, rgba(0,212,255,0), rgba(0,212,255,.88), rgba(0,212,255,0)); box-shadow: 0 0 16px rgba(0,212,255,.5); }
 .closing-pair { color: var(--cyan); font: 500 12px var(--mono); letter-spacing: .28em; }
 .closing-pair em { font-style: normal; color: #fff; }
 .closing-ntt { color: #fff; text-shadow: 0 0 46px rgba(0,212,255,.4), 0 0 12px rgba(255,255,255,.5); }
@@ -162,6 +164,11 @@ button { color: inherit; font: inherit; }
 .timeline-node--first { transform: translateX(0); }
 /* Last node: shift text left for right-edge safety */
 .timeline-node--last { transform: translateX(-100%); }
+/* Chile-only: prevent milestone 1 (2007) and milestone 2 (2015) overlap.
+   Scoped strictly to Chile so the approved/frozen Peru timeline (Scene 07)
+   is never affected. */
+.country-scroll-journey--chile .timeline-node--first { max-width: min(24vw, 210px); text-align: left; justify-items: start; }
+.country-scroll-journey--chile .timeline-node--second { transform: translateX(-25%); }
 .timeline-dot { width: 9px; height: 9px; border-radius: 50%; background: #00c8f5; box-shadow: 0 0 12px #00d4ff; margin-top: 25px; }
 .timeline-node.inflection .timeline-dot { width: 11px; height: 11px; background: #fff; box-shadow: 0 0 18px #baf5ff; }
 .timeline-year { color: #ffffff72; font: 500 clamp(14px, 1vw, 18px) var(--mono); letter-spacing: .1em; }

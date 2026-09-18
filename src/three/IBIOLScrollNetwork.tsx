@@ -36,21 +36,29 @@ export function IBIOLScrollNetwork({ progress, visible, opacity = 1 }: { progres
     })}
     {[...ibiol.growthIndustries, ...ibiol.growthCapabilities].map((item, index) => {
       const pos = finiteIBIOLPosition(item.position)
-      const isRightEdge = item.label === 'Enterprise Platforms' || item.label === 'Insurance'
+      const isEnterprisePlatforms = item.label === 'Enterprise Platforms'
+      const isRightEdge = isEnterprisePlatforms || item.label === 'Insurance'
       const labelClass = `ibiol-node-label${isRightEdge ? ' ibiol-node-label--right' : ''}`
+      // Enterprise Platforms sits at the far right of the frustum. Anchor its
+      // label inward (left of the node), not just offset via CSS, so the
+      // projected text never leaves the viewport. Node position unchanged.
+      const labelAnchorX = isEnterprisePlatforms ? pos[0] - .22 : pos[0] + .12
       return <group key={item.label}>
         <Line points={[[0, 0, 0], pos]} color="#8defff" transparent opacity={growMesh * .3} lineWidth={1} />
         <mesh position={pos}><icosahedronGeometry args={[index < 3 ? .12 : .075, 2]} /><meshBasicMaterial color={index < 3 ? '#dffcff' : '#37bde9'} transparent opacity={growMesh} /></mesh>
-        {growLabel > .2 && <Html position={[pos[0] + .12, pos[1] + .12, pos[2]]} distanceFactor={8} style={{ opacity: growLabel }} className={labelClass}><span>{item.label}</span></Html>}
+        {growLabel > .2 && <Html position={[labelAnchorX, pos[1] + .12, pos[2]]} distanceFactor={8} style={{ opacity: growLabel }} className={labelClass}><span>{item.label}</span></Html>}
       </group>
     })}
     {ibiol.asks.map((ask, index) => {
       const angle = index / ibiol.asks.length * Math.PI * 2
       const pos: [number, number, number] = [Math.cos(angle) * 2.7, Math.sin(angle) * 1.45, Math.sin(angle * 2) * .7]
+      // Oportunidades sits near the left-side editorial copy safe zone —
+      // nudge only its label (not the node) outward for separation.
+      const labelPos: [number, number, number] = ask === 'Oportunidades' ? [pos[0] + .35, pos[1], pos[2]] : pos
       return <group key={ask}>
         <Line points={[pos, [0, 0, 0]]} color="#d7faff" transparent opacity={askMesh * .35} lineWidth={1} />
         <mesh position={pos}><sphereGeometry args={[.07, 10, 10]} /><meshBasicMaterial color="#d7faff" transparent opacity={askMesh} /></mesh>
-        {askLabel > .2 && <Html position={pos} distanceFactor={8} style={{ opacity: askLabel }} className="ibiol-node-label"><span>{ask}</span></Html>}
+        {askLabel > .2 && <Html position={labelPos} distanceFactor={8} style={{ opacity: askLabel }} className="ibiol-node-label"><span>{ask}</span></Html>}
       </group>
     })}
   </group>

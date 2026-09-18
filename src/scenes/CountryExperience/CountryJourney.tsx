@@ -9,7 +9,7 @@ export function CountryJourney({ history, progress, countryId = 'peru', heroLabe
   const milestones = history
   const supportLines = heroSupport.split('~')
 
-  return <section className="country-scroll-journey editorial-timeline" style={{ opacity }}>
+  return <section className={`country-scroll-journey editorial-timeline country-scroll-journey--${countryId}`} style={{ opacity }}>
     <p className="country-scroll-kicker">{heroLabel}</p>
     <div className="timeline-hero" style={{ opacity: scaleReveal, transform: `translateY(${(1 - scaleReveal) * 18}px)` }}>
       <strong>{heroValue}</strong><span>{supportLines.map((line, i) => <>{line}{i < supportLines.length - 1 && <br />}</>)}</span>
@@ -21,6 +21,7 @@ export function CountryJourney({ history, progress, countryId = 'peru', heroLabe
         const itemReveal = Math.min(1, Math.max(0, (local - itemFrac * .7) / .15))
         const edgeClass = index === 0 ? 'timeline-node--first'
           : index === milestones.length - 1 ? 'timeline-node--last'
+          : index === 1 ? 'timeline-node--second'
           : ''
         return <div key={`${item.year}-${index}`} className={`timeline-node ${item.inflection ? 'inflection' : ''} ${edgeClass}`} style={{ left: `${itemFrac * 100}%`, opacity: itemReveal }}>
           <i className="timeline-dot" />
