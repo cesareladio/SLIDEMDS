@@ -164,11 +164,14 @@ button { color: inherit; font: inherit; }
 .timeline-node--first { transform: translateX(0); }
 /* Last node: shift text left for right-edge safety */
 .timeline-node--last { transform: translateX(-100%); }
-/* Chile-only: prevent milestone 1 (2007) and milestone 2 (2015) overlap.
+/* Chile-only: fix label overflow/collision on 4-node timeline.
    Scoped strictly to Chile so the approved/frozen Peru timeline (Scene 07)
    is never affected. */
-.country-scroll-journey--chile .timeline-node--first { max-width: min(24vw, 210px); text-align: left; justify-items: start; }
-.country-scroll-journey--chile .timeline-node--second { transform: translateX(-25%); }
+.country-scroll-journey--chile .timeline-node { width: clamp(160px, 14vw, 210px); max-width: clamp(160px, 14vw, 210px); }
+.country-scroll-journey--chile .timeline-people,
+.country-scroll-journey--chile .timeline-location { white-space: normal; text-wrap: balance; }
+.country-scroll-journey--chile .timeline-node--first { transform: translateX(0); justify-items: start; text-align: left; }
+.country-scroll-journey--chile .timeline-node--last { transform: translateX(-100%); justify-items: end; text-align: right; }
 .timeline-dot { width: 9px; height: 9px; border-radius: 50%; background: #00c8f5; box-shadow: 0 0 12px #00d4ff; margin-top: 25px; }
 .timeline-node.inflection .timeline-dot { width: 11px; height: 11px; background: #fff; box-shadow: 0 0 18px #baf5ff; }
 .timeline-year { color: #ffffff72; font: 500 clamp(14px, 1vw, 18px) var(--mono); letter-spacing: .1em; }
