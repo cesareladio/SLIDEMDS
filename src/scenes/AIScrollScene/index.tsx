@@ -8,9 +8,7 @@ export function AIScrollScene() {
   // Beat 1 — One GDN-e certification scale (Scene 15 · canonical .32)
   const cert = fadeWindow(p, .12, .20, .46, .54)
   // Beat 2 — Complementary Peru + Chile capability building (Scene 16 · canonical .68)
-  const upskill = fadeWindow(p, .48, .56, .80, .87)
-  // Beat 3 — Capability orientation (canonical .92)
-  const concepts = fadeWindow(p, .80, .88, 1, 1.02)
+  const upskill = p >= .56 ? 1 : fadeWindow(p, .48, .56, 2, 3)
   const style = (opacity: number) => ({ opacity, filter: `blur(${(1 - opacity) * 7}px)` })
   return <section className="scene ai-scroll-scene">
     <div className="ai-scroll-copy">
@@ -55,16 +53,6 @@ export function AIScrollScene() {
             <small>{oneGdneCapabilityBuilding.chile.percentOfHeadcount}% DEL HC · ≥{oneGdneCapabilityBuilding.chile.approvalTarget}% APROBACIÓN OBJETIVO</small>
           </article>
         </div>
-      </div>
-
-      {/* Beat 3 — Orientation message */}
-      <div className="ai-scroll-beat ai-concepts-beat" style={style(concepts)}>
-        <div className="ai-concepts-grid">
-          <strong>SKILLING</strong>
-          <strong>CERTIFICACIÓN</strong>
-          <strong className="ai-concepts-upskilling">UPSKILLING</strong>
-        </div>
-        <p className="ai-concepts-message">PREPARANDO EL TALENTO<br />PARA LO QUE VIENE</p>
       </div>
 
     </div>

@@ -5,7 +5,8 @@ import { ibiol } from '../../data/ibiol'
 export function IBIOLScrollScene() {
   const { chapter, chapterProgress: p } = useScrollStory()
   if (chapter !== 'ibiol') return null
-  const handoff = fadeWindow(p, 0, .08, .08, .14)
+  // Keep the consolidated identifier present at the Scene 17 canonical hold (.25).
+  const handoff = fadeWindow(p, 0, .08, .34, .42)
   const today = fadeWindow(p, .1, .18, .34, .42)
   const grow = fadeWindow(p, .36, .44, .60, .68)
   const ask = fadeWindow(p, .62, .70, .82, .89)
